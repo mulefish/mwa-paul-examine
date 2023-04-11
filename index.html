@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
+
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
+
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
+
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
+
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
+
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
+  </head>
+  <body>
+    <script>
+      MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
+      async function doFetch() {
+        const theResult = await MwaAnalytics.trackEvent('product-interaction', {
+          event: {
+            attributes: {
+              action: 'view',
+              algorithm: 'personalized',
+            },
+          },
+          component: {
+            id: 'recommendation:recently-`viewed',
+            type: 'ProductCarousel',
+            text: 'Buy now',
+            position: 2,
+            totalCount: 3,
+          },
+          product: {
+            skuID: 'ca_123',
+            productID: 'prod789',
+            unifiedID: '',
+            name: 'cool 22" pants',
+            localizedName: '',
+            price: '68.99',
+            salePrice: '',
+            isSale: false,
+            categoryUnifiedID: '',
+          },
+          collection: {
+            type: 'recommendation',
+            id: 'recently-viewed',
+          },
+        });
+        console.log(
+          '%c ' +
+            JSON.stringify(
+              theResult['payload']['properties']['validationResult']['data'][
+                'payload'
+              ],
+              null,
+              2
+            ),
+          'background:lightgreen'
+        );
+      }
+    </script>
+    <button onClick="doFetch()">doFetch</button>
+  </body>
+</html>
