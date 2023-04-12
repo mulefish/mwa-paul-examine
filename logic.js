@@ -81,7 +81,8 @@ async function sendIt() {
             let out = JSON.stringify(product,null,2) 
             out += "\n-----------------\n"
             out += JSON.stringify(payloadInner, null, 2 ) 
-            document.getElementById("receiveInfo").value = out
+            // document.getElementById("receiveInfo").value = out
+            document.getElementById("receiveInfo").value = JSON.stringify(theResult, null, 2 )
         } catch ( boom ) {            
             document.getElementById("receiveInfo").value = boom
         }
