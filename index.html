@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="icon" href="data:;base64,=">
     <link rel="stylesheet" href="style.css">
     <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
-
     <script src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
-
     <script src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
-
     <script src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
-
     <script src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
-
     <script src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
     <script src="logic.js"></script>
-
   </head>
   <body>
     <script>
-      MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
+//      MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
       async function doFetch() {
         const theResult = await MwaAnalytics.trackEvent('product-interaction', {
           event: {
@@ -35,7 +30,7 @@
             totalCount: 3,
           },
           product: {
-            skuID: 'ca_123',`
+            skuID: 'ca_123',
             productID: 'prod789',
             unifiedID: '',
             name: 'cool 22" pants',
@@ -63,6 +58,28 @@
         );
       }
     </script>
-    <button onClick="doFetch()">doFetch</button>
+    <!-- <button onClick="doFetch()">doFetch OLD </button>-->
+    
+    <button onClick="doFetchNEW('product-interaction')">product-interaction</button>
+    <span id="event_name"></span>
+    
+    <hr/>
+    <table border="'1">
+      <tr>
+        <td>
+          <textarea id="sendInfo"></textarea>
+        </td>
+        <td valign="top" id="middleRow">
+          <center>
+            <button onClick="sendIt()" id="sendBtn"> >>> </button>
+          </center>
+        </td>
+        <td>
+          <textarea id="receiveInfo"></textarea>
+        </td>
+
+      </tr>
+    </table>
+
   </body>
 </html>
