@@ -1,3 +1,81 @@
+
+const grey = (thing)=> { 
+    let msg = thing
+    if ( ( typeof thing ) === "object") {
+        msg = JSON.stringify( thing)
+    }
+    console.log("%c " + msg, "background:#e0e0e0")
+}
+const tan = (thing)=> { 
+    let msg = thing
+    if ( ( typeof thing ) === "object") {
+        msg = JSON.stringify( thing)
+    }
+    console.log("%c " + msg, "background:tan")
+}
+
+const green = (thing)=> { 
+    let msg = thing
+    if ( ( typeof thing ) === "object") {
+        msg = JSON.stringify( thing, null, 2 )
+    }
+    console.log("%c " + msg, "background:lightgreen")
+}
+const pink = (thing)=> { 
+    let msg = thing
+    if ( ( typeof thing ) === "object") {
+        msg = JSON.stringify( thing, null, 2 )
+    }
+    console.log("%c " + msg, "background:pink")
+}
+
+const blue = (thing)=> { 
+    let msg = thing
+    if ( ( typeof thing ) === "object") {
+        msg = JSON.stringify( thing, null, 2 )
+    }
+    console.log("%c " + msg, "background:lightblue")
+}
+
+function doValidationModule() { 
+
+    const cvo = self.validationModule.categoricalValidatorObjects["schemaObjects"]
+    const _listOfEvents = Object.keys(cvo)
+    const listOfEvents = _listOfEvents.map(function(x){ return x.toUpperCase(); })
+    // grey(listOfEvents)   
+    grey('self.validationModule.categoricalValidatorObjects["schemaObjects"]')
+    grey("self.validationModule")
+    const listOfvalidationModule = Object.keys(self.validationModule)
+    // green(listOfvalidationModule)
+    // blue( JSON.stringify( self.validationModule, null, 2 ) )
+
+    document.getElementById("sendInfo").value = JSON.stringify( listOfEvents, null, 2 )
+
+    document.getElementById("receiveInfo").value = JSON.stringify( self.validationModule, null, 2 )
+    
+
+    // listOfEvents.forEach((event, i)=> { 
+    //     const obj = self.validationModule[event]
+    //     blue( i + "   " + event)
+    //     green(obj)
+    // })
+    
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /////////////////////////////// COLLECTION FOLLOWS ///////////////////
 const signals = {}
 signals['product-interaction'] = {
@@ -33,8 +111,46 @@ signals['product-interaction'] = {
 
 
 
+signals["general-component-interaction"] = {
+    attributes: {
+    dummykey: "dummyValue"
+    },
+    component: {
+       id: "truefit:quiz-start",
+       type: "component-library...",
+       text: "get your size",
+       position: -1,
+       totalCount: -1
+    },
+    attributes: {
+       componentKey: "compValue"
+    }
+}
+    
+
+// mport { trackEvent, EVENT_CATEGORY, EVENT_TYPE } from "@lululemon/mwa-analytics";
+
+// ...
+
+// trackEvent(EVENT_CATEGORY.COMPONENT_EVENT, 
+// signals['general-component-interaction'] = {
 
 
+// }
+
+
+
+signals['page-view'] = {
+
+    attributes: {
+        dummykey: "hello"
+        },
+        component: {
+        },
+        attributes: {
+           componentKey: "compValue"
+        }
+}
 
 
 
