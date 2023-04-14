@@ -21,37 +21,61 @@ function flattenObject(obj) {
 /////////// END FLATTENING ///////////
 
 // const thing_to_look_for = "categoricalOptionalityObjects.purchase"
-const allThings = flattenObject(everything)
-function step1_findTarget(thing_to_look_for) { 
-  const target = {} 
-  let i = 0
-  for (let k in allThings) {
-    i++
-    if ( k.startsWith(thing_to_look_for)) {
-      const v = allThings[k]
-      // console.log(i + "   " + k + "  " + v)
-      target[k] = v 
-    } 
-  }
-  return target
+const flattened = flattenObject(everything)
+const eventLookup = {}
+const seen = {}
+const seenBy = {}
+function step1_findTarget(thing_to_look_for, index) {
+  let FINDME = "categoricalOptionalityObjects." + thing_to_look_for
+  Object.keys(flattened).forEach((key, i) => {
+    // const v = flattened[key]
+    if (key.startsWith(FINDME) && key.includes("payload")) {
+      eventLookup[thing_to_look_for] = index
+      const v = key.replace(thing_to_look_for, "______")
+      // events particulars 
+      if (seen.hasOwnProperty(v)) {
+        seen[v]++
+      } else {
+        seen[v] = 1
+      }
+      
+      // events seen by step_A
+      const eventId = eventLookup[thing_to_look_for]
+      if (! seenBy.hasOwnProperty(v)) { 
+        seenBy[v] = []
+      }
+      // events seen by step_B
+      if ( ! seenBy[v].includes(3)) {
+        console.log( thing_to_look_for +  "  " + v )
+        seenBy[v].push(eventId)
+      }
+
+      
+
+
+
+
+    }
+  })
 }
+const findThese = [
+  "APP-RESPONSE",
+  "ERROR",
+  "GENERAL-COMPONENT-INTERACTION",
+  "GENERAL-COMPONENT-EVENT",
+  "PAGE-PRODUCTS-DISPLAYED",
+  "PAGE-VIEW",
+  "PRODUCT-INTERACTION",
+  "PURCHASE"
+]
 
-const show=(m)=> { 
-  console.log()
-  let i = 0; 
-  for ( let k in m ) {
-    i++ 
-    const v = m[k]
-    console.log( i + "    " + k + "    " + v )
-  }
+findThese.forEach((thing, i) => {
+  step1_findTarget(thing.toLowerCase(), i)
+})
+
+
+for (let k in seen) {
+  const v = seen[k]
+  const isInside = seenBy[k]
+  // console.log(isInside + "      count=" + v + "    k=" + k + "   ")
 }
-let stuff = {}
-stuff = step1_findTarget('categoricalOptionalityObjects.purchase')
-// console.log( stuff )
-show(stuff)
-stuff = step1_findTarget('categoricalOptionalityObjects.app-response')
-//console.log( stuff )
-show(stuff)
-
-
-
