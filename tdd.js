@@ -1,30 +1,57 @@
 const everything = require('./everything.json');
 
-
-
-function flattenObject(ob) {
-  let toReturn = {};
-  for (let key in ob) {
-    if (!ob.hasOwnProperty(key)) { continue; } 
-    if ((typeof ob[key]) == 'object' && ob[key] != null) {
-      const flatObject = flattenObject(ob[key]);
-      for (let x in flatObject) {
-        if (!flatObject.hasOwnProperty(x)) { continue; } 
-        toReturn[key + '.' + x] = flatObject[x];
+function flattenObject(obj) {
+  const accumulator = {};
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if ((typeof obj[key]) == 'object' && obj[key] != null) {
+        const flatObject = flattenObject(obj[key]);
+        for (let x in flatObject) {
+          if (flatObject.hasOwnProperty(x)) {
+            accumulator[key + '.' + x] = flatObject[x];
+          }
+        }
+      } else {
+        accumulator[key] = obj[key];
       }
-    } else {
-      toReturn[key] = ob[key];
     }
   }
-  return toReturn;
+  return accumulator;
+}
+/////////// END FLATTENING ///////////
+
+// const thing_to_look_for = "categoricalOptionalityObjects.purchase"
+const allThings = flattenObject(everything)
+function step1_findTarget(thing_to_look_for) { 
+  const target = {} 
+  let i = 0
+  for (let k in allThings) {
+    i++
+    if ( k.startsWith(thing_to_look_for)) {
+      const v = allThings[k]
+      // console.log(i + "   " + k + "  " + v)
+      target[k] = v 
+    } 
+  }
+  return target
 }
 
-
-
-const path_value = flattenObject(everything)
-let i = 0
-for (let k in path_value) {
-  i++
-  const v = path_value[k]
-  console.log(i + "   " + k + "  " + v)
+const show=(m)=> { 
+  console.log()
+  let i = 0; 
+  for ( let k in m ) {
+    i++ 
+    const v = m[k]
+    console.log( i + "    " + k + "    " + v )
+  }
 }
+let stuff = {}
+stuff = step1_findTarget('categoricalOptionalityObjects.purchase')
+// console.log( stuff )
+show(stuff)
+stuff = step1_findTarget('categoricalOptionalityObjects.app-response')
+//console.log( stuff )
+show(stuff)
+
+
+
