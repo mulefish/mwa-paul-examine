@@ -1,0 +1,80 @@
+
+<html>
+    <body>
+        
+
+<script>
+
+    function doit() { 
+        alert("asdkfa")
+      // Toggle the visibility of child elements
+      if (ul.style.display === 'none') {
+        ul.style.display = 'block';
+        button.textContent = '-';
+      } else {
+        ul.style.display = 'none';
+        button.textContent = '+';
+      }
+    }
+
+
+    function renderJson(container, data) {
+  // If the data is undefined, exit the function
+  if (typeof data === 'undefined') {
+    return;
+  }
+
+  // Create a new <ul> element for the container
+  const ul = document.createElement('ul');
+
+  // Loop through each key-value pair in the data object
+  Object.entries(data).forEach(([key, value]) => {
+    // Create a new <li> element for the key
+    const li = document.createElement('li');
+
+    // Create a button to toggle child elements
+    // const button = document.createElement('button');
+    // button.textContent = '+';
+    // button.addEventListener('click', () => doit());
+    // li.appendChild(button);
+        let btn = "<button onClick='doit()'>doit</button>    "
+    li.innerHTML += btn + key + ': ';
+
+    // If the value is an object, render it recursively
+    if (typeof value === 'object') {
+      renderJson(li, value);
+    } else {
+      // Otherwise, just display the value as text
+      const span = document.createElement('span');
+      span.textContent = value;
+      li.appendChild(span);
+    }
+
+    // Add the <li> element to the <ul> element
+    ul.appendChild(li);
+  });
+
+  // Add the <ul> element to the container
+  container.appendChild(ul);
+}
+
+// Example usage
+const jsonData = {
+  "name": "John",
+  "age": 30,
+  "pets": {
+    "dog": "Rex",
+    "cat": "Fluffy"
+  }
+};
+
+const jsonContainer = document.createElement('div');
+renderJson(jsonContainer, jsonData);
+
+// Add the JSON container to the page
+document.body.appendChild(jsonContainer);
+</script>
+
+
+</body>
+</html>
