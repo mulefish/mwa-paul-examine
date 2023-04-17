@@ -1,81 +1,66 @@
 const everything = require('./everything.json');
 
-function flattenObject(obj) {
-  const accumulator = {};
-  for (let key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      if ((typeof obj[key]) == 'object' && obj[key] != null) {
-        const flatObject = flattenObject(obj[key]);
-        for (let x in flatObject) {
-          if (flatObject.hasOwnProperty(x)) {
-            accumulator[key + '.' + x] = flatObject[x];
+function step1_flatten() {
+  function flattenObject(obj) {
+    const accumulator = {};
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if ((typeof obj[key]) == 'object' && obj[key] != null) {
+          const flatObject = flattenObject(obj[key]);
+          for (let x in flatObject) {
+            if (flatObject.hasOwnProperty(x)) {
+              accumulator[key + '.' + x] = flatObject[x];
+            }
           }
+        } else {
+          accumulator[key] = obj[key];
         }
-      } else {
-        accumulator[key] = obj[key];
       }
     }
+    return accumulator;
   }
-  return accumulator;
+  return flattenObject(everything)
 }
+
+
+
 /////////// END FLATTENING ///////////
+const flat = step1_flatten()
 
-// const thing_to_look_for = "categoricalOptionalityObjects.purchase"
-const flattened = flattenObject(everything)
-const eventLookup = {}
-const seen = {}
-const seenBy = {}
-function step1_findTarget(thing_to_look_for, index) {
-  let FINDME = "categoricalOptionalityObjects." + thing_to_look_for
-  Object.keys(flattened).forEach((key, i) => {
-    // const v = flattened[key]
-    if (key.startsWith(FINDME) && key.includes("payload")) {
-      eventLookup[thing_to_look_for] = index
-      const v = key.replace(thing_to_look_for, "______")
-      // events particulars 
-      if (seen.hasOwnProperty(v)) {
-        seen[v]++
-      } else {
-        seen[v] = 1
-      }
-      
-      // events seen by step_A
-      const eventId = eventLookup[thing_to_look_for]
-      if (! seenBy.hasOwnProperty(v)) { 
-        seenBy[v] = []
-      }
-      // events seen by step_B
-      if ( ! seenBy[v].includes(3)) {
-        console.log( thing_to_look_for +  "  " + v )
-        seenBy[v].push(eventId)
-      }
-
-      
-
-
-
-
-    }
-  })
-}
 const findThese = [
-  "APP-RESPONSE",
-  "ERROR",
-  "GENERAL-COMPONENT-INTERACTION",
-  "GENERAL-COMPONENT-EVENT",
-  "PAGE-PRODUCTS-DISPLAYED",
-  "PAGE-VIEW",
-  "PRODUCT-INTERACTION",
-  "PURCHASE"
+  "app-response",
+  "error",
+  "general-component-interaction",
+  "general-component-event",
+  "page-products-displayed",
+  "page-view",
+  "product-interaction",
+  "purchase"
 ]
 
-findThese.forEach((thing, i) => {
-  step1_findTarget(thing.toLowerCase(), i)
-})
+///////////// 
+findThese.forEach((item, j)=> { 
+  const coo = "categoricalOptionalityObjects." + item
+    console.log(coo )
+    let i = 0 
+    for ( let k in flat ) {
+      if ( k.includes(coo)) {
+
+        if ( "payload.screen")
 
 
-for (let k in seen) {
-  const v = seen[k]
-  const isInside = seenBy[k]
-  // console.log(isInside + "      count=" + v + "    k=" + k + "   ")
-}
+        console.log( j + "    " +  ++i  + "    " + k )
+
+
+
+
+      }
+    }
+  });
+
+
+
+console.log(" ... ")
+console.log( JSON.stringify( Object.keys(everything["PAYLOAD"]["screen"]), null, 2 ) ) 
+
+//console.log( JSON.stringify( Object.keys(everything['SCREEN']), null, 2 ) ) 
