@@ -1,100 +1,88 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <style>
         .line-1 {
-            color: red;
-        }
+  color: red;
+}
 
-        .line-2 {
-            color: green;
-        }
+.line-2 {
+  color: green;
+}
 
-        .line-3 {
-            color: blue;
-        }
+.line-3 {
+  color: blue;
+}
+
     </style>
     <link rel="icon" href="data:;base64,=">
     <link rel="stylesheet" href="style.css">
     <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
     <script src="logic.js"></script>
     <!-- <script src="
 https://cdn.jsdelivr.net/npm/zod-to-json-schema@3.20.4/index.min.js
 "></script> -->
-</head>
-
-<body>
+  </head>
+  <body>
     <!-- self.validationModule.categoricalOptionalityObjects 
     <button onClick="doValidationModule()">validationModule</button>-->
 
     <div id="buttons" />
-    <hr>
+        <hr>
 
 
     <script>
 
 
-        let loadAttemptCount = 0
-        let everything;
+        let loadAttemptCount = 0 
+        let everything; 
         function isItLoadedYet() {
-            if (everything !== "undefined") {
+            if ( everything !== "undefined") {
                 clearInterval(interval);
                 addButtons();
             } else {
-                console.log(++loadAttemptCount + " everything" + everything)
+                console.log( ++loadAttemptCount + " everything" + everything )
             }
         }
-        const interval = setInterval(isItLoadedYet, 100);
+    const interval = setInterval(isItLoadedYet, 100);
 
 
-        function addButtons() {
-            try {
-                if (self.validationModule.categoricalValidatorObjects["schemaObjects"] !== undefined) {
+        function addButtons() { 
+            try { 
+            if ( self.validationModule.categoricalValidatorObjects["schemaObjects"] !== undefined ) { 
 
-                    everything = self.validationModule.categoricalValidatorObjects["schemaObjects"]
-                    const listOfEvents = Object.keys(everything)
-                    let table = "<table border'1'><tr>"
-                    listOfEvents.forEach((eventName) => {
-                        const btn = `<button onClick='doEvent("${eventName}")'>${eventName}</button>`
-                        table += "<td>" + btn + "</td>"
-                    })
-                    table += "</tr></table>"
+            everything = self.validationModule.categoricalValidatorObjects["schemaObjects"]
+            const listOfEvents = Object.keys(everything)
+            let table = "<table border'1'><tr>"
+            listOfEvents.forEach((eventName)=> { 
+                    const btn = `<button onClick='doEvent("${eventName}")'>${eventName}</button>`
+                    table += "<td>" + btn + "</td>"
+            })    
+                table += "</tr></table>"
 
-                    document.getElementById("buttons").innerHTML = table
+            document.getElementById("buttons").innerHTML = table 
 
-                }
-            } catch (boom) {
-                if (loadAttemptCount > 10) {
-                    // This error will happen a few times as the page is loading...   ...ignore it a little
-                    console.log(boom.message)
-                }
+        } } catch( boom) {
+            if ( loadAttemptCount > 10 ) {
+                // This error will happen a few times as the page is loading...   ...ignore it a little
+                console.log(boom.message)
             }
         }
-        function doValidationModule() {
+        }
+        function doValidationModule() { 
             const _listOfEvents = Object.keys(everything)
-            const listOfEvents = _listOfEvents.map(function (x) { return x.toUpperCase(); })
+            const listOfEvents = _listOfEvents.map(function(x){ return x.toUpperCase(); })
             const listOfvalidationModule = Object.keys(self.validationModule)
-            console.log(_listOfEvents)
-        }
+            console.log( _listOfEvents) 
+}
 
 
-        function doEverything() {
-            addButtons()
-        }
-        addButtons()
-    </script>
+    </script>    
 
-</body>
-
+  </body>
 </html>
