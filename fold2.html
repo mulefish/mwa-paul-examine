@@ -1,80 +1,310 @@
-
+<!DOCTYPE html>
 <html>
-    <body>
-        
+  <head>
+    <link rel="icon" href="data:;base64,=">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
 
-<script>
-
-    function doit() { 
-        alert("asdkfa")
-      // Toggle the visibility of child elements
-      if (ul.style.display === 'none') {
-        ul.style.display = 'block';
-        button.textContent = '-';
-      } else {
-        ul.style.display = 'none';
-        button.textContent = '+';
+    <!-- <script src="
+https://cdn.jsdelivr.net/npm/zod-to-json-schema@3.20.4/index.min.js
+"></script> -->
+  </head>
+  <body>
+    <script>
+//      MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
+      async function doFetch() {
+        const theResult = await MwaAnalytics.trackEvent('product-interaction', {
+          event: {
+            attributes: {
+              action: 'view',
+              algorithm: 'personalized',
+            },
+          },
+          component: {
+            id: 'recommendation:recently-`viewed',
+            type: 'ProductCarousel',
+            text: 'Buy now',
+            position: 2,
+            totalCount: 3,
+          },
+          product: {
+            skuID: 'ca_123',
+            productID: 'prod789',
+            unifiedID: '',
+            name: 'cool 22" pants',
+            localizedName: '',
+            price: '68.99',
+            salePrice: '',
+            isSale: false,
+            categoryUnifiedID: '',
+          },
+          collection: {
+            type: 'recommendation',
+            id: 'recently-viewed',
+          },
+        });
+        console.log(
+          '%c ' +
+            JSON.stringify(
+              theResult['payload']['properties']['validationResult']['data'][
+                'payload'
+              ],
+              null,
+              2
+            ),
+          'background:lightgreen'
+        );
       }
+    </script>
+    <!-- <button onClick="doFetch()">doFetch OLD </button>-->
+    
+    <button onClick="doFetchNEW('product-interaction')">product-interaction</button>
+    <button onClick="doFetchNEW('general-component-interaction')">general-component-interaction</button>
+    <button onClick="doFetchNEW('page-view')">page-view</button>
+    |
+    <button onClick="doValidationModule()">validationModule</button>
+
+
+
+
+    
+    <span id="event_name"></span>
+    
+    <hr/>
+    <table border="'1">
+      <tr>
+        <td>
+          <textarea id="sendInfo"></textarea>
+        </td>
+        <td valign="top" id="middleRow">
+          <center>
+            <button onClick="sendIt()" id="sendBtn"> >>> </button>
+          </center>
+        </td>
+        <td>
+          <textarea id="receiveInfo"></textarea>
+        </td>
+
+      </tr>
+    </table>
+
+
+    <script>
+
+const grey = (thing)=> { 
+    let msg = thing
+    if ( ( typeof thing ) === "object") {
+        msg = JSON.stringify( thing)
     }
-
-
-    function renderJson(container, data) {
-  // If the data is undefined, exit the function
-  if (typeof data === 'undefined') {
-    return;
-  }
-
-  // Create a new <ul> element for the container
-  const ul = document.createElement('ul');
-
-  // Loop through each key-value pair in the data object
-  Object.entries(data).forEach(([key, value]) => {
-    // Create a new <li> element for the key
-    const li = document.createElement('li');
-
-    // Create a button to toggle child elements
-    // const button = document.createElement('button');
-    // button.textContent = '+';
-    // button.addEventListener('click', () => doit());
-    // li.appendChild(button);
-        let btn = "<button onClick='doit()'>doit</button>    "
-    li.innerHTML += btn + key + ': ';
-
-    // If the value is an object, render it recursively
-    if (typeof value === 'object') {
-      renderJson(li, value);
-    } else {
-      // Otherwise, just display the value as text
-      const span = document.createElement('span');
-      span.textContent = value;
-      li.appendChild(span);
+    console.log("%c " + msg, "background:#e0e0e0")
+}
+const tan = (thing)=> { 
+    let msg = thing
+    if ( ( typeof thing ) === "object") {
+        msg = JSON.stringify( thing)
     }
-
-    // Add the <li> element to the <ul> element
-    ul.appendChild(li);
-  });
-
-  // Add the <ul> element to the container
-  container.appendChild(ul);
+    console.log("%c " + msg, "background:tan")
 }
 
-// Example usage
-const jsonData = {
-  "name": "John",
-  "age": 30,
-  "pets": {
-    "dog": "Rex",
-    "cat": "Fluffy"
-  }
-};
+const green = (thing)=> { 
+    let msg = thing
+    if ( ( typeof thing ) === "object") {
+        msg = JSON.stringify( thing, null, 2 )
+    }
+    console.log("%c " + msg, "background:lightgreen")
+}
+const pink = (thing)=> { 
+    let msg = thing
+    if ( ( typeof thing ) === "object") {
+        msg = JSON.stringify( thing, null, 2 )
+    }
+    console.log("%c " + msg, "background:pink")
+}
 
-const jsonContainer = document.createElement('div');
-renderJson(jsonContainer, jsonData);
+const blue = (thing)=> { 
+    let msg = thing
+    if ( ( typeof thing ) === "object") {
+        msg = JSON.stringify( thing, null, 2 )
+    }
+    console.log("%c " + msg, "background:lightblue")
+}
 
-// Add the JSON container to the page
-document.body.appendChild(jsonContainer);
-</script>
+function doValidationModule() { 
+
+    const cvo = self.validationModule.categoricalValidatorObjects["schemaObjects"]
+    const _listOfEvents = Object.keys(cvo)
+    const listOfEvents = _listOfEvents.map(function(x){ return x.toUpperCase(); })
+    // grey(listOfEvents)   
+    grey('self.validationModule.categoricalValidatorObjects["schemaObjects"]')
+    grey("self.validationModule")
+    const listOfvalidationModule = Object.keys(self.validationModule)
+    // green(listOfvalidationModule)
+    // blue( JSON.stringify( self.validationModule, null, 2 ) )
+
+    document.getElementById("sendInfo").value = JSON.stringify( listOfEvents, null, 2 )
+
+    document.getElementById("receiveInfo").value = JSON.stringify( self.validationModule, null, 2 )
+    
+
+    // listOfEvents.forEach((event, i)=> { 
+    //     const obj = self.validationModule[event]
+    //     blue( i + "   " + event)
+    //     green(obj)
+    // })
+    
+
+}
 
 
-</body>
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////// COLLECTION FOLLOWS ///////////////////
+const signals = {}
+signals['product-interaction'] = {
+    event: {
+        attributes: {
+            action: 'view',
+            algorithm: 'personalized',
+        },
+    },
+    component: {
+        id: 'recommendation:recently-viewed',
+        type: 'ProductCarousel',
+        text: 'Buy now',
+        position: 2,
+        totalCount: 3,
+    },
+    product: {
+        skuID: 'ca_123',
+        productID: 'prod789',
+        unifiedID: '',
+        name: 'cool 22" pants',
+        localizedName: '',
+        price: '68.99',
+        salePrice: '',
+        isSale: false,
+        categoryUnifiedID: '',
+    },
+    collection: {
+        type: 'recommendation',
+        id: 'recently-viewed',
+    },
+}
+
+
+
+signals["general-component-interaction"] = {
+    attributes: {
+    dummykey: "dummyValue"
+    },
+    component: {
+       id: "truefit:quiz-start",
+       type: "component-library...",
+       text: "get your size",
+       position: -1,
+       totalCount: -1
+    },
+    attributes: {
+       componentKey: "compValue"
+    }
+}
+    
+
+// mport { trackEvent, EVENT_CATEGORY, EVENT_TYPE } from "@lululemon/mwa-analytics";
+
+// ...
+
+// trackEvent(EVENT_CATEGORY.COMPONENT_EVENT, 
+// signals['general-component-interaction'] = {
+
+
+// }
+
+
+
+signals['page-view'] = {
+
+    attributes: {
+        dummykey: "hello"
+        },
+        component: {
+        },
+        attributes: {
+           componentKey: "compValue"
+        }
+}
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////// LOGIC FOLLOWS ///////////////////
+
+MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
+
+
+
+
+
+async function doFetchNEW(event_name) {
+    // PUNT? 
+    if ( ! signals.hasOwnProperty(event_name)) {
+        document.getElementById("event_name").innerHTML = "none"
+        document.getElementById("sendInfo").value = "The supplied " + event_name + " is not in the collection"
+    } else {
+        document.getElementById("event_name").innerHTML = event_name
+        const x = signals[event_name]
+        document.getElementById("sendInfo").value = JSON.stringify(x,null, 2)
+    }
+}
+
+async function sendIt() { 
+    const event_name = document.getElementById("event_name").innerHTML
+    if ( ! signals.hasOwnProperty(event_name)) {
+        document.getElementById("receiveInfo").value = "The supplied " + event_name + " is not in the collection"
+    } else {
+        // const x = signals[event_name]
+        const x = JSON.parse(document.getElementById("sendInfo").value)
+        try {             
+            const theResult = await MwaAnalytics.trackEvent(event_name, x)
+            const base = theResult['payload']['properties'] //["validationResult"] //["data"]["payload"] //['payload']["validationResult"]["data"]["payload"]
+            const product = base["product"]
+            const payloadInner = base['validationResult']['data']['payload']
+            let out = JSON.stringify(product,null,2) 
+            out += "\n-----------------\n"
+            out += JSON.stringify(payloadInner, null, 2 ) 
+            // document.getElementById("receiveInfo").value = out
+            document.getElementById("receiveInfo").value = JSON.stringify(theResult, null, 2 )
+        } catch ( boom ) {            
+            document.getElementById("receiveInfo").value = boom
+        }
+    }
+}
+
+
+
+    </script>
+
+  </body>
 </html>

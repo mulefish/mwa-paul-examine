@@ -64,3 +64,9 @@ console.log(" ... ")
 console.log( JSON.stringify( Object.keys(everything["PAYLOAD"]["screen"]), null, 2 ) ) 
 
 //console.log( JSON.stringify( Object.keys(everything['SCREEN']), null, 2 ) ) 
+
+
+console.log( " .............. ")
+let hello = everything["categoricalOptionalityObjects"]["app-response"]["default"] // .default.payload.screen.path
+
+console.log( hello ) 
