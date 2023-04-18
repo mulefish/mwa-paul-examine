@@ -258,9 +258,36 @@ function findTheseZodThings( eventName, everything) {
             }
         }
 
-        return found
-    }
+    
+    } else if ( eventName === "product-interaction") { 
 
+        found = {
+            "screen": {
+
+                "path":everything["SCREEN"]["path"],
+                "type":everything["SCREEN"]["type"],
+                "category": "TODO",
+                "country":everything["SCREEN"]["country"]["zodValidType"],
+                "collections":everything["SCREEN"]["collections"],
+                "currency":everything["SCREEN"]["currency"],
+                "header":"TODO",
+                "language":everything["SCREEN"]["language"]["zodValidType"],
+                "property":everything["SCREEN"]["property"]["zodValidType"],
+                "urlRoute":everything["SCREEN"]["urlRoute"]                
+            },
+            "event": {
+              "component": {
+                "id": everything["EVENT"]["component"]["id"],
+                "type": everything["EVENT"]["component"]["type"],
+                "text": everything["EVENT"]["component"]["text"],
+                "placement": everything["EVENT"]["component"]["placement"]
+              }
+            },
+            "collectionList": "TODO"
+          }
+    }
+        
+    return found
 }
 
 
