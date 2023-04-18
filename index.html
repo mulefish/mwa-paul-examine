@@ -161,7 +161,7 @@ function colorize(jsonTypes, jsonOptions) {
         if ( row2 !== undefined ) { 
         if (row2.includes(" false")) {
             css = "optional"
-            blue("rows2 |"+ row2)
+            // blue("rows2 |"+ row2)
         } else if (row2.includes(" true")) {
             css = "mandatory"
             tan("rows2 |" + row2  )
@@ -526,7 +526,8 @@ try {
 
     <script>
         function init() { 
-            blue("MwaAnalytics.initializeAnalytics('TEST', {}, [], true);")
+            // blue("MwaAnalytics.initializeAnalytics('TEST', {}, [], true);")
+            console.log("INIT")
             MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
         }
 
