@@ -163,7 +163,6 @@ function flatten(objectToFlatten) {
 //     return found
 // }
 
-
 function getTypesFromZod(someJsonFromValidationModule) {
     let found = {}
     for (let k in someJsonFromValidationModule) {
@@ -192,47 +191,84 @@ function findZodTypesToFind(complexJson) {
 
 function getSchemaKeys(categoricalEvent) {
     const lookup = []
-    switch(categoricalEvent) {
+    switch (categoricalEvent) {
         case "purchase":
-            lookup.push("SCREEN")
-            lookup.push("EVENT.attributes")
-            break; 
+            lookup.push(["SCREEN"])
+            lookup.push(["EVENT","attributes"])
+            break;
         case "product-interaction":
-            lookup.push("SCREEN")
-            lookup.push("EVENT.component")
-            break; 
+            lookup.push(["SCREEN"])
+            lookup.push(["EVENT","component"])
+            break;
         case "page-view":
-            lookup.push("SCREEN")
+            lookup.push(["SCREEN"])
             break;
         case "page-products-displayed":
-            lookup.push("SCREEN")
+            lookup.push(["SCREEN"])
             break;
 
         case "general-component-event":
-            lookup.push("SCREEN")
-            lookup.push("EVENT.component")
-            break; 
+            lookup.push(["SCREEN"])
+            lookup.push(["EVENT","component"])
+            break;
 
         case "general-component-interaction":
-            lookup.push("SCREEN")
-            lookup.push("EVENT.component")
-            break; 
+            lookup.push(["SCREEN"])
+            lookup.push(["EVENT","component"])
+            break;
 
         case "error":
-            lookup.push("SCREEN")
-            lookup.push("EVENT.attributes")
-            break; 
-    
+            lookup.push(["SCREEN"])
+            lookup.push(["EVENT","attributes"])
+            break;
+
         case "app-response":
-            lookup.push("SCREEN")
+            lookup.push(["SCREEN"])
             break;
 
         default:
             console.log("Case statement fall through! This should not have been reached.")
-            
+
     }
     return lookup
 }
+
+function findTheseZodThings(findThese, everything) {
+    console.log(findThese)
+    if (findThese.length === 1) {
+        for (let k in everything) {
+            console.log(k)
+        }
+    } else if (findThese.length === 2) {
+        const k1 = findThese[0]
+        const k2 = findThese[1]
+
+        for (let k in everything) {
+            if (k === k1) {
+                console.log(k + "   and " + k1)
+                if ( k1 === k ) {
+                    console.log( k + "   " + k1 + "   " + everything[k1])
+
+
+                }
+
+            }
+        }
+    } else if (findThese.length === 3) {
+        const k1 = findThese[0]
+        const k2 = findThese[1]
+        const k3 = findThese[1]
+
+        for (let k in everything) {
+            if ( k1 === k ) {
+                console.log("OK")
+                console.log( everything[k1])
+                console.log("k2=" + k2 )
+            }
+        }
+    }
+}
+
 
 try {
     module.exports = {
@@ -240,7 +276,8 @@ try {
         colorize,
         getTypesFromZod,
         findZodTypesToFind,
-        getSchemaKeys
+        getSchemaKeys,
+        findTheseZodThings
     };
 } catch (thisIsJustForNode) {
     // ignore this error... 
