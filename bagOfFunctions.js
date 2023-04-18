@@ -1,43 +1,41 @@
-
-
 const grey = (thing) => {
-    let msg = thing
-    if ((typeof thing) === "object") {
-        msg = JSON.stringify(thing)
-    }
-    console.log("%c " + msg, "background:#e0e0e0")
-}
+  let msg = thing;
+  if (typeof thing === 'object') {
+    msg = JSON.stringify(thing);
+  }
+  console.log('%c ' + msg, 'background:#e0e0e0');
+};
 const tan = (thing) => {
-    let msg = thing
-    if ((typeof thing) === "object") {
-        msg = JSON.stringify(thing)
-    }
-    console.log("%c " + msg, "background:tan")
-}
+  let msg = thing;
+  if (typeof thing === 'object') {
+    msg = JSON.stringify(thing);
+  }
+  console.log('%c ' + msg, 'background:tan');
+};
 
 const green = (thing) => {
-    let msg = thing
-    if ((typeof thing) === "object") {
-        msg = JSON.stringify(thing, null, 2)
-    }
-    console.log("%c " + msg, "background:lightgreen")
-}
+  let msg = thing;
+  if (typeof thing === 'object') {
+    msg = JSON.stringify(thing, null, 2);
+  }
+  console.log('%c ' + msg, 'background:lightgreen');
+};
 const pink = (thing) => {
-    let msg = thing
-    if ((typeof thing) === "object") {
-        msg = JSON.stringify(thing, null, 2)
-    }
-    console.log("%c " + msg, "background:pink")
-}
+  let msg = thing;
+  if (typeof thing === 'object') {
+    msg = JSON.stringify(thing, null, 2);
+  }
+  console.log('%c ' + msg, 'background:pink');
+};
 
 const blue = (thing) => {
-    let msg = thing
-    if ((typeof thing) === "object") {
-        msg = JSON.stringify(thing, null, 2)
-    }
-    console.log("%c " + msg, "background:lightblue")
-}
-
+  let msg = thing;
+  if (typeof thing === 'object') {
+    msg = JSON.stringify(thing, null, 2);
+  }
+  console.log('%c ' + msg, 'background:lightblue');
+};
+/* 
 function doValidationModule() {
 
     const cvo = self.validationModule.categoricalValidatorObjects["schemaObjects"]
@@ -102,27 +100,9 @@ async function sendIt() {
 
 
 
-// function colorize(json) {
-//     const raw = JSON.stringify(json, null, 2)
-//     const rows = raw.split("\n");
-//     let output = ""
-//     rows.forEach((row, i) => {
-//         let css = "ignore"
-//         if (row.includes(" false")) {
-//             css = "optional"
-//         } else if (row.includes(" true")) {
-//             css = "mandatory"
-//         }
-//         css = "optional"
-//         output += `<div class='${css}'>${row}</div>`
-
-//     })
-//     return output
-// }
 
 
-
-/* Merge 'optionality' dimension in with the 'type' dimensions - the keys of these maps are identical */ 
+// Merge 'optionality' dimension in with the 'type' dimensions - the keys of these maps are identical 
 function colorize(jsonTypes, jsonOptions) {
     const raw = JSON.stringify(jsonTypes, null, 2)
     const rows = raw.split("\n");
@@ -132,7 +112,6 @@ function colorize(jsonTypes, jsonOptions) {
 
 
     let output = ""
-    // rows.forEach((row, i) => {
     for ( let i = 0 ; i < rows.length; i++ ) { 
         let row = rows[i]
         let row2 = rows2[i]
@@ -147,10 +126,6 @@ function colorize(jsonTypes, jsonOptions) {
             tan("rows2 |" + row2  )
         }
     }
-    // } catch(boom ) {
-    //     console.log( boom )
-    // }
-    //    css = "optional"
         output += `<div class='${css}'>${row}</div>`
 
     }
@@ -181,25 +156,6 @@ function flatten(objectToFlatten) {
     }
     return flattenObject(objectToFlatten)
 }
-// function getTypesFromZod(someJsonFromValidationModule) {
-//     let found = {}
-//     for (let k in someJsonFromValidationModule) {
-//         if (k !== "attributes") {
-//             const v = someJsonFromValidationModule[k]
-//             if ((typeof v) === "object") {
-//                 if (v.hasOwnProperty("zodValidationFn")) {
-//                     // It is a simple Zod thing. Likely a 'string' that has some logic on it
-//                     found[k] = v["zodValidType"]
-//                 } else {
-//                     found[k] = k // It is a zod thing! Good find it.
-//                 }
-//             } else {
-//                 found[k] = v
-//             }
-//         }
-//     }
-//     return found
-// }
 
 function getTypesFromZod(someJsonFromValidationModule) {
     let found = {}
@@ -434,18 +390,18 @@ function findTheseZodThings(eventName, everything) {
     }
     return found
 }
+*/
 
-
-try {
-    module.exports = {
-        flatten,
-        colorize,
-        getTypesFromZod,
-        findZodTypesToFind,
-        getSchemaKeys,
-        findTheseZodThings
-    };
-} catch (thisIsJustForNode) {
-    // ignore this error... 
-    // this is just for the TDD for node 
-}
+// try {
+//     module.exports = {
+//         flatten,
+//         colorize,
+//         getTypesFromZod,
+//         findZodTypesToFind,
+//         getSchemaKeys,
+//         findTheseZodThings
+//     };
+// } catch (thisIsJustForNode) {
+//     // ignore this error...
+//     // this is just for the TDD for node
+// }
