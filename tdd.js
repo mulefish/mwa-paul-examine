@@ -1,4 +1,4 @@
-const {colorize, getTypesFromZod, flatten} = require("./bagOfFunctions.js");
+const {colorize, getTypesFromZod, flatten, findZodTypesToFind} = require("./bagOfFunctions.js");
 function verdict(a, b, msg) {
   let isOk = "FAIL "
   if (JSON.stringify(a) === JSON.stringify(b)) {
@@ -123,15 +123,15 @@ function findZodTypesToFind_test() {
   }
 
   const expected = ["SCREEN","EVENT" ]
-  const actual = []
+  const actual = findZodTypesToFind(product_interaction)
   verdict(actual, expected, 'findZodTypesToFind_test')
 
 }
 
-colorize_test()
+// colorize_test()
 findTypesFromJson_test()
-flatten_test()
-findZodTypesToFind_test()
+// flatten_test()
+// findZodTypesToFind_test()
 
 
 

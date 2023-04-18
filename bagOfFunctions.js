@@ -163,11 +163,18 @@ function getTypesFromZod(someJsonFromValidationModule) {
     return found
 }
 
+function findZodTypesToFind(json) {
+    for ( let k in json ) {
+        console.log( k )
+    }
+}
+
 try {
     module.exports = {
         flatten,
         colorize,
-        getTypesFromZod
+        getTypesFromZod,
+        findZodTypesToFind
     };
 } catch (thisIsJustForNode) {
     // ignore this error... 
