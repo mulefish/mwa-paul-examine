@@ -1,72 +1,92 @@
-const everything = require('./everything.json');
+function verdict(a, b, msg) {
+  let isOk = "FAIL "
+  if (JSON.stringify(a) === JSON.stringify(b)) {
+    isOk = "PASS "
+  }
+  console.log(isOk + " " + msg)
+}
 
-function step1_flatten() {
-  function flattenObject(obj) {
-    const accumulator = {};
-    for (let key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        if ((typeof obj[key]) == 'object' && obj[key] != null) {
-          const flatObject = flattenObject(obj[key]);
-          for (let x in flatObject) {
-            if (flatObject.hasOwnProperty(x)) {
-              accumulator[key + '.' + x] = flatObject[x];
-            }
-          }
+function findTypesFromJson() {
+
+  const someJsonFromValidationModule = {
+    "urlRoute": "string",
+    "path": "string",
+    "type": "string",
+    "country": {
+      "zodValidType": "string",
+      "zodValidationFn": [
+        [
+          "regex",
+          {},
+          "Country code must match ISO 3166 specifcation"
+        ]
+      ]
+    },
+    "collections": "Array<string>",
+    "currency": "string",
+    "property": {
+      "zodValidType": "string",
+      "zodValidationFn": [
+        [
+          "regex",
+          {},
+          "There was error parsing this from UsrLocale and/or User Language Preference cookie"
+        ]
+      ]
+    },
+    "language": {
+      "zodValidType": "string",
+      "zodValidationFn": [
+        [
+          "regex",
+          {},
+          "Must match ISO 639 two letter for language and ISO 3166 for country ex: en_CA (Canadian English)"
+        ]
+      ]
+    },
+    "header": {
+      "zodValidType": "header",
+      "localized": "string",
+      "unified": "string"
+    },
+    "category": {
+      "hierarchy": "Array<hierarchy>",
+      "gender": "string"
+    },
+    "attributes": "Record<any>"
+  }
+
+  let found = {}
+  for (let k in someJsonFromValidationModule) {
+    if (k !== "attributes") {
+      const v = someJsonFromValidationModule[k]
+      if ((typeof v) === "object") {
+        if (v.hasOwnProperty("zodValidationFn")) {
+          // It is a simple Zod thing. Likely a 'string' that has some logic on it
+          found[k] = v["zodValidType"]
         } else {
-          accumulator[key] = obj[key];
+          found[k] = k // It is a zod thing! Good find it.
         }
+      } else {
+        found[k] = v
       }
     }
-    return accumulator;
   }
-  return flattenObject(everything)
+  let expected = ["path", "type", "category", "country", "collections", "currency", "header", "language", "property", "urlRoute"]
+  let actual = Object.keys(found)
+  expected = expected.sort()
+  actual = actual.sort()
+
+  verdict(actual, expected, 'someJsonFromValidationModule')
 }
 
 
 
-/////////// END FLATTENING ///////////
-const flat = step1_flatten()
-
-const findThese = [
-  "app-response",
-  "error",
-  "general-component-interaction",
-  "general-component-event",
-  "page-products-displayed",
-  "page-view",
-  "product-interaction",
-  "purchase"
-]
-
-///////////// 
-findThese.forEach((item, j)=> { 
-  const coo = "categoricalOptionalityObjects." + item
-    console.log(coo )
-    let i = 0 
-    for ( let k in flat ) {
-      if ( k.includes(coo)) {
-
-        if ( "payload.screen")
 
 
-        console.log( j + "    " +  ++i  + "    " + k )
+
+findTypesFromJson()
 
 
 
 
-      }
-    }
-  });
-
-
-
-console.log(" ... ")
-console.log( JSON.stringify( Object.keys(everything["PAYLOAD"]["screen"]), null, 2 ) ) 
-
-//console.log( JSON.stringify( Object.keys(everything['SCREEN']), null, 2 ) ) 
-
-
-console.log( " .............. ")
-let hello = everything["categoricalOptionalityObjects"]["app-response"]["default"] // .default.payload.screen.path
-
-console.log( hello ) 

@@ -38,6 +38,7 @@
 
     <table border'1'>
         <tr>
+            <td><button onClick='doFlatten()'>Flatten</button></td>
             <td><button onClick='doEvent("app-response")'>app-response</button></td>
             <td><button onClick='doEvent("error")'>error</button></td>
             <td><button onClick='doEvent("general-component-interaction")'>general-component-interaction</button></td>
@@ -46,6 +47,7 @@
             <td><button onClick='doEvent("page-view")'>page-view</button></td>
             <td><button onClick='doEvent("product-interaction")'>product-interaction</button></td>
             <td><button onClick='doEvent("purchase")'>purchase</button></td>
+            <td id="selectedEvent"></td>
         </tr>
     </table>
     <hr />
@@ -77,15 +79,16 @@
         let schemaObjects;
         let categoricalOptionalityObjects;
         function loadData() {
-            schemaObjects = self.validationModule.categoricalValidatorObjects["schemaObjects"]
+            schemaObjects =                 self.validationModule.categoricalValidatorObjects
             categoricalOptionalityObjects = self.validationModule.categoricalOptionalityObjects
             const listOfEvents = Object.keys(schemaObjects)
-            const everything = {
-                "validator": schemaObjects,
-                "category": categoricalOptionalityObjects
-            }
-            const x = flatten(everything)
-            document.getElementById("receiveInfo").innerHTML = JSON.stringify(x, null, 4)
+            // const x = flatten(self.validationModule)
+            // document.getElementById("receiveInfo").innerHTML = JSON.stringify(x, null, 4)
+
+            document.getElementById("receiveInfo").innerHTML = JSON.stringify(self.validationModule["SCREEN"], null, 4)
+
+
+
         }
         function doEvent(eventName) {
             if (schemaObjects === undefined) {
@@ -93,6 +96,7 @@
             }
             const str = categoricalOptionalityObjects[eventName]["default"]["payload"]
             document.getElementById("schema").innerHTML = colorize(str)
+            document.getElementById("selectedEvent").innerHTML = eventName
         }
 
         function colorize(json) {
@@ -111,6 +115,9 @@
             })
             return output
         }
+
+
+        
         function flatten(objectToFlatten) {
             // This will not be used in the logic of the page - but it will be helpful to put this page together
             function flattenObject(obj) {
@@ -134,6 +141,13 @@
             return flattenObject(objectToFlatten)
         }
 
+        function doFlatten() {
+            const obj = {
+                schemaObjects,
+                categoricalOptionalityObjects
+            }
+            document.getElementById("receiveInfo").innerHTML = JSON.stringify(flatten(obj), null, 4)
+        }
 
 
     </script>
