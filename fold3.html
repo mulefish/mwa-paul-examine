@@ -61,7 +61,7 @@
                 &nbsp;
             </td>
             <td>
-                <textarea id="receiveInfo"></textarea>
+                <textarea id="receiveInfo" spellcheck="false"></textarea>
             </td>
 
         </tr>
@@ -84,27 +84,33 @@
             // document.getElementById("receiveInfo").innerHTML = JSON.stringify(x, null, 4)
 
             document.getElementById("receiveInfo").innerHTML = JSON.stringify(self.validationModule["SCREEN"], null, 4)
-
-
-
         }
         function doEvent(eventName) {
             if (schemaObjects === undefined) {
                 loadData()
             }
-            const str = categoricalOptionalityObjects[eventName]["default"]["payload"]
-            document.getElementById("schema").innerHTML = colorize(str)
+            const obj = categoricalOptionalityObjects[eventName]["default"]["payload"]
+            // green(obj)
+            // pink( eventName + "   " + eventName.toUpperCase())
+            // const zod = getTypesFromZod(self.validationModule["SCREEN"])
+            // blue(zod )
+            const zod2 = getTypesFromZod(self.validationModule["EVENT"]["attributes"])
+            blue(zod2 )
+            const zod3 = getTypesFromZod(self.validationModule["EVENT"]["component"])
+            tan(zod3 )
+
+            document.getElementById("schema").innerHTML = colorize(obj)
             document.getElementById("selectedEvent").innerHTML = eventName
         }
 
         function doFlatten() {
-            const obj = {
-                schemaObjects,
-                categoricalOptionalityObjects
-            }
-            const everything = flatten(obj)
+            // const obj = {
+            //     schemaObjects,
+            //     categoricalOptionalityObjects
+            // }
+            // const everything = flatten(obj)
+            const everything = flatten(self.validationModule)
             document.getElementById("receiveInfo").innerHTML = JSON.stringify(everything, null, 2 )
-
         }
         init()
     </script>

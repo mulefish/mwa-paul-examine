@@ -7,7 +7,7 @@ function verdict(a, b, msg) {
   console.log(isOk + " " + msg)
 }
 
-function findTypesFromJson() {
+function findTypesFromJson_test() {
 
   const someJsonFromValidationModule = {
     "urlRoute": "string",
@@ -63,7 +63,7 @@ function findTypesFromJson() {
   expected = expected.sort()
   actual = actual.sort()
 
-  verdict(actual, expected, 'someJsonFromValidationModule')
+  verdict(actual, expected, 'findTypesFromJson_test')
 }
 
 function colorize_test() { 
@@ -96,9 +96,42 @@ function flatten_test() {
 
 }
 
+function findZodTypesToFind_test() { 
+
+  const product_interaction = {
+    "screen": {
+      "path": false,
+      "type": false,
+      "category": false,
+      "country": false,
+      "collections": false,
+      "currency": false,
+      "header": false,
+      "language": false,
+      "property": false,
+      "urlRoute": false
+    },
+    "event": {
+      "component": {
+        "id": false,
+        "type": false,
+        "text": false,
+        "placement": false
+      }
+    },
+    "collectionList": false
+  }
+
+  const expected = ["SCREEN","EVENT" ]
+  const actual = []
+  verdict(actual, expected, 'findZodTypesToFind_test')
+
+}
+
 colorize_test()
-findTypesFromJson()
+findTypesFromJson_test()
 flatten_test()
+findZodTypesToFind_test()
 
 
 
