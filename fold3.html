@@ -29,7 +29,7 @@
         src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
     <script
         src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
-    <script src="logic.js"></script>
+    <script src="bagOfFunctions.js"></script>
 </head>
 
 <body>
@@ -56,13 +56,9 @@
         <tr>
             <td valign="top">
                 <pre id="schema"></pre>
-                <!-- <textarea id="sendInfo"></textarea> -->
             </td>
             <td valign="top">
                 &nbsp;
-                <!-- <center>
-              <button onClick="sendIt()" id="sendBtn"> >>> </button>
-            </center> -->
             </td>
             <td>
                 <textarea id="receiveInfo"></textarea>
@@ -76,6 +72,8 @@
 
 
     <script>
+        MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
+        alert("ad")
         let schemaObjects;
         let categoricalOptionalityObjects;
         function loadData() {
@@ -97,48 +95,6 @@
             const str = categoricalOptionalityObjects[eventName]["default"]["payload"]
             document.getElementById("schema").innerHTML = colorize(str)
             document.getElementById("selectedEvent").innerHTML = eventName
-        }
-
-        function colorize(json) {
-            const raw = JSON.stringify(json, null, 2)
-            const rows = raw.split("\n");
-            let output = ""
-            rows.forEach((row, i) => {
-                let css = "ignore"
-                if (row.includes(" false")) {
-                    css = "optional"
-                } else if (row.includes(" true")) {
-                    css = "mandatory"
-                }
-                output += `<div class='${css}'>${row}</div>`
-
-            })
-            return output
-        }
-
-
-        
-        function flatten(objectToFlatten) {
-            // This will not be used in the logic of the page - but it will be helpful to put this page together
-            function flattenObject(obj) {
-                const accumulator = {};
-                for (let key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        if ((typeof obj[key]) == 'object' && obj[key] != null) {
-                            const flatObject = flattenObject(obj[key]);
-                            for (let x in flatObject) {
-                                if (flatObject.hasOwnProperty(x)) {
-                                    accumulator[key + '.' + x] = flatObject[x];
-                                }
-                            }
-                        } else {
-                            accumulator[key] = obj[key];
-                        }
-                    }
-                }
-                return accumulator;
-            }
-            return flattenObject(objectToFlatten)
         }
 
         function doFlatten() {

@@ -1,3 +1,4 @@
+const {colorize} = require("./bagOfFunctions.js");
 function verdict(a, b, msg) {
   let isOk = "FAIL "
   if (JSON.stringify(a) === JSON.stringify(b)) {
@@ -80,9 +81,19 @@ function findTypesFromJson() {
   verdict(actual, expected, 'someJsonFromValidationModule')
 }
 
+function colorize_test() { 
+  const m = {
+    "one":" false",
+    "two":" true",
+    "three":" ",
 
 
+  }
+  const obj = colorize(m)
+  console.log(obj)
+}
 
+colorize_test()
 
 
 findTypesFromJson()
