@@ -1,97 +1,130 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
+    <style>
+        .optional {
+            color: #ff6633;
+        }
+
+        .mandatory {
+            color: #0000ff;
+        }
+
+        #receiveInfo {
+            min-width: 1000px;
+            min-height: 1000px;
+        }
+    </style>
     <link rel="icon" href="data:;base64,=">
-    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="style.css"> -->
     <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
-    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
-    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
-    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
-    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
-    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
-    <script src="logic.js"></script>
-    <!-- <script src="
-https://cdn.jsdelivr.net/npm/zod-to-json-schema@3.20.4/index.min.js
-"></script> -->
-  </head>
-  <body>
-    <script>
-//      MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
-      async function doFetch() {
-        const theResult = await MwaAnalytics.trackEvent('product-interaction', {
-          event: {
-            attributes: {
-              action: 'view',
-              algorithm: 'personalized',
-            },
-          },
-          component: {
-            id: 'recommendation:recently-`viewed',
-            type: 'ProductCarousel',
-            text: 'Buy now',
-            position: 2,
-            totalCount: 3,
-          },
-          product: {
-            skuID: 'ca_123',
-            productID: 'prod789',
-            unifiedID: '',
-            name: 'cool 22" pants',
-            localizedName: '',
-            price: '68.99',
-            salePrice: '',
-            isSale: false,
-            categoryUnifiedID: '',
-          },
-          collection: {
-            type: 'recommendation',
-            id: 'recently-viewed',
-          },
-        });
-        console.log(
-          '%c ' +
-            JSON.stringify(
-              theResult['payload']['properties']['validationResult']['data'][
-                'payload'
-              ],
-              null,
-              2
-            ),
-          'background:lightgreen'
-        );
-      }
-    </script>
-    <!-- <button onClick="doFetch()">doFetch OLD </button>-->
-    
-    <button onClick="doFetchNEW('product-interaction')">product-interaction</button>
-    <button onClick="doFetchNEW('general-component-interaction')">general-component-interaction</button>
-    <button onClick="doFetchNEW('page-view')">page-view</button>
-    |
-    <button onClick="doValidationModule()">validationModule</button>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
+    <script src="bagOfFunctions.js"></script>
+</head>
 
+<body>
+    <!-- self.validationModule.categoricalOptionalityObjects 
+    <button onClick="doValidationModule()">validationModule</button>-->
 
+    <table border'1'>
+        <tr>
+            <td><button onClick='doFlatten()'>Flatten</button></td>
+            <td><button onClick='doEvent("app-response")'>app-response</button></td>
+            <td><button onClick='doEvent("error")'>error</button></td>
+            <td><button onClick='doEvent("general-component-interaction")'>general-component-interaction</button></td>
+            <td><button onClick='doEvent("general-component-event")'>general-component-event</button></td>
+            <td><button onClick='doEvent("page-products-displayed")'>page-products-displayed</button></td>
+            <td><button onClick='doEvent("page-view")'>page-view</button></td>
+            <td><button onClick='doEvent("product-interaction")'>product-interaction</button></td>
+            <td><button onClick='doEvent("purchase")'>purchase</button></td>
+            <td id="selectedEvent"></td>
+        </tr>
+    </table>
+    <hr />
 
-
-    
-    <span id="event_name"></span>
-    
-    <hr/>
     <table border="'1">
-      <tr>
-        <td>
-          <textarea id="sendInfo"></textarea>
-        </td>
-        <td valign="top" id="middleRow">
-          <center>
-            <button onClick="sendIt()" id="sendBtn"> >>> </button>
-          </center>
-        </td>
-        <td>
-          <textarea id="receiveInfo"></textarea>
-        </td>
+        <tr>
+            <td valign="top">
+                <pre id="schema"></pre>
+            </td>
+            <td valign="top">
+                &nbsp;
+            </td>
+            <td>
+                <textarea id="receiveInfo" spellcheck="false"></textarea>
+            </td>
 
-      </tr>
+        </tr>
     </table>
 
-  </body>
+
+    <script>
+        function init() { 
+            blue("MwaAnalytics.initializeAnalytics('TEST', {}, [], true);")
+            MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
+        }
+
+        let schemaObjects;
+        let categoricalOptionalityObjects;
+        function loadData() {
+            schemaObjects =                 self.validationModule.categoricalValidatorObjects
+            categoricalOptionalityObjects = self.validationModule.categoricalOptionalityObjects
+            const listOfEvents = Object.keys(schemaObjects)
+            // const x = flatten(self.validationModule)
+            // document.getElementById("receiveInfo").innerHTML = JSON.stringify(x, null, 4)
+
+            document.getElementById("receiveInfo").innerHTML = JSON.stringify(self.validationModule["SCREEN"], null, 4)
+        }
+        function doEvent(eventName) {
+            if (schemaObjects === undefined) {
+                loadData()
+            }
+            const obj2 = categoricalOptionalityObjects[eventName]["default"]["payload"]
+           // green(obj2)
+            // const zod = getTypesFromZod(self.validationModule[eventName.toUpperCase()])
+            // blue(zod)
+            // pink( eventName + "   " + eventName.toUpperCase())
+            // const zod = getTypesFromZod(self.validationModule["SCREEN"])
+            // blue(zod )
+            // const zod2 = getTypesFromZod(self.validationModule["EVENT"]["attributes"])
+            // blue(zod2 )
+            // const zod3 = getTypesFromZod(self.validationModule["EVENT"]["component"])
+            // tan(zod3 )
+
+            // document.getElementById("schema").innerHTML = colorize(obj)
+
+            const obj = findTheseZodThings( eventName, self.validationModule)
+            // const colorizedJson = colorize(obj)
+            const colorizedJson = colorize(obj, obj2)
+
+            document.getElementById("schema").innerHTML = colorizedJson
+
+            document.getElementById("selectedEvent").innerHTML = eventName
+        }
+
+        function doFlatten() {
+            // const obj = {
+            //     schemaObjects,
+            //     categoricalOptionalityObjects
+            // }
+            //const everything = flatten(obj)
+            const everything = flatten(self.validationModule)
+            // const self.validationModule
+            document.getElementById("receiveInfo").innerHTML = JSON.stringify(everything, null, 2 )
+        }
+        init()
+    </script>
+
+</body>
+
 </html>
