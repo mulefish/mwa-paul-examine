@@ -90,8 +90,7 @@
                 loadData()
             }
             const obj2 = categoricalOptionalityObjects[eventName]["default"]["payload"]
-            console.log(JSON.stringify( obj2, null, 2 ))
-            //green(obj)
+           // green(obj2)
             // const zod = getTypesFromZod(self.validationModule[eventName.toUpperCase()])
             // blue(zod)
             // pink( eventName + "   " + eventName.toUpperCase())
@@ -105,7 +104,8 @@
             // document.getElementById("schema").innerHTML = colorize(obj)
 
             const obj = findTheseZodThings( eventName, self.validationModule)
-            const colorizedJson = colorize(obj)
+            // const colorizedJson = colorize(obj)
+            const colorizedJson = colorize(obj, obj2)
 
             document.getElementById("schema").innerHTML = colorizedJson
 

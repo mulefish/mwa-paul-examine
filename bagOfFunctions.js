@@ -102,24 +102,61 @@ async function sendIt() {
 
 
 
-function colorize(json) {
-    const raw = JSON.stringify(json, null, 2)
+// function colorize(json) {
+//     const raw = JSON.stringify(json, null, 2)
+//     const rows = raw.split("\n");
+//     let output = ""
+//     rows.forEach((row, i) => {
+//         let css = "ignore"
+//         if (row.includes(" false")) {
+//             css = "optional"
+//         } else if (row.includes(" true")) {
+//             css = "mandatory"
+//         }
+//         css = "optional"
+//         output += `<div class='${css}'>${row}</div>`
+
+//     })
+//     return output
+// }
+
+
+
+/* Merge 'optionality' dimension in with the 'type' dimensions - the keys of these maps are identical */ 
+function colorize(jsonTypes, jsonOptions) {
+    const raw = JSON.stringify(jsonTypes, null, 2)
     const rows = raw.split("\n");
+
+    const raw2 = JSON.stringify(jsonOptions, null, 2)
+    const rows2 = raw2.split("\n");
+
+
     let output = ""
-    rows.forEach((row, i) => {
+    // rows.forEach((row, i) => {
+    for ( let i = 0 ; i < rows.length; i++ ) { 
+        let row = rows[i]
+        let row2 = rows2[i]
         let css = "ignore"
-        if (row.includes(" false")) {
+        // try {
+        if ( row2 !== undefined ) { 
+        if (row2.includes(" false")) {
             css = "optional"
-        } else if (row.includes(" true")) {
+            blue("rows2 |"+ row2)
+        } else if (row2.includes(" true")) {
             css = "mandatory"
+            tan("rows2 |" + row2  )
         }
-        css = "optional"
+    }
+    // } catch(boom ) {
+    //     console.log( boom )
+    // }
+    //    css = "optional"
         output += `<div class='${css}'>${row}</div>`
 
-    })
+    }
+    green(output)
     return output
 }
-
 
 
 function flatten(objectToFlatten) {
