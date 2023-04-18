@@ -3,28 +3,14 @@ const path = require('path');
 const app = express();
 const port = 4040
 
-
-app.get('/everything', function(req, res) {
-    console.log("everything")
-  res.sendFile(__dirname + '/everything.json');
-});
 app.get('/bagOfFunctions.js', function(req, res) {
   console.log("bagOfFunctions.js")
   res.sendFile(__dirname + '/bagOfFunctions.js');
 });
 
-app.get('/fold3', function(req, res) {
-  console.log("fold3")
-  res.sendFile(path.join(__dirname, '/fold3.html'));
-});
-
-app.get('/fold2', function(req, res) {
-  console.log("fold2")
-  res.sendFile(path.join(__dirname, '/fold2.html'));
-});
-app.get('/fold', function(req, res) {
-  console.log("fold")
-  res.sendFile(path.join(__dirname, '/fold.html'));
+app.get('/lookatme', function(req, res) {
+  console.log("lookatme")
+  res.sendFile(path.join(__dirname, '/lookatme.html'));
 });
 
 app.get('/', function(req, res) {
