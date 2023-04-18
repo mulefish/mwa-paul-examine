@@ -113,6 +113,7 @@ function colorize(json) {
         } else if (row.includes(" true")) {
             css = "mandatory"
         }
+        css = "optional"
         output += `<div class='${css}'>${row}</div>`
 
     })
@@ -233,40 +234,33 @@ function getSchemaKeys(categoricalEvent) {
     return lookup
 }
 
-function findTheseZodThings(findThese, everything) {
-    console.log(findThese)
-    if (findThese.length === 1) {
-        for (let k in everything) {
-            console.log(k)
-        }
-    } else if (findThese.length === 2) {
-        const k1 = findThese[0]
-        const k2 = findThese[1]
-
-        for (let k in everything) {
-            if (k === k1) {
-                console.log(k + "   and " + k1)
-                if ( k1 === k ) {
-                    console.log( k + "   " + k1 + "   " + everything[k1])
-
-
+function findTheseZodThings( eventName, everything) {
+    let found = {} 
+    if ( eventName === "purchase") {
+        found = {
+            "screen":{
+                "path":everything["SCREEN"]["path"],
+                "type":everything["SCREEN"]["type"],
+                "category": "TODO",
+                "country":everything["SCREEN"]["country"]["zodValidType"],
+                "collections":everything["SCREEN"]["collections"],
+                "currency":everything["SCREEN"]["currency"],
+                "header":"TODO",
+                "language":everything["SCREEN"]["language"]["zodValidType"],
+                "property":everything["SCREEN"]["property"]["zodValidType"],
+                "urlRoute":everything["SCREEN"]["urlRoute"]                
+              
+            },
+            "event":{
+                "attributes":{
+                    "orderId": everything["EVENT"]["attributes"]["orderId?"]
                 }
-
             }
         }
-    } else if (findThese.length === 3) {
-        const k1 = findThese[0]
-        const k2 = findThese[1]
-        const k3 = findThese[1]
 
-        for (let k in everything) {
-            if ( k1 === k ) {
-                console.log("OK")
-                console.log( everything[k1])
-                console.log("k2=" + k2 )
-            }
-        }
+        return found
     }
+
 }
 
 

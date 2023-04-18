@@ -1038,15 +1038,15 @@ function getSchemaKeys_test() {
   verdict(isOk , true, "getSchemaKeys_test")
 }
 
-function findZodTypes_forProduct_test() {
+function findZodTypes_forPurchase_test() {
   let findTheseAry = getSchemaKeys("purchase")
-  findTheseZodThings(findTheseAry, everything)
+  findTheseZodThings( "purchase", everything)
 
 }
 
 
-// colorize_test()
-// flatten_test()
-// getSchemaKeys_test()
-// findTypesFromJson_test()
-findZodTypes_forProduct_test()
+colorize_test()
+flatten_test()
+getSchemaKeys_test()
+findTypesFromJson_test()
+findZodTypes_forPurchase_test()

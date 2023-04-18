@@ -89,9 +89,9 @@
             if (schemaObjects === undefined) {
                 loadData()
             }
-            const obj = categoricalOptionalityObjects[eventName]["default"]["payload"]
-
-            green(obj)
+            const obj2 = categoricalOptionalityObjects[eventName]["default"]["payload"]
+            console.log(JSON.stringify( obj2, null, 2 ))
+            //green(obj)
             // const zod = getTypesFromZod(self.validationModule[eventName.toUpperCase()])
             // blue(zod)
             // pink( eventName + "   " + eventName.toUpperCase())
@@ -102,7 +102,13 @@
             // const zod3 = getTypesFromZod(self.validationModule["EVENT"]["component"])
             // tan(zod3 )
 
-            document.getElementById("schema").innerHTML = colorize(obj)
+            // document.getElementById("schema").innerHTML = colorize(obj)
+
+            const obj = findTheseZodThings( eventName, self.validationModule)
+            const colorizedJson = colorize(obj)
+
+            document.getElementById("schema").innerHTML = colorizedJson
+
             document.getElementById("selectedEvent").innerHTML = eventName
         }
 
@@ -111,9 +117,10 @@
             //     schemaObjects,
             //     categoricalOptionalityObjects
             // }
-            // const everything = flatten(obj)
+            //const everything = flatten(obj)
             const everything = flatten(self.validationModule)
-            document.getElementById("receiveInfo").innerHTML = JSON.stringify(self.validationModule, null, 2 )
+            // const self.validationModule
+            document.getElementById("receiveInfo").innerHTML = JSON.stringify(everything, null, 2 )
         }
         init()
     </script>
