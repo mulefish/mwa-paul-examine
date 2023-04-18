@@ -146,7 +146,9 @@
                 schemaObjects,
                 categoricalOptionalityObjects
             }
-            document.getElementById("receiveInfo").innerHTML = JSON.stringify(flatten(obj), null, 4)
+            const everything = flatten(obj)
+            document.getElementById("receiveInfo").innerHTML = JSON.stringify(everything, null, 2 )
+
         }
 
 

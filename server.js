@@ -8,6 +8,11 @@ app.get('/everything', function(req, res) {
     console.log("everything")
   res.sendFile(__dirname + '/everything.json');
 });
+app.get('/bagOfFunctions.js', function(req, res) {
+  console.log("bagOfFunctions.js")
+  res.sendFile(__dirname + '/bagOfFunctions.js');
+});
+
 app.get('/fold3', function(req, res) {
   console.log("fold3")
   res.sendFile(path.join(__dirname, '/fold3.html'));
