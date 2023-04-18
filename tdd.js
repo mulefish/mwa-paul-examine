@@ -1,4 +1,4 @@
-const {colorize} = require("./bagOfFunctions.js");
+const {colorize, getTypesFromZod} = require("./bagOfFunctions.js");
 function verdict(a, b, msg) {
   let isOk = "FAIL "
   if (JSON.stringify(a) === JSON.stringify(b)) {
@@ -57,22 +57,7 @@ function findTypesFromJson() {
     "attributes": "Record<any>"
   }
 
-  let found = {}
-  for (let k in someJsonFromValidationModule) {
-    if (k !== "attributes") {
-      const v = someJsonFromValidationModule[k]
-      if ((typeof v) === "object") {
-        if (v.hasOwnProperty("zodValidationFn")) {
-          // It is a simple Zod thing. Likely a 'string' that has some logic on it
-          found[k] = v["zodValidType"]
-        } else {
-          found[k] = k // It is a zod thing! Good find it.
-        }
-      } else {
-        found[k] = v
-      }
-    }
-  }
+  const found = getTypesFromZod(someJsonFromValidationModule)
   let expected = ["path", "type", "category", "country", "collections", "currency", "header", "language", "property", "urlRoute"]
   let actual = Object.keys(found)
   expected = expected.sort()
@@ -82,20 +67,20 @@ function findTypesFromJson() {
 }
 
 function colorize_test() { 
-  const m = {
+  const obj = {
     "one":" false",
     "two":" true",
     "three":" ",
-
-
   }
-  const obj = colorize(m)
-  console.log(obj)
+  const actual = colorize(obj)
+  const expected = `<div class='ignore'>{</div><div class='optional'>  "one": " false",</div><div class='mandatory'>  "two": " true",</div><div class='ignore'>  "three": " "</div><div class='ignore'>}</div>`
+
+  verdict(actual, expected, 'colorize_test')
 }
 
+
+
 colorize_test()
-
-
 findTypesFromJson()
 
 

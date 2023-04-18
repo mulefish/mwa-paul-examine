@@ -72,8 +72,12 @@
 
 
     <script>
-        MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
-        alert("ad")
+        function init() { 
+            blue("MwaAnalytics.initializeAnalytics('TEST', {}, [], true);")
+            MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
+
+        }
+
         let schemaObjects;
         let categoricalOptionalityObjects;
         function loadData() {
@@ -106,8 +110,7 @@
             document.getElementById("receiveInfo").innerHTML = JSON.stringify(everything, null, 2 )
 
         }
-
-
+        init()
     </script>
 
 </body>
