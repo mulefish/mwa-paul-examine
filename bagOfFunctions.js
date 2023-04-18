@@ -143,6 +143,27 @@ function flatten(objectToFlatten) {
     }
     return flattenObject(objectToFlatten)
 }
+// function getTypesFromZod(someJsonFromValidationModule) {
+//     let found = {}
+//     for (let k in someJsonFromValidationModule) {
+//         if (k !== "attributes") {
+//             const v = someJsonFromValidationModule[k]
+//             if ((typeof v) === "object") {
+//                 if (v.hasOwnProperty("zodValidationFn")) {
+//                     // It is a simple Zod thing. Likely a 'string' that has some logic on it
+//                     found[k] = v["zodValidType"]
+//                 } else {
+//                     found[k] = k // It is a zod thing! Good find it.
+//                 }
+//             } else {
+//                 found[k] = v
+//             }
+//         }
+//     }
+//     return found
+// }
+
+
 function getTypesFromZod(someJsonFromValidationModule) {
     let found = {}
     for (let k in someJsonFromValidationModule) {
@@ -163,10 +184,26 @@ function getTypesFromZod(someJsonFromValidationModule) {
     return found
 }
 
-function findZodTypesToFind(json) {
-    for ( let k in json ) {
-        console.log( k )
+
+function findZodTypesToFind(complexJson) {
+    const flatMap = flatten(complexJson)
+
+}
+
+function getSchemaKeys(categoricalEvent) {
+    const lookup = []
+    switch(categoricalEvent) {
+        case "purchase":
+            lookup.push("SCREEN")
+            lookup.push("EVENT.attributes")
+            break; 
+        case "product-interaction":
+            lookup.push("SCREEN")
+            lookup.push("EVENT.component")
+            break; 
+    
     }
+    return lookup
 }
 
 try {
@@ -174,7 +211,8 @@ try {
         flatten,
         colorize,
         getTypesFromZod,
-        findZodTypesToFind
+        findZodTypesToFind,
+        getSchemaKeys
     };
 } catch (thisIsJustForNode) {
     // ignore this error... 

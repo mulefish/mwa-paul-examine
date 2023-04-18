@@ -90,14 +90,17 @@
                 loadData()
             }
             const obj = categoricalOptionalityObjects[eventName]["default"]["payload"]
-            // green(obj)
+
+            green(obj)
+            // const zod = getTypesFromZod(self.validationModule[eventName.toUpperCase()])
+            // blue(zod)
             // pink( eventName + "   " + eventName.toUpperCase())
             // const zod = getTypesFromZod(self.validationModule["SCREEN"])
             // blue(zod )
-            const zod2 = getTypesFromZod(self.validationModule["EVENT"]["attributes"])
-            blue(zod2 )
-            const zod3 = getTypesFromZod(self.validationModule["EVENT"]["component"])
-            tan(zod3 )
+            // const zod2 = getTypesFromZod(self.validationModule["EVENT"]["attributes"])
+            // blue(zod2 )
+            // const zod3 = getTypesFromZod(self.validationModule["EVENT"]["component"])
+            // tan(zod3 )
 
             document.getElementById("schema").innerHTML = colorize(obj)
             document.getElementById("selectedEvent").innerHTML = eventName

@@ -1,4 +1,4 @@
-const {colorize, getTypesFromZod, flatten, findZodTypesToFind} = require("./bagOfFunctions.js");
+const { colorize, getTypesFromZod, flatten, findZodTypesToFind, getSchemaKeys } = require("./bagOfFunctions.js");
 function verdict(a, b, msg) {
   let isOk = "FAIL "
   if (JSON.stringify(a) === JSON.stringify(b)) {
@@ -66,11 +66,11 @@ function findTypesFromJson_test() {
   verdict(actual, expected, 'findTypesFromJson_test')
 }
 
-function colorize_test() { 
+function colorize_test() {
   const obj = {
-    "one":" false",
-    "two":" true",
-    "three":" ",
+    "one": " false",
+    "two": " true",
+    "three": " ",
   }
   const actual = colorize(obj)
   const expected = `<div class='ignore'>{</div><div class='optional'>  "one": " false",</div><div class='mandatory'>  "two": " true",</div><div class='ignore'>  "three": " "</div><div class='ignore'>}</div>`
@@ -78,25 +78,25 @@ function colorize_test() {
   verdict(actual, expected, 'colorize_test')
 }
 
-function flatten_test() { 
+function flatten_test() {
   const obj = {
-    "dog":"Eeboo",
-    "cities":{
-      "Portland":"a",
-      "Tokyo":"b"
+    "dog": "Eeboo",
+    "cities": {
+      "Portland": "a",
+      "Tokyo": "b"
     }
   }
   const actual = flatten(obj)
   const expected = {
-    "dog":"Eeboo",
-    "cities.Portland":"a",
-    "cities.Tokyo":"b",
+    "dog": "Eeboo",
+    "cities.Portland": "a",
+    "cities.Tokyo": "b",
   }
   verdict(actual, expected, 'flatten_test')
 
 }
 
-function findZodTypesToFind_test() { 
+function findZodTypesToFind_test() {
 
   const product_interaction = {
     "screen": {
@@ -122,16 +122,34 @@ function findZodTypesToFind_test() {
     "collectionList": false
   }
 
-  const expected = ["SCREEN","EVENT" ]
+  const expected = ["SCREEN", "EVENT"]
   const actual = findZodTypesToFind(product_interaction)
   verdict(actual, expected, 'findZodTypesToFind_test')
 
 }
+function eq(a,b) {
+  return JSON.stringify(a) === JSON.stringify(b)
+}
+function getSchemaKeys_test() {
+  let isOk = true 
+  let expected = ["SCREEN", "EVENT.attributes"]
+  let actual = getSchemaKeys("purchase")
+  if ( eq(expected, actual) === false ) { isOk = false  } 
+
+  expected = ["SCREEN", "EVENT.component"]
+  actual = getSchemaKeys("product-interaction")
+  if ( eq(expected, actual) === false ) { isOk = false  } 
+
+console.log(actual) 
+  
+
+  verdict(isOk , true, "getSchemaKeys_test")
+}
 
 // colorize_test()
-findTypesFromJson_test()
+// findTypesFromJson_test()
 // flatten_test()
 // findZodTypesToFind_test()
-
+getSchemaKeys_test()
 
 
