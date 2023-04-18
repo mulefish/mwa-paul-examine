@@ -201,7 +201,35 @@ function getSchemaKeys(categoricalEvent) {
             lookup.push("SCREEN")
             lookup.push("EVENT.component")
             break; 
+        case "page-view":
+            lookup.push("SCREEN")
+            break;
+        case "page-products-displayed":
+            lookup.push("SCREEN")
+            break;
+
+        case "general-component-event":
+            lookup.push("SCREEN")
+            lookup.push("EVENT.component")
+            break; 
+
+        case "general-component-interaction":
+            lookup.push("SCREEN")
+            lookup.push("EVENT.component")
+            break; 
+
+        case "error":
+            lookup.push("SCREEN")
+            lookup.push("EVENT.attributes")
+            break; 
     
+        case "app-response":
+            lookup.push("SCREEN")
+            break;
+
+        default:
+            console.log("Case statement fall through! This should not have been reached.")
+            
     }
     return lookup
 }

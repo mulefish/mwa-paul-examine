@@ -96,37 +96,6 @@ function flatten_test() {
 
 }
 
-function findZodTypesToFind_test() {
-
-  const product_interaction = {
-    "screen": {
-      "path": false,
-      "type": false,
-      "category": false,
-      "country": false,
-      "collections": false,
-      "currency": false,
-      "header": false,
-      "language": false,
-      "property": false,
-      "urlRoute": false
-    },
-    "event": {
-      "component": {
-        "id": false,
-        "type": false,
-        "text": false,
-        "placement": false
-      }
-    },
-    "collectionList": false
-  }
-
-  const expected = ["SCREEN", "EVENT"]
-  const actual = findZodTypesToFind(product_interaction)
-  verdict(actual, expected, 'findZodTypesToFind_test')
-
-}
 function eq(a,b) {
   return JSON.stringify(a) === JSON.stringify(b)
 }
@@ -140,16 +109,34 @@ function getSchemaKeys_test() {
   actual = getSchemaKeys("product-interaction")
   if ( eq(expected, actual) === false ) { isOk = false  } 
 
-console.log(actual) 
-  
+  expected = ["SCREEN"]
+  actual = getSchemaKeys("page-view")
+  // if ( eq(expected, actual) === false ) { isOk = false  } 
+  expected = ["SCREEN"]
+  actual = getSchemaKeys("page-products-displayed")
+  if ( eq(expected, actual) === false ) { isOk = false  } 
+
+  expected = ["SCREEN", "EVENT.component"]
+  actual = getSchemaKeys("general-component-event")
+  if ( eq(expected, actual) === false ) { isOk = false  } 
+
+  expected = ["SCREEN", "EVENT.component"]
+  actual = getSchemaKeys("general-component-interaction")
+  if ( eq(expected, actual) === false ) { isOk = false  } 
+
+  expected = ["SCREEN", "EVENT.attributes"]
+  actual = getSchemaKeys("error")
+  if ( eq(expected, actual) === false ) { isOk = false  } 
+
+  expected = ["SCREEN"]
+  actual = getSchemaKeys("app-response")
+  if ( eq(expected, actual) === false ) { isOk = false  } 
 
   verdict(isOk , true, "getSchemaKeys_test")
 }
 
-// colorize_test()
-// findTypesFromJson_test()
-// flatten_test()
-// findZodTypesToFind_test()
+colorize_test()
+flatten_test()
 getSchemaKeys_test()
-
+findTypesFromJson_test()
 
