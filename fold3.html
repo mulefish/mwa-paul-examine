@@ -3,16 +3,21 @@
 
 <head>
     <style>
-pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
-.string { color: green; }
-.number { color: darkorange; }
-.boolean { color: blue; }
-.null { color: magenta; }
-.key { color: red; }
+        .optional {
+            color: #ff6633;
+        }
 
+        .mandatory {
+            color: #0000ff;
+        }
+
+        #receiveInfo {
+            min-width: 1000px;
+            min-height: 1000px;
+        }
     </style>
     <link rel="icon" href="data:;base64,=">
-    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="style.css"> -->
     <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
     <script
         src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
@@ -25,100 +30,112 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
     <script
         src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
     <script src="logic.js"></script>
-    <!-- <script src="
-https://cdn.jsdelivr.net/npm/zod-to-json-schema@3.20.4/index.min.js
-"></script> -->
 </head>
 
 <body>
     <!-- self.validationModule.categoricalOptionalityObjects 
     <button onClick="doValidationModule()">validationModule</button>-->
 
-    <table border'1'><tr><td><button onClick='doEvent("app-response")'>app-response</button></td><td><button onClick='doEvent("error")'>error</button></td><td><button onClick='doEvent("general-component-interaction")'>general-component-interaction</button></td><td><button onClick='doEvent("general-component-event")'>general-component-event</button></td><td><button onClick='doEvent("page-products-displayed")'>page-products-displayed</button></td><td><button onClick='doEvent("page-view")'>page-view</button></td><td><button onClick='doEvent("product-interaction")'>product-interaction</button></td><td><button onClick='doEvent("purchase")'>purchase</button></td></tr></table>
-    <hr/>
-    <pre id="schema"></pre>
+    <table border'1'>
+        <tr>
+            <td><button onClick='doEvent("app-response")'>app-response</button></td>
+            <td><button onClick='doEvent("error")'>error</button></td>
+            <td><button onClick='doEvent("general-component-interaction")'>general-component-interaction</button></td>
+            <td><button onClick='doEvent("general-component-event")'>general-component-event</button></td>
+            <td><button onClick='doEvent("page-products-displayed")'>page-products-displayed</button></td>
+            <td><button onClick='doEvent("page-view")'>page-view</button></td>
+            <td><button onClick='doEvent("product-interaction")'>product-interaction</button></td>
+            <td><button onClick='doEvent("purchase")'>purchase</button></td>
+        </tr>
+    </table>
+    <hr />
+
+    <table border="'1">
+        <tr>
+            <td valign="top">
+                <pre id="schema"></pre>
+                <!-- <textarea id="sendInfo"></textarea> -->
+            </td>
+            <td valign="top">
+                &nbsp;
+                <!-- <center>
+              <button onClick="sendIt()" id="sendBtn"> >>> </button>
+            </center> -->
+            </td>
+            <td>
+                <textarea id="receiveInfo"></textarea>
+            </td>
+
+        </tr>
+    </table>
+
+
+
 
 
     <script>
-        // let loadAttemptCount = 0;
         let schemaObjects;
         let categoricalOptionalityObjects;
-        // function isItLoadedYet() {
-        //     if (schemaObjects !== "undefined") {
-        //         clearInterval(interval);
-        //         loadData_addButtons();
-        //     } else {
-        //         console.log(++loadAttemptCount + " schemaObjects" + schemaObjects)
-        //     }
-        // }
-        // const interval = setInterval(isItLoadedYet, 100);
         function loadData() {
-
-                    schemaObjects = self.validationModule.categoricalValidatorObjects["schemaObjects"]
-                    categoricalOptionalityObjects = self.validationModule.categoricalOptionalityObjects
-                         
-
-                    const listOfEvents = Object.keys(schemaObjects)
-                    console.log(listOfEvents)
-                    // let table = "<table border'1'><tr>"
-                    // listOfEvents.forEach((eventName) => {
-                    //     const btn = `<button onClick='doEvent("${eventName}")'>${eventName}</button>`
-                    //     table += "<td>" + btn + "</td>"
-                    // })
-                    
-                    // table += "</tr></table>"
-                    // console.log(table)
-                    // document.getElementById("buttons").innerHTML = table
-
-
+            schemaObjects = self.validationModule.categoricalValidatorObjects["schemaObjects"]
+            categoricalOptionalityObjects = self.validationModule.categoricalOptionalityObjects
+            const listOfEvents = Object.keys(schemaObjects)
+            const everything = {
+                "validator": schemaObjects,
+                "category": categoricalOptionalityObjects
+            }
+            const x = flatten(everything)
+            document.getElementById("receiveInfo").innerHTML = JSON.stringify(x, null, 4)
         }
-        // function doValidationModule() {
-        //     const _listOfEvents = Object.keys(schemaObjects)
-        //     const listOfEvents = _listOfEvents.map(function (x) { return x.toUpperCase(); })
-        //     const listOfvalidationModule = Object.keys(self.validationModule)
-        //     console.log(_listOfEvents)
-        // }
-
         function doEvent(eventName) {
-            if ( schemaObjects === undefined ) {
+            if (schemaObjects === undefined) {
                 loadData()
             }
-            console.log(eventName)
-console.log(             categoricalOptionalityObjects[eventName]["default"]["payload"] ) 
+            const str = categoricalOptionalityObjects[eventName]["default"]["payload"]
+            document.getElementById("schema").innerHTML = colorize(str)
         }
 
+        function colorize(json) {
+            const raw = JSON.stringify(json, null, 2)
+            const rows = raw.split("\n");
+            let output = ""
+            rows.forEach((row, i) => {
+                let css = "ignore"
+                if (row.includes(" false")) {
+                    css = "optional"
+                } else if (row.includes(" true")) {
+                    css = "mandatory"
+                }
+                output += `<div class='${css}'>${row}</div>`
 
-
-        function output(inp) {
-    document.body.appendChild(document.createElement('pre')).innerHTML = inp;
-}
-
-function syntaxHighlight(json) {
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
+            })
+            return output
+        }
+        function flatten(objectToFlatten) {
+            // This will not be used in the logic of the page - but it will be helpful to put this page together
+            function flattenObject(obj) {
+                const accumulator = {};
+                for (let key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        if ((typeof obj[key]) == 'object' && obj[key] != null) {
+                            const flatObject = flattenObject(obj[key]);
+                            for (let x in flatObject) {
+                                if (flatObject.hasOwnProperty(x)) {
+                                    accumulator[key + '.' + x] = flatObject[x];
+                                }
+                            }
+                        } else {
+                            accumulator[key] = obj[key];
+                        }
+                    }
+                }
+                return accumulator;
             }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
+            return flattenObject(objectToFlatten)
         }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
-}
 
-var obj = {a:1, 'b':'foo', c:[false,'false',null, 'null', {d:{e:1.3e5,f:'1.3e5'}}]};
-var str = JSON.stringify(obj, undefined, 4);
 
-console.log(str )
-document.getElementById("schema").innerHTML = syntaxHighlight(str)
-// output(str);
-// output(syntaxHighlight(str));
+
     </script>
 
 </body>
