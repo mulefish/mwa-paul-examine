@@ -272,46 +272,70 @@ function getSchemaKeys(categoricalEvent) {
 }
 
 function findTheseZodThings(eventName, everything) {
+    function getScreen() { 
+        return {
+            "path": everything["SCREEN"]["path"],
+            "type": everything["SCREEN"]["type"],
+            "category": "TODO",
+            "country": everything["SCREEN"]["country"]["zodValidType"],
+            "collections": everything["SCREEN"]["collections"],
+            "currency": everything["SCREEN"]["currency"],
+            "header.localized": everything["HEADER"]["localized"],
+            "header.unified": everything["HEADER"]["unified"],
+            "language": everything["SCREEN"]["language"]["zodValidType"],
+            "property": everything["SCREEN"]["property"]["zodValidType"],
+            "urlRoute": everything["SCREEN"]["urlRoute"]
+        }
+    }
     let found = {}
     if (eventName === "purchase") {
+        // found = {
+        //     "screen": {
+        //         "path": everything["SCREEN"]["path"],
+        //         "type": everything["SCREEN"]["type"],
+        //         "category": "TODO",
+        //         "country": everything["SCREEN"]["country"]["zodValidType"],
+        //         "collections": everything["SCREEN"]["collections"],
+        //         "currency": everything["SCREEN"]["currency"],
+        //         "header.localized": everything["HEADER"]["localized"],
+        //         "header.unified": everything["HEADER"]["unified"],
+        //         "language": everything["SCREEN"]["language"]["zodValidType"],
+        //         "property": everything["SCREEN"]["property"]["zodValidType"],
+        //         "urlRoute": everything["SCREEN"]["urlRoute"]
+        //     },
+        //     "event": {
+        //         "attributes": {
+        //             "orderId": everything["EVENT"]["attributes"]["orderId?"]
+        //         }
+        //     }
+        // }
         found = {
-            "screen": {
-                "path": everything["SCREEN"]["path"],
-                "type": everything["SCREEN"]["type"],
-                "category": "TODO",
-                "country": everything["SCREEN"]["country"]["zodValidType"],
-                "collections": everything["SCREEN"]["collections"],
-                "currency": everything["SCREEN"]["currency"],
-                "header": "TODO",
-                "language": everything["SCREEN"]["language"]["zodValidType"],
-                "property": everything["SCREEN"]["property"]["zodValidType"],
-                "urlRoute": everything["SCREEN"]["urlRoute"]
-
-            },
+            "screen":getScreen(), 
             "event": {
                 "attributes": {
                     "orderId": everything["EVENT"]["attributes"]["orderId?"]
                 }
             }
-        }
 
+        }
 
     } else if (eventName === "product-interaction") {
 
         found = {
-            "screen": {
+            // "screen": {
 
-                "path": everything["SCREEN"]["path"],
-                "type": everything["SCREEN"]["type"],
-                "category": "TODO",
-                "country": everything["SCREEN"]["country"]["zodValidType"],
-                "collections": everything["SCREEN"]["collections"],
-                "currency": everything["SCREEN"]["currency"],
-                "header": "TODO",
-                "language": everything["SCREEN"]["language"]["zodValidType"],
-                "property": everything["SCREEN"]["property"]["zodValidType"],
-                "urlRoute": everything["SCREEN"]["urlRoute"]
-            },
+            //     "path": everything["SCREEN"]["path"],
+            //     "type": everything["SCREEN"]["type"],
+            //     "category": "TODO",
+            //     "country": everything["SCREEN"]["country"]["zodValidType"],
+            //     "collections": everything["SCREEN"]["collections"],
+            //     "currency": everything["SCREEN"]["currency"],
+            //     "header": "TODO",
+            //     "language": everything["SCREEN"]["language"]["zodValidType"],
+            //     "property": everything["SCREEN"]["property"]["zodValidType"],
+            //     "urlRoute": everything["SCREEN"]["urlRoute"]
+            // },
+            "screen": getScreen(), 
             "event": {
                 "component": {
                     "id": everything["EVENT"]["component"]["id"],
@@ -325,6 +349,7 @@ function findTheseZodThings(eventName, everything) {
 
     } else if (eventName === "page-view") {
         found = {
+            /* 
             "screen": {
                 "path": everything["SCREEN"]["path"],
                 "type": everything["SCREEN"]["type"],
@@ -336,11 +361,13 @@ function findTheseZodThings(eventName, everything) {
                 "language": everything["SCREEN"]["language"]["zodValidType"],
                 "property": everything["SCREEN"]["property"]["zodValidType"],
                 "urlRoute": everything["SCREEN"]["urlRoute"]
-            },
+            },*/
+            screen: getScreen()
+
         }
     } else if (eventName === "page-products-displayed") {
         found = {
-            "screen": {
+            /*"screen": {
                 "path": everything["SCREEN"]["path"],
                 "type": everything["SCREEN"]["type"],
                 "category": "TODO",
@@ -351,13 +378,14 @@ function findTheseZodThings(eventName, everything) {
                 "language": everything["SCREEN"]["language"]["zodValidType"],
                 "property": everything["SCREEN"]["property"]["zodValidType"],
                 "urlRoute": everything["SCREEN"]["urlRoute"]
-            },
+            }, */ 
+            "screen": getScreen(), 
             "collectionList": "TODO"
         }
     } else if ( eventName === "general-component-event") { 
 
         found = {
-            "screen": {
+            /*"screen": {
                 "path": everything["SCREEN"]["path"],
                 "type": everything["SCREEN"]["type"],
                 "category": "TODO",
@@ -368,7 +396,8 @@ function findTheseZodThings(eventName, everything) {
                 "language": everything["SCREEN"]["language"]["zodValidType"],
                 "property": everything["SCREEN"]["property"]["zodValidType"],
                 "urlRoute": everything["SCREEN"]["urlRoute"]
-            },
+            },*/ 
+            "screen": getScreen(), 
             "event": {
                 "component": {
                     "id": everything["EVENT"]["component"]["id"],
@@ -380,7 +409,7 @@ function findTheseZodThings(eventName, everything) {
         }
     } else if ( eventName === "general-component-interaction") { 
         found = {
-            "screen": {
+            /*"screen": {
                 "path": everything["SCREEN"]["path"],
                 "type": everything["SCREEN"]["type"],
                 "category": "TODO",
@@ -391,7 +420,8 @@ function findTheseZodThings(eventName, everything) {
                 "language": everything["SCREEN"]["language"]["zodValidType"],
                 "property": everything["SCREEN"]["property"]["zodValidType"],
                 "urlRoute": everything["SCREEN"]["urlRoute"]
-            },
+            },*/
+            "screen": getScreen(), 
             "event": {
                 "component": {
                     "id": everything["EVENT"]["component"]["id"],
@@ -417,7 +447,8 @@ function findTheseZodThings(eventName, everything) {
     } else if ( eventName === "app-response") {
         found = {
             "screen": {
-                "screen": {
+
+                /*"screen": {
                     "path": everything["SCREEN"]["path"],
                     "type": everything["SCREEN"]["type"],
                     "category": "TODO",
@@ -428,10 +459,10 @@ function findTheseZodThings(eventName, everything) {
                     "language": everything["SCREEN"]["language"]["zodValidType"],
                     "property": everything["SCREEN"]["property"]["zodValidType"],
                     "urlRoute": everything["SCREEN"]["urlRoute"]
-                },   
+                },*/   
             }
         }
-    }
+    } 
     return found
 }
 
