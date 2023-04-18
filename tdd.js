@@ -1,4 +1,4 @@
-const {colorize, getTypesFromZod} = require("./bagOfFunctions.js");
+const {colorize, getTypesFromZod, flatten} = require("./bagOfFunctions.js");
 function verdict(a, b, msg) {
   let isOk = "FAIL "
   if (JSON.stringify(a) === JSON.stringify(b)) {
@@ -78,11 +78,27 @@ function colorize_test() {
   verdict(actual, expected, 'colorize_test')
 }
 
+function flatten_test() { 
+  const obj = {
+    "dog":"Eeboo",
+    "cities":{
+      "Portland":"a",
+      "Tokyo":"b"
+    }
+  }
+  const actual = flatten(obj)
+  const expected = {
+    "dog":"Eeboo",
+    "cities.Portland":"a",
+    "cities.Tokyo":"b",
+  }
+  verdict(actual, expected, 'flatten_test')
 
+}
 
 colorize_test()
 findTypesFromJson()
-
+flatten_test()
 
 
 
