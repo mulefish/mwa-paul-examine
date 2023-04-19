@@ -23,83 +23,96 @@ function flatten(objectToFlatten) {
     return flattenObject(objectToFlatten)
 }
 let headwaters = []
-function init() { 
-    for ( let k in everything ) {
+function init() {
+    for (let k in everything) {
         headwaters.push(k)
     }
 }
 
-function printJSON(obj, indent = 0) {
-    // Iterate over each key-value pair in the object
-    for (const [key, value] of Object.entries(obj)) {
-        // Print the key with proper indentation
-        console.log(`OBJ${'_'.repeat(indent)}${key}:`);
-
-        // If the value is an object, recursively call the function
-        if (typeof value === 'object' && !Array.isArray(value)) {
-            printJSON(value, indent + 2);
-        }
-        else if (Array.isArray(value)) {
-            for (const element of value) {
-                // If the element is an object, recursively call the function
-                if (typeof element === 'object') {
-                    printJSON(element, indent + 2);
-                }
-                // Otherwise, print the element with proper indentation
-                else {
-                    console.log(`HELLO${' '.repeat(indent + 2)}${element}`);
-                }
-            }
-        }
-        else {
-            console.log(`VAL${' '.repeat(indent + 2)}${value}`);
-        }
-    }
-}
-
-function roll(thing, parent, history, loop, result  ) {
-    if ( parent.length > 0 ) {
+function step1_roll(thing, parent, history, loop, result) {
+    if (parent.length > 0) {
         history += parent + "."
     }
-    if ( typeof thing === "object") {
-        for ( let k in thing ) {
-            if ( thing[k] !== undefined ) {
-                roll( thing[k], k,  history, ++loop, result)
+    if (typeof thing === "object") {
+        for (let k in thing) {
+            if (thing[k] !== undefined) {
+                step1_roll(thing[k], k, history, ++loop, result)
             }
         }
     } else {
-        // console.log(parent, thing, history, loop )
-        // console.log(`${loop} ${history} ${parent}` )
-        history =  history.slice(0, -1); // Zap the trailed '.'
-        result[history] = { loop, history, parent, mandatory:thing }
+        const type = "string"
+        history = history.slice(0, -1); // Zap the trailing '.'
+        result[history] = { mandatory: thing, type }
     }
 }
 
-function product_interaction() {
-   const all = everything["categoricalOptionalityObjects"]["product-interaction"]
-   let result = {} 
-roll(all, "", "", 0, result)
 
-console.log( result )
-    // // // printJSON(everything["categoricalOptionalityObjects"]["product-interaction"]) 
-    // const all = flatten(everything["categoricalOptionalityObjects"]["product-interaction"])
-    // for (let k in all) {
-    //     const v = all[k]
-    //     const K = k.toUpperCase() 
-    //     if (headwaters.includes( K ) ) {
-    //         console.log("!!! " + k ) 
-    //     } else {
-    //         console.log("___ " + k ) 
-
-    //     }
-    // }
-
-
+function step2_getNeededFirstClassObjects(categoricalOptionalityObject) {
+    const paths = Object.keys(categoricalOptionalityObject)
+    const seen = {}
+    for (let i = 0; i < paths.length; i++) {
+        const pieces = paths[i].toUpperCase().split(".")
+        pieces.forEach((p) => {
+            if (!seen.hasOwnProperty(p)) {
+                seen[p] = 1 // should use a Set() but I forget how to in JS
+            }
+        })
+    }
+    let found = {}
+    for (let k in seen) {
+        if (headwaters.includes(k)) {
+            found[k] = everything[k]
+        }
+    }
+    return found
 
 
 
 }
 
+function lowerCaseLeadingKey(str) {
+    const components = str.split('.');
+    components[0] = components[0].toLowerCase();
+    return components.join('.');
+  }
 
-init() 
+function step3_getNonCategoricalObjects(thing, parent, history, loop, result) {
+    if (parent.length > 0) {
+        history += parent + "."
+    }
+    if (typeof thing === "object") {
+
+        for (let k in thing) {
+
+            if (thing[k] !== undefined && k !== "zodValidationFn") {
+                step3_getNonCategoricalObjects(thing[k], k, history, ++loop, result)
+            }
+        }
+    } else {
+        if ( parent !== "zodValidType") {
+            history = history.slice(0, -1); // Zap the trailing '.'
+            history = lowerCaseLeadingKey(history)
+            result[history] = { type: thing, parent, "firstClass":true }
+        }
+    }
+}
+
+
+
+function product_interaction() {
+    const all = everything["categoricalOptionalityObjects"]["product-interaction"]
+    let result = {}
+    step1_roll(all, "", "", 0, result)
+    // console.log( result )
+    const firstClassObjects = step2_getNeededFirstClassObjects(result)
+    const seenObjects = {}
+    for (let k in firstClassObjects) {
+        seenObjects[k] = {}
+        step3_getNonCategoricalObjects(firstClassObjects, "", "", 0, seenObjects[k])
+    }
+    console.log( seenObjects)
+}
+
+
+init()
 product_interaction()
