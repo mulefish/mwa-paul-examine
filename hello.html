@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .optional {
+            color: #ff6633;
+        }
+
+        .mandatory {
+            color: #0000ff;
+        }
+
+        #receiveInfo {
+            min-width: 1000px;
+            min-height: 1000px;
+        }
+        #left { 
+            min-width: 500px;
+        }
+        #jsonToSend {
+            width:98%; 
+            min-height:700px;
+        }
+    </style>
+    <link rel="icon" href="data:;base64,=">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <table border'1'>
+        <tr>
+            <td><button onClick='doFlatten()'>Flatten</button></td>
+            <td><button onClick='doEvent("app-response")'>app-response</button></td>
+            <td><button onClick='doEvent("error")'>error</button></td>
+            <td><button onClick='doEvent("general-component-interaction")'>general-component-interaction</button></td>
+            <td><button onClick='doEvent("general-component-event")'>general-component-event</button></td>
+            <td><button onClick='doEvent("page-products-displayed")'>page-products-displayed</button></td>
+            <td><button onClick='doEvent("page-view")'>page-view</button></td>
+            <td><button onClick='doEvent("product-interaction")'>product-interaction</button></td>
+            <td><button onClick='doEvent("purchase")'>purchase</button></td>
+            <td id="selectedEvent"></td>
+        </tr>
+    </table>
+    <hr />
+
+    <table border="'1">
+        <tr>
+            <td valign="top" id="left">
+                <pre id="schema"></pre>
+                <button>Send</button>
+                <textarea id="jsonToSend"></textarea>
+            </td>
+            <td valign="top">
+                &nbsp;
+            </td>
+            <td>
+                <textarea id="receiveInfo" spellcheck="false"></textarea>
+            </td>
+
+        </tr>
+    </table>
+
+
+    <script>
+        async function init() { 
+            console.log("MwaAnalytics.initializeAnalytics('TEST', {}, [], true);")
+            await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
+            setEverything( self.validationModule)
+        }
+        function doEvent(eventName) {
+            document.getElementById("selectedEvent").innerHTML = eventName
+        }
+        function doFlatten() { 
+            const flat = flatten(everything)
+            document.getElementById("selectedEvent").innerHTML = "flatten"
+            document.getElementById("receiveInfo").value = JSON.stringify(flat, null, 2 )
+        }
+
+        init()
+    </script>
+
+</body>
+
+</html>

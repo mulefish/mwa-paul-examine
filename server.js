@@ -7,10 +7,18 @@ app.get('/bagOfFunctions.js', function(req, res) {
   console.log("bagOfFunctions.js")
   res.sendFile(__dirname + '/bagOfFunctions.js');
 });
+app.get('/index.js', function(req, res) {
+  console.log("index.js")
+  res.sendFile(path.join(__dirname, '/index.js'));
+});
 
 app.get('/lookatme', function(req, res) {
   console.log("lookatme")
   res.sendFile(path.join(__dirname, '/lookatme.html'));
+});
+app.get('/hello', function(req, res) {
+  console.log("hello")
+  res.sendFile(path.join(__dirname, '/hello.html'));
 });
 
 app.get('/', function(req, res) {
