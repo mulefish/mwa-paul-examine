@@ -92,22 +92,12 @@
         }
         function doEvent(eventName) {
             document.getElementById("selectedEvent").innerHTML = eventName
-            // const payload_before = getFinalForm_fromIntermediate(categoricalHoH[eventName]["core"])
-            // const payload = payload_before["default"]
-            // const colored = colorize(payload);
-
-            // document.getElementById("schema").innerHTML = colored
-            document.getElementById("jsonToSend").value = JSON.stringify(categoricalHoH[eventName], null, 2 )
-            // const paths = categoricalHoH[eventName]["core"] 
-            
-
-
-            document.getElementById("schema").value = JSON.stringify(paths, null, 2 )
-
-
-
-            document.getElementById("receiveInfo").value = JSON.stringify(everything["categoricalOptionalityObjects"][eventName], null, 2  )
-
+            const inputObject = categoricalHoH[eventName]["core"]
+            const intermediate = setFinalForm_1_of_2(Object.keys(inputObject))
+            const final = setFinalForm_2_of_2(intermediate, inputObject)
+            document.getElementById("schema").value = JSON.stringify({}, null, 2 )
+            document.getElementById("jsonToSend").value = JSON.stringify(inputObject, null, 2 )
+            document.getElementById("receiveInfo").value = JSON.stringify(intermediate, null, 2  )
         }
 
         function doFlatten() { 

@@ -2,8 +2,8 @@
 // These function is directly tested. 
 flatten()
 step0_examineSomething()
-getFinalFrom_fromIntermediate()
 colorize()
+setFinalForm_1_of_2() & setFinalForm_2_of_2()
 
 // This function is directly used to set up the test
 setEverything()
@@ -18,7 +18,8 @@ const {
   setEverything,
   flatten,
   colorize,
-  getFinalForm_fromIntermediate, 
+  setFinalForm_1_of_2, 
+  setFinalForm_2_of_2, 
   step0_examineSomething,
   categoricalHoH,
   otherObjects_thatNeedAName,
@@ -180,13 +181,16 @@ function colorize_test(note) {
 
 }
 
-function getFinalForm_fromIntermediate_test(note) { 
+function setFinalForm_test(note) { 
   const intermediate = categoricalHoH["error"]["core"] 
   // console.log( intermediate)
   const paths = Object.keys(intermediate)
-  const actual = getFinalForm_fromIntermediate(paths)
-  console.log( JSON.stringify( actual, null, 2 ))
-  verdict(true, false ,note + " getFinalForm_fromIntermediate_test")
+  const shell = setFinalForm_1_of_2(paths)
+
+  const result = setFinalForm_2_of_2(shell, intermediate)
+
+  console.log( JSON.stringify( result, null, 2 ))
+  verdict(true, false ,note + " setFinalForm_1_of_2_test")
 }
 
 /*
@@ -201,5 +205,5 @@ simple_happypath("1 of 6")
 happypath_deeperLook("2 of 6")
 complex_happypath("3 of 6")
 flatten_test("4 of 6")
-getFinalForm_fromIntermediate_test("5 of 6")
+setFinalForm_test("5 of 6")
 //colorize_test("6 of 6")
