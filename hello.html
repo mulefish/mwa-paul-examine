@@ -60,13 +60,14 @@
         <tr>
             <td valign="top" id="left">
                 <pre id="schema"></pre>
+                <hr/>
                 <button>Send</button>
                 <textarea id="jsonToSend"></textarea>
             </td>
             <td valign="top">
                 &nbsp;
             </td>
-            <td>
+            <td valign="top">
                 <textarea id="receiveInfo" spellcheck="false"></textarea>
             </td>
 
@@ -76,16 +77,26 @@
 
     <script>
         async function init() { 
-            console.log("MwaAnalytics.initializeAnalytics('TEST', {}, [], true);")
+            // new up MwaAnalytics
             await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
-            setEverything( self.validationModule)
+            // set 'everything'
+            setEverything( self.validationModule) 
+            // Roll through and set up the different event objects
+            const events = ["app-response", "error", "general-component-interaction","general-component-event","page-products-displayed", "page-view", "product-interaction", "purchase"]
+            events.forEach((thing) => {
+                step0_examineSomething(thing)
+            })
+            console.log("init done MwaAnalytics.initializeAnalytics")
         }
         function doEvent(eventName) {
             document.getElementById("selectedEvent").innerHTML = eventName
+            const core = colorize(categoricalHoH[eventName]["core"])
+            document.getElementById("schema").innerHTML = core
+
         }
         function doFlatten() { 
             const flat = flatten(everything)
-            document.getElementById("selectedEvent").innerHTML = "flatten"
+            document.getElementById("selectedEvent").innerHTML = flat
             document.getElementById("receiveInfo").value = JSON.stringify(flat, null, 2 )
         }
 

@@ -121,7 +121,7 @@ function flatten_test(note) {
   const flat = flatten(data)
   const n = Object.keys(flat).length
   const isOk = n > 0
-  verdict(isOk, true, note + " flatten_test " + n)
+  verdict(isOk, true, note + " flatten_test n=" + n)
 }
 
 function colorize_test(note) {
