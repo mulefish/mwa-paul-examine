@@ -1,20 +1,21 @@
-const everything = require("./everything.json")
-const lowerCaseLeadingKey = ((str) => {
-    const components = str.split('.');
-    components[0] = components[0].toLowerCase();
-    return components.join('.');
-})
-const len = (map)=> { 
-    return Object.keys(map).length
+let everything = require("./everything.json")
+const categoricalHoH = {} 
+const otherObjects_thatNeedAName = {} 
+
+function setEverything(gaintBallOfJson) {
+    // This needs to be set either from xTDD.js OR from the real page.
+    everything = gaintBallOfJson
 }
-function step1_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
+
+
+function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
     if (parent.length > 0) {
         history += parent + "."
     }
     if (typeof thing === "object") {
         for (let k in thing) {
             if (thing[k] !== undefined) {
-                step1_getCategoricalOptionalityObjects(thing[k], k, history, ++loop, result)
+                step1_recursive_getCategoricalOptionalityObjects(thing[k], k, history, ++loop, result)
             }
         }
     } else {
@@ -23,48 +24,6 @@ function step1_getCategoricalOptionalityObjects(thing, parent, history, loop, re
         result[history] = { mandatory: thing, type }
     }
 }
-
-// function step2_getNeededFirstClassObjects(categoricalOptionalityObject) {
-//     const paths = Object.keys(categoricalOptionalityObject)
-//     const seen = {}
-//     for (let i = 0; i < paths.length; i++) {
-//         const pieces = paths[i].toUpperCase().split(".")
-//         pieces.forEach((p) => {
-//             if (!seen.hasOwnProperty(p)) {
-//                 seen[p] = 1 // should use a Set() but I forget how to in JS
-//             }
-//         })
-//     }
-//     let found = {}
-//     for (let k in seen) {
-//         if (everything.hasOwnProperty(k)) {
-//             found[k] = everything[k]
-//         }
-//     }
-//     return found
-// }
-
-
-function step3_getNonCategoricalObjects(thing, parent, history, loop, result) {
-    if (parent.length > 0) {
-        history += parent + "."
-    }
-    if (typeof thing === "object") {
-        for (let k in thing) {
-            if (thing[k] !== undefined && k !== "zodValidationFn") {
-                step3_getNonCategoricalObjects(thing[k], k, history, ++loop, result)
-            }
-        }
-    } else {
-        if (parent !== "zodValidType") {
-            history = history.slice(0, -1); // Zap the trailing '.'
-            history = lowerCaseLeadingKey(history)
-            result[history] = { type: thing, parent }
-        }
-    }
-}
-
-
 function step2_findTypescriptObjects(HoH) {
     // This is a map of objects like: 
     // 'default.payload.screen.path': { mandatory: false, type: 'string' },
@@ -77,20 +36,42 @@ function step2_findTypescriptObjects(HoH) {
             const path = k.split("payload.")[1]
             // 'screen'
             const objectOfInterest = path.split(".")[0]           
-            // UPPER CASE : lower case
-            found[objectOfInterest.toUpperCase()] = objectOfInterest
-
+            // Look to see if this key is in 'everything'. Purpose? 
+            // Prevent 'COLLECTIONLIST' from getting into the system. 
+            // If 'COLLECTIONLIST' is doing something - then...  change this. 
+           if ( everything.hasOwnProperty(objectOfInterest.toUpperCase) ) {
+                // UPPER CASE : lower case
+                found[objectOfInterest.toUpperCase()] = objectOfInterest
+            } 
         }        
     }
     return found
 }
 
-const categoricalHoH = {} 
-function examineSomething(eventName) {
+function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, result) {
+    if (parent.length > 0) {
+        history += parent + "."
+    }
+    if (typeof thing === "object") {
+        for (let k in thing) {
+            if (thing[k] !== undefined && k !== "zodValidationFn") {
+                step3_recursive_getNonCategoricalObjects(thing[k], k, history, ++loop, result)
+            }
+        }
+    } else {
+        if (parent !== "zodValidType") {
+            history = history.slice(0, -1); // Zap the trailing '.'
+            result[history] = { type: thing, parent }
+        }
+    }
+}
+
+
+function step0_examineSomething(eventName) {
 
     const all = everything["categoricalOptionalityObjects"][eventName]
     const core = {} 
-    step1_getCategoricalOptionalityObjects(all, "", "", 0, core)
+    step1_recursive_getCategoricalOptionalityObjects(all, "", "", 0, core)
     // console.log(categoricalHoH[eventName])
     const lookup = step2_findTypescriptObjects(core)
     
@@ -99,22 +80,60 @@ function examineSomething(eventName) {
         "lookup":lookup
     }
 
- 
     for ( let k in categoricalHoH  ) {
        const v = categoricalHoH[k]
-        console.log( k )
-        console.log(v)
     }
- 
+
+    for ( let k in categoricalHoH[eventName]["lookup"]) {
+        if ( ! otherObjects_thatNeedAName.hasOwnProperty( k )) {
+            const cleaned = {}
+            step3_recursive_getNonCategoricalObjects(everything[k], "", "", 0, cleaned)
+            otherObjects_thatNeedAName[k] = cleaned
+        }
+    }
 }
 
-examineSomething("product-interaction")
-// examineSomething("purchase")
-// examineSomething("page-view")
-// examineSomething("page-products-displayed")
-// examineSomething("page-products-displayed")
-// examineSomething("general-component-event")
-// examineSomething("general-component-interaction")
-// examineSomething("app-response")
+function show() { 
+    for ( let k in categoricalHoH ) {
+        const H =  categoricalHoH[k]
+        console.log( k)
+        console.log( H )
+    }
+    console.log( " ==== ")
+
+    for ( let k in otherObjects_thatNeedAName ) {
+        const H = otherObjects_thatNeedAName[k]
+        console.log( k )
+        console.log( H )
+    }
 
 
+}
+
+
+try {
+    if (require.main === module) {
+        step0_examineSomething("product-interaction")
+        // examineSomething("purchase")
+        // examineSomething("page-view")
+        // examineSomething("page-products-displayed")
+        // examineSomething("page-products-displayed")
+        // examineSomething("general-component-event")
+        // examineSomething("general-component-interaction")
+        // examineSomething("app-response")
+        show() 
+        
+    }
+    module.exports = {
+        setEverything,
+        step0_examineSomething,
+        step1_recursive_getCategoricalOptionalityObjects,
+        step2_findTypescriptObjects,
+        step3_recursive_getNonCategoricalObjects,
+        categoricalHoH,
+        otherObjects_thatNeedAName
+    };
+} catch (thisIsJustForNode) {
+    // ignore this error... 
+    // this is just for the TDD for node 
+}
