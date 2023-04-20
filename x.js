@@ -5,9 +5,7 @@ let everything;
 function setEverything(gaintBallOfJson) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
-
 }
-
 
 function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
     if (parent.length > 0) {
@@ -21,8 +19,12 @@ function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history
         }
     } else {
         const type = "string"
-        history = history.slice(0, -1); // Zap the trailing '.'
-        result[history] = { mandatory: thing, type }
+        // Zap the trailing '.'
+        history = history.slice(0, -1); 
+        // Prevent impossible things from getting into the state
+        if ( thing !== undefined ) {
+            result[history] = { mandatory: thing, type }
+        }
     }
 }
 function step2_findTypescriptObjects(HoH) {
@@ -69,16 +71,10 @@ function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, 
 
 
 function step0_examineSomething(eventName) {
-
-    // categoricalHoH = {} 
-    // categoricalHoH = {}
-    //otherObjects_thatNeedAName = {} 
-    
-
+    if ( everything["categoricalOptionalityObjects"].hasOwnProperty(eventName)) {
     const all = everything["categoricalOptionalityObjects"][eventName]
     const core = {} 
     step1_recursive_getCategoricalOptionalityObjects(all, "", "", 0, core)
-    // console.log(categoricalHoH[eventName])
     const lookup = step2_findTypescriptObjects(core)
     
     categoricalHoH[eventName] = {
@@ -97,6 +93,7 @@ function step0_examineSomething(eventName) {
             otherObjects_thatNeedAName[k] = cleaned
         }
     }
+}
 }
 
 try {

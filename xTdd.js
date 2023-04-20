@@ -1,3 +1,15 @@
+/* 
+// This function is directly tested. 
+step0_examineSomething()
+// This function is directly used to set up the test
+setEverything()
+// These functions are tested but indirectly. If this were Java 
+// they would be 'private'
+step1_recursive_getCategoricalOptionalityObjects()
+step2_findTypescriptObjects()
+step3_recursive_getNonCategoricalObjects()
+*/ 
+
 const {
   setEverything,
   step0_examineSomething,
@@ -5,28 +17,31 @@ const {
   otherObjects_thatNeedAName
 } = require("./x.js")
 
-function verdict(a, b, msg) {
+const show = (() => { 
+  for (let k in categoricalHoH) {
+    const H = categoricalHoH[k]
+    console.log(k)
+    console.log(H)
+  }
+  console.log(" ==== ")
+
+  for (let k in otherObjects_thatNeedAName) {
+    const H = otherObjects_thatNeedAName[k]
+    console.log(k)
+    console.log(H)
+  }
+})
+
+const verdict = ((a, b, msg) => {
   let isOk = "FAIL "
   if (JSON.stringify(a) === JSON.stringify(b)) {
     isOk = "PASS "
   }
   console.log(isOk + " " + msg)
-}
+}) 
 
 function simple_happypath() {
   step0_examineSomething("app-response")
-  // for (let k in categoricalHoH) {
-  //   const H = categoricalHoH[k]
-  //   console.log(k)
-  //   console.log(H)
-  // }
-  // console.log(" ==== ")
-
-  // for (let k in otherObjects_thatNeedAName) {
-  //   const H = otherObjects_thatNeedAName[k]
-  //   console.log(k)
-  //   console.log(H)
-  // }
 
   const cKeys = Object.keys(categoricalHoH)
   const lookup = Object.keys(categoricalHoH["app-response"]["lookup"])
@@ -57,16 +72,11 @@ function happypath_deeperLook() {
       lookup:Object.keys(categoricalHoH[k]["lookup"] ).length,
     }
   }
-
-  events.forEach((thing)=> { 
-    delete categoricalHoH[thing]
-  })
-
   const expected = {
     'app-response': { core: 12, lookup: 1 },
     'product-interaction': { core: 17, lookup: 2 },
     'page-view': { core: 12, lookup: 1 },
-    'This does not exist': { core: 1, lookup: 0 } // See? lookup as 0
+    // See? 'This does not exist' is not here
   }
   verdict(actual, expected, "happypath_deeperLook")
 }
@@ -102,8 +112,6 @@ function complex_happypath() {
   }
   verdict(actual, expected, "complex_happypath")
 }
-
-
 
 // Not a test : Needed to set run the test
 // This is the equivilent of
