@@ -90,9 +90,13 @@
         }
         function doEvent(eventName) {
             document.getElementById("selectedEvent").innerHTML = eventName
-            const core = colorize(categoricalHoH[eventName]["core"])
-            document.getElementById("schema").innerHTML = core
-
+            // const core = colorize(categoricalHoH[eventName]["core"])
+            // document.getElementById("schema").innerHTML = core
+            const schemaNode = document.getElementById('schema');
+//console.log( JSON.stringify(   categoricalHoH[eventName]["core"], null, 2 )) 
+  const payload = getFinalForm_fromIntermediate(categoricalHoH[eventName]["core"])
+ console.log( JSON.stringify( payload, null , 2 ))
+ colorize(payload, schemaNode);
         }
         function doFlatten() { 
             const flat = flatten(everything)

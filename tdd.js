@@ -169,10 +169,10 @@ function colorize_test(note) {
   }
 
 
-  //const properlyFormattedJson = getFinalForm_fromIntermediate(someWellFormedObject) 
-  const result = colorize(someWellFormedObject)
+  const properlyFormattedJson = getFinalForm_fromIntermediate(someWellFormedObject) 
+  // const result = colorize(someWellFormedObject)
   // console.log( JSON.stringify( pretty , null, 2 ) )
-  console.log( result )    
+  console.log( JSON.stringify( properlyFormattedJson["default"]["payload"], null, 2 )) 
 
 
 
@@ -187,8 +187,8 @@ let everything =  self.validationModule
 const data = require("./everything.json")
 setEverything(data)
 /* */
-simple_happypath("1 of 5")
-happypath_deeperLook("2 of 5")
-complex_happypath("3 of 5")
-flatten_test("4 of 5")
+// simple_happypath("1 of 5")
+// happypath_deeperLook("2 of 5")
+// complex_happypath("3 of 5")
+// flatten_test("4 of 5")
 colorize_test("5 of 5")

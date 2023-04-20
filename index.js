@@ -29,7 +29,46 @@ function getFinalForm_fromIntermediate(input) {
     return output;
 }
 
+function colorize(jsonData, parentElement) {
+    // Create a function to recursively render objects and arrays
+    function renderObjectOrArray(value, parentElement) {
+      const element = document.createElement('ul');
+      parentElement.appendChild(element);
+      for (const key in value) {
+        const li = document.createElement('li');
+        const spanKey = document.createElement('span');
+        spanKey.innerText = key;
+        li.appendChild(spanKey);
+  
+        if (typeof value[key] === 'object' && !Array.isArray(value[key])) {
+          li.appendChild(renderObjectOrArray(value[key], document.createElement('div')));
+        } else if (Array.isArray(value[key])) {
+          li.appendChild(renderObjectOrArray(value[key], document.createElement('ul')));
+        } else {
+          const spanValue = document.createElement('span');
+          spanValue.innerText = value[key];
+          li.appendChild(spanValue);
+  
+          if (typeof value[key] === 'boolean') {
+            if (value[key]) {
+              li.style.color = 'blue';
+            } else {
+              li.style.color = 'orange';
+            }
+          }
+        }
+  
+        element.appendChild(li);
+      }
+      return element;
+    }
+  
+    // Render the top-level object
+    const topLevelElement = renderObjectOrArray(jsonData, document.createElement('div'));
+    parentElement.appendChild(topLevelElement);
+  }
 
+/*
 function colorize(intermediateFormat) {
 
     const tmp = getFinalForm_fromIntermediate(intermediateFormat)
@@ -49,7 +88,7 @@ function colorize(intermediateFormat) {
     }
     return output
 }
-
+*/ 
 function flatten(objectToFlatten) {
     // This will not be used in the logic of the page - but it will be helpful to put this page together
     function flattenObject(obj) {
@@ -138,6 +177,7 @@ function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, 
 
 function step0_examineSomething(eventName) {
     if (everything["categoricalOptionalityObjects"].hasOwnProperty(eventName)) {
+        console.log("YEP  " + eventName)
         const all = everything["categoricalOptionalityObjects"][eventName]
         const core = {}
         step1_recursive_getCategoricalOptionalityObjects(all, "", "", 0, core)
@@ -159,6 +199,8 @@ function step0_examineSomething(eventName) {
                 otherObjects_thatNeedAName[k] = cleaned
             }
         }
+    } else {
+        console.log("NOPE " + eventName)
     }
 }
 
