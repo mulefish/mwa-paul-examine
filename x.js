@@ -1,10 +1,11 @@
-let everything = require("./everything.json")
+// let everything = require("./everything.json")
 const categoricalHoH = {} 
 const otherObjects_thatNeedAName = {} 
-
+let everything;
 function setEverything(gaintBallOfJson) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
+
 }
 
 
@@ -39,7 +40,7 @@ function step2_findTypescriptObjects(HoH) {
             // Look to see if this key is in 'everything'. Purpose? 
             // Prevent 'COLLECTIONLIST' from getting into the system. 
             // If 'COLLECTIONLIST' is doing something - then...  change this. 
-           if ( everything.hasOwnProperty(objectOfInterest.toUpperCase) ) {
+           if ( everything.hasOwnProperty(objectOfInterest.toUpperCase()) ) {
                 // UPPER CASE : lower case
                 found[objectOfInterest.toUpperCase()] = objectOfInterest
             } 
@@ -69,6 +70,11 @@ function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, 
 
 function step0_examineSomething(eventName) {
 
+    // categoricalHoH = {} 
+    // categoricalHoH = {}
+    //otherObjects_thatNeedAName = {} 
+    
+
     const all = everything["categoricalOptionalityObjects"][eventName]
     const core = {} 
     step1_recursive_getCategoricalOptionalityObjects(all, "", "", 0, core)
@@ -93,26 +99,25 @@ function step0_examineSomething(eventName) {
     }
 }
 
-function show() { 
-    for ( let k in categoricalHoH ) {
-        const H =  categoricalHoH[k]
-        console.log( k)
-        console.log( H )
-    }
-    console.log( " ==== ")
-
-    for ( let k in otherObjects_thatNeedAName ) {
-        const H = otherObjects_thatNeedAName[k]
-        console.log( k )
-        console.log( H )
-    }
-
-
-}
-
-
 try {
     if (require.main === module) {
+
+        function show() { 
+            for ( let k in categoricalHoH ) {
+                const H =  categoricalHoH[k]
+                console.log( k)
+                console.log( H )
+            }
+            console.log( " ==== ")
+        
+            for ( let k in otherObjects_thatNeedAName ) {
+                const H = otherObjects_thatNeedAName[k]
+                console.log( k )
+                console.log( H )
+            }
+        }
+        
+
         step0_examineSomething("product-interaction")
         // examineSomething("purchase")
         // examineSomething("page-view")
