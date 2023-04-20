@@ -3,6 +3,7 @@
 flatten()
 step0_examineSomething()
 colorize()
+
 // This function is directly used to set up the test
 setEverything()
 // These functions are tested but indirectly. If this were Java 
@@ -10,12 +11,14 @@ setEverything()
 step1_recursive_getCategoricalOptionalityObjects()
 step2_findTypescriptObjects()
 step3_recursive_getNonCategoricalObjects()
+getFinalFrom_fromIntermediate()
 */
 
 const {
   setEverything,
   flatten,
   colorize,
+  getFinalForm_fromIntermediate, 
   step0_examineSomething,
   categoricalHoH,
   otherObjects_thatNeedAName,
@@ -124,25 +127,66 @@ function flatten_test(note) {
   verdict(isOk, true, note + " flatten_test n=" + n)
 }
 
-function colorize_test(note) {
-  const obj = {
-    "one": " false",
-    "two": " true",
-    "three": " ",
-  }
-  const actual = colorize(obj)
-  const expected = `<div class='ignore'>{</div><div class='optional'>  "one": " false",</div><div class='mandatory'>  "two": " true",</div><div class='ignore'>  "three": " "</div><div class='ignore'>}</div>`
+// function colorize_test(note) {
+//   const obj = {
+//     "one": " false",
+//     "two": " true",
+//     "three": " ",
+//   }
+//   const actual = colorize(obj)
+//   const expected = `<div class='ignore'>{</div><div class='optional'>  "one": " false",</div><div class='mandatory'>  "two": " true",</div><div class='ignore'>  "three": " "</div><div class='ignore'>}</div>`
 
-  verdict(actual, expected, note + ' colorize_test')
+//   verdict(actual, expected, note + ' colorize_test')
+// }
+
+function colorize_test(note) {
+
+  const someWellFormedObject = {
+    "default.payload.screen.header": {
+      "mandatory": true,
+      "type": "string"
+    },
+    "default.payload.event.attributes.errorMessage": {
+      "mandatory": false,
+      "type": "string"
+    },
+    "default.payload.event.attributes.errorDetails": {
+      "mandatory": false,
+      "type": "string"
+    },
+    "default.payload.event.attributes.errorType": {
+      "mandatory": "ignore",
+      "type": "string"
+    },
+    "default.version": {
+      "mandatory": false,
+      "type": "string"
+    },
+    "default.timestamp": {
+      "mandatory": false,
+      "type": "string"
+    }
+  }
+
+
+  //const properlyFormattedJson = getFinalForm_fromIntermediate(someWellFormedObject) 
+  const result = colorize(someWellFormedObject)
+  // console.log( JSON.stringify( pretty , null, 2 ) )
+  console.log( result )    
+
+
+
 }
 
-// Not a test : Needed to set run the test
-// This is the equivilent of
-// let everything =  self.validationModule
+
+/*
+Not a test : Needed to set run the test
+This is the equivilent of
+let everything =  self.validationModule
+*/
 const data = require("./everything.json")
 setEverything(data)
-//
-//
+/* */
 simple_happypath("1 of 5")
 happypath_deeperLook("2 of 5")
 complex_happypath("3 of 5")
