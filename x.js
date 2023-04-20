@@ -24,25 +24,25 @@ function step1_getCategoricalOptionalityObjects(thing, parent, history, loop, re
     }
 }
 
-function step2_getNeededFirstClassObjects(categoricalOptionalityObject) {
-    const paths = Object.keys(categoricalOptionalityObject)
-    const seen = {}
-    for (let i = 0; i < paths.length; i++) {
-        const pieces = paths[i].toUpperCase().split(".")
-        pieces.forEach((p) => {
-            if (!seen.hasOwnProperty(p)) {
-                seen[p] = 1 // should use a Set() but I forget how to in JS
-            }
-        })
-    }
-    let found = {}
-    for (let k in seen) {
-        if (everything.hasOwnProperty(k)) {
-            found[k] = everything[k]
-        }
-    }
-    return found
-}
+// function step2_getNeededFirstClassObjects(categoricalOptionalityObject) {
+//     const paths = Object.keys(categoricalOptionalityObject)
+//     const seen = {}
+//     for (let i = 0; i < paths.length; i++) {
+//         const pieces = paths[i].toUpperCase().split(".")
+//         pieces.forEach((p) => {
+//             if (!seen.hasOwnProperty(p)) {
+//                 seen[p] = 1 // should use a Set() but I forget how to in JS
+//             }
+//         })
+//     }
+//     let found = {}
+//     for (let k in seen) {
+//         if (everything.hasOwnProperty(k)) {
+//             found[k] = everything[k]
+//         }
+//     }
+//     return found
+// }
 
 
 function step3_getNonCategoricalObjects(thing, parent, history, loop, result) {
@@ -65,41 +65,56 @@ function step3_getNonCategoricalObjects(thing, parent, history, loop, result) {
 }
 
 
+function step2_findTypescriptObjects(HoH) {
+    // This is a map of objects like: 
+    // 'default.payload.screen.path': { mandatory: false, type: 'string' },
+    // 
+    // Here, for this example the goal was to find 'screen'
+    let found = {}
+    for ( let k in HoH ) {
+        if ( k.includes("payload.")) {
+            //[ 'screen', 'path' ]
+            const path = k.split("payload.")[1]
+            // 'screen'
+            const objectOfInterest = path.split(".")[0]           
+            // UPPER CASE : lower case
+            found[objectOfInterest.toUpperCase()] = objectOfInterest
 
-
-function examineSomething(eventName) {
-    console.log(eventName)
-    const all = everything["categoricalOptionalityObjects"][eventName]
-    let result = {}
-    step1_getCategoricalOptionalityObjects(all, "", "", 0, result)
-    const firstClassObjects = step2_getNeededFirstClassObjects(result)
-    const seenObjects = {}
-    for (let k in firstClassObjects) {
-        seenObjects[k] = {}
-        step3_getNonCategoricalObjects(firstClassObjects, "", "", 0, seenObjects[k])
+        }        
     }
-    // console.log("non-categorical...")
-    // let i = 0 
-    // for ( let k in seenObjects ) { 
-    //     console.log( ++i + "    " + len(seenObjects[k] )) 
-    // }
+    return found
+}
 
-    // console.log("categorical... ")
+const categoricalHoH = {} 
+function examineSomething(eventName) {
 
-    // // i = 0 
-    // // for ( let k in result ) { 
-    // //     console.log( ++i + "    " + len(result[k] )) 
-    // // }
+    const all = everything["categoricalOptionalityObjects"][eventName]
+    const core = {} 
+    step1_getCategoricalOptionalityObjects(all, "", "", 0, core)
+    // console.log(categoricalHoH[eventName])
+    const lookup = step2_findTypescriptObjects(core)
+    
+    categoricalHoH[eventName] = {
+        "core":core,
+        "lookup":lookup
+    }
 
-    console.log( result )
-    console.log("LEN=" + len(result))
+ 
+    for ( let k in categoricalHoH  ) {
+       const v = categoricalHoH[k]
+        console.log( k )
+        console.log(v)
+    }
+ 
 }
 
 examineSomething("product-interaction")
-examineSomething("purchase")
-examineSomething("page-view")
-examineSomething("page-products-displayed")
-examineSomething("page-products-displayed")
-examineSomething("general-component-event")
-examineSomething("general-component-interaction")
-examineSomething("app-response")
+// examineSomething("purchase")
+// examineSomething("page-view")
+// examineSomething("page-products-displayed")
+// examineSomething("page-products-displayed")
+// examineSomething("general-component-event")
+// examineSomething("general-component-interaction")
+// examineSomething("app-response")
+
+
