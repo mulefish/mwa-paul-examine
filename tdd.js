@@ -2,6 +2,7 @@
 // These function is directly tested. 
 flatten()
 step0_examineSomething()
+getFinalFrom_fromIntermediate()
 colorize()
 
 // This function is directly used to set up the test
@@ -11,7 +12,6 @@ setEverything()
 step1_recursive_getCategoricalOptionalityObjects()
 step2_findTypescriptObjects()
 step3_recursive_getNonCategoricalObjects()
-getFinalFrom_fromIntermediate()
 */
 
 const {
@@ -90,6 +90,7 @@ function happypath_deeperLook(note) {
 
 
 function complex_happypath(note) {
+  step0_examineSomething("error")
   step0_examineSomething("product-interaction")
   step0_examineSomething("purchase")
   step0_examineSomething("page-view")
@@ -107,6 +108,7 @@ function complex_happypath(note) {
   }
   const expected = {
     categorical_keys: [
+      'error',
       'product-interaction',
       'purchase',
       'page-view',
@@ -169,15 +171,23 @@ function colorize_test(note) {
   }
 
 
-  const properlyFormattedJson = getFinalForm_fromIntermediate(someWellFormedObject) 
-  // const result = colorize(someWellFormedObject)
-  // console.log( JSON.stringify( pretty , null, 2 ) )
-  console.log( JSON.stringify( properlyFormattedJson["default"]["payload"], null, 2 )) 
+  // const properlyFormattedJson = getFinalForm_fromIntermediate(someWellFormedObject) 
+  // // const result = colorize(someWellFormedObject)
+  // // console.log( JSON.stringify( pretty , null, 2 ) )
+  // console.log( JSON.stringify( properlyFormattedJson["default"]["payload"], null, 2 )) 
 
 
 
 }
 
+function getFinalForm_fromIntermediate_test(note) { 
+  const intermediate = categoricalHoH["error"]["core"] 
+  // console.log( intermediate)
+  const paths = Object.keys(intermediate)
+  const actual = getFinalForm_fromIntermediate(paths)
+  console.log( JSON.stringify( actual, null, 2 ))
+  verdict(true, false ,note + " getFinalForm_fromIntermediate_test")
+}
 
 /*
 Not a test : Needed to set run the test
@@ -187,8 +197,9 @@ let everything =  self.validationModule
 const data = require("./everything.json")
 setEverything(data)
 /* */
-// simple_happypath("1 of 5")
-// happypath_deeperLook("2 of 5")
-// complex_happypath("3 of 5")
-// flatten_test("4 of 5")
-colorize_test("5 of 5")
+simple_happypath("1 of 6")
+happypath_deeperLook("2 of 6")
+complex_happypath("3 of 6")
+flatten_test("4 of 6")
+getFinalForm_fromIntermediate_test("5 of 6")
+//colorize_test("6 of 6")

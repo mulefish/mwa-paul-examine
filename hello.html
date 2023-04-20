@@ -59,7 +59,9 @@
     <table border="'1">
         <tr>
             <td valign="top" id="left">
-                <pre id="schema"></pre>
+                <!-- <pre id="schema"></pre> -->
+                <textarea id="schema" rows="20" cols="100"></textarea>
+
                 <hr/>
                 <button>Send</button>
                 <textarea id="jsonToSend"></textarea>
@@ -90,14 +92,24 @@
         }
         function doEvent(eventName) {
             document.getElementById("selectedEvent").innerHTML = eventName
-            // const core = colorize(categoricalHoH[eventName]["core"])
-            // document.getElementById("schema").innerHTML = core
-            const schemaNode = document.getElementById('schema');
-//console.log( JSON.stringify(   categoricalHoH[eventName]["core"], null, 2 )) 
-  const payload = getFinalForm_fromIntermediate(categoricalHoH[eventName]["core"])
- console.log( JSON.stringify( payload, null , 2 ))
- colorize(payload, schemaNode);
+            // const payload_before = getFinalForm_fromIntermediate(categoricalHoH[eventName]["core"])
+            // const payload = payload_before["default"]
+            // const colored = colorize(payload);
+
+            // document.getElementById("schema").innerHTML = colored
+            document.getElementById("jsonToSend").value = JSON.stringify(categoricalHoH[eventName], null, 2 )
+            // const paths = categoricalHoH[eventName]["core"] 
+            
+
+
+            document.getElementById("schema").value = JSON.stringify(paths, null, 2 )
+
+
+
+            document.getElementById("receiveInfo").value = JSON.stringify(everything["categoricalOptionalityObjects"][eventName], null, 2  )
+
         }
+
         function doFlatten() { 
             const flat = flatten(everything)
             document.getElementById("selectedEvent").innerHTML = flat
