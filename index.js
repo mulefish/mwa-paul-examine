@@ -26,75 +26,6 @@ function convertObject(simple) {
     }
     return complex;
   }
-  
-
-// function setFinalForm_1_of_2(inputList) {
-//     /* receive a list of flattened paths... e.g., 
-//     ['default.something,kitty','default.something,puppy']
-//     return this: 
-//     { default: { something: {kitty:{}, puppy:{}}}}
-//     */ 
-//     let outputMap = {};
-//     for (let i = 0; i < inputList.length; i++) {
-//       let currentPath = inputList[i].split(".");
-//       let currentNode = outputMap;
-//       for (let j = 0; j < currentPath.length; j++) {
-//         let currentKey = currentPath[j];
-//         if (!currentNode.hasOwnProperty(currentKey)) {
-//           if (j === currentPath.length - 1) {
-//             currentNode[currentKey] = {};
-//           } else {
-//             currentNode[currentKey] = {};
-//           }
-//         }
-//         currentNode = currentNode[currentKey];
-//       }
-//     }
-//     return outputMap;
-  
-
-// }
-
-// function setFinalForm_2_of_2(inputMap, inputObject) {
-
-//     function mergeMaps(inputObject, inputMap) {
-//         let outputMap = {};
-//         for (let key in inputMap) {
-//           let currentValue = inputMap[key];
-//           if (typeof currentValue === "object" && !Array.isArray(currentValue)) {
-//             outputMap[key] = mergeMaps(inputObject, currentValue);
-//           } else {
-//             outputMap[key] = inputObject[key];
-//           }
-//         }
-//         return outputMap;
-//       }
-      
-//       function convertObjectToMap(inputObject) {
-//         let outputMap = {};
-//         for (let key in inputObject) {
-//           let currentPath = key.split(".");
-//           let currentNode = outputMap;
-//           for (let j = 0; j < currentPath.length; j++) {
-//             let currentKey = currentPath[j];
-//             if (!currentNode.hasOwnProperty(currentKey)) {
-//               if (j === currentPath.length - 1) {
-//                 currentNode[currentKey] = inputObject[key];
-//               } else {
-//                 currentNode[currentKey] = {};
-//               }
-//             }
-//             currentNode = currentNode[currentKey];
-//           }
-//         }
-//         return outputMap;
-//       }
-
-//       let kittycat = mergeMaps(inputObject, inputMap);
-//     //   let outputMap = convertObjectToMap(intermediateMap);
-//     //   return outputMap
-// return kittycat
-// }
 
 
 function colorize(ballOfJson) {
@@ -186,7 +117,7 @@ function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, 
         }
     }
 }
-https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking
+//https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking
 
 function step0_examineSomething(eventName) {
     if (everything["categoricalOptionalityObjects"].hasOwnProperty(eventName)) {
@@ -217,45 +148,12 @@ function step0_examineSomething(eventName) {
 }
 
 try {
-    if (require.main === module) {
-
-        function show() {
-            for (let k in categoricalHoH) {
-                const H = categoricalHoH[k]
-                console.log(k)
-                console.log(H)
-            }
-            console.log(" ==== ")
-
-            for (let k in otherObjects_thatNeedAName) {
-                const H = otherObjects_thatNeedAName[k]
-                console.log(k)
-                console.log(H)
-            }
-        }
-
-        step0_examineSomething("product-interaction")
-        // examineSomething("purchase")
-        // examineSomething("page-view")
-        // examineSomething("page-products-displayed")
-        // examineSomething("page-products-displayed")
-        // examineSomething("general-component-event")
-        // examineSomething("general-component-interaction")
-        // examineSomething("app-response")
-        show()
-
-    }
     module.exports = {
         setEverything,
         flatten,
-        // setFinalForm_1_of_2,
-        // setFinalForm_2_of_2,
         colorize,
         step0_examineSomething,
         convertObject,
-        // step1_recursive_getCategoricalOptionalityObjects,
-        // step2_findTypescriptObjects,
-        // step3_recursive_getNonCategoricalObjects,
         categoricalHoH,
         otherObjects_thatNeedAName
     };

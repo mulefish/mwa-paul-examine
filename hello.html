@@ -24,6 +24,7 @@
             width: 98%;
             min-height: 700px;
         }
+        
     </style>
     <link rel="icon" href="data:;base64,=">
     <!-- <link rel="stylesheet" href="style.css"> -->
@@ -45,14 +46,14 @@
     <table border'1'>
         <tr>
             <td><button onClick='doFlatten()'>Flatten</button></td>
-            <td><button onClick='doEvent("app-response")'>app-response</button></td>
-            <td><button onClick='doEvent("error")'>error</button></td>
-            <td><button onClick='doEvent("general-component-interaction")'>general-component-interaction</button></td>
-            <td><button onClick='doEvent("general-component-event")'>general-component-event</button></td>
-            <td><button onClick='doEvent("page-products-displayed")'>page-products-displayed</button></td>
-            <td><button onClick='doEvent("page-view")'>page-view</button></td>
-            <td><button onClick='doEvent("product-interaction")'>product-interaction</button></td>
-            <td><button onClick='doEvent("purchase")'>purchase</button></td>
+            <td><button onClick='humanChoseAnEvent("app-response")'>app-response</button></td>
+            <td><button onClick='humanChoseAnEvent("error")'>error</button></td>
+            <td><button onClick='humanChoseAnEvent("general-component-interaction")'>general-component-interaction</button></td>
+            <td><button onClick='humanChoseAnEvent("general-component-event")'>general-component-event</button></td>
+            <td><button onClick='humanChoseAnEvent("page-products-displayed")'>page-products-displayed</button></td>
+            <td><button onClick='humanChoseAnEvent("page-view")'>page-view</button></td>
+            <td><button onClick='humanChoseAnEvent("product-interaction")'>product-interaction</button></td>
+            <td><button onClick='humanChoseAnEvent("purchase")'>purchase</button></td>
             <td id="selectedEvent"></td>
         </tr>
     </table>
@@ -72,6 +73,7 @@
                 &nbsp;
             </td>
             <td valign="top">
+                <button  onClick="switch_view()">Switch view</button>&nbsp;&nbsp;<span id="switch_view">Verify</span>
                 <textarea id="receiveInfo" spellcheck="false"></textarea>
             </td>
 
@@ -79,6 +81,23 @@
     </table>
 
     <script>
+        // Poor man's enum
+        // This 'enum' will be used to determine what to show on the right hand
+        const VERIFY = "verify_actual_restful_call"
+        const DATA_LAYER_EXAMPLE = "data_layer_example"
+        let VIEWMODE=VERIFY
+        function switch_view() { 
+            let view;
+            if ( VIEWMODE === VERIFY ) { 
+                view = `<a target="_blank" href="https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking">Data Layer Example</a>`
+                VIEWMODE = DATA_LAYER_EXAMPLE
+            } else {
+                view = 'Verify'
+                VIEWMODE = VERIFY
+            }
+            document.getElementById("switch_view").innerHTML = view
+        }
+
         async function init() {
             // new up MwaAnalytics
             await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
@@ -91,17 +110,27 @@
             })
             console.log("init! MwaAnalytics.initializeAnalytics")
         }
-        function doEvent(eventName) {
+        function humanChoseAnEvent(eventName) {
             document.getElementById("selectedEvent").innerHTML = eventName
             const inputObject = categoricalHoH[eventName]["core"]
 
             let intermediate = convertObject(inputObject)
-            intermediate = intermediate["default"]
+            intermediate = intermediate["default"]["payload"]
             document.getElementById("schema").value = JSON.stringify(intermediate, null, 2)
-            document.getElementById("jsonToSend").value = JSON.stringify(inputObject, null, 2)
-            document.getElementById("receiveInfo").value = JSON.stringify(categoricalHoH[eventName], null, 2)
-        }
+            document.getElementById("jsonToSend").value = JSON.stringify(intermediate, null, 2)
 
+
+            if ( VIEWMODE === VERIFY ) {
+                document.getElementById("receiveInfo").value = JSON.stringify(categoricalHoH[eventName], null, 2)
+            } else {
+                document.getElementById("receiveInfo").value = getSnippet(intermediate)
+            }
+
+        }
+        function getSnippet(json) {
+            console.log( VIEWMODE )
+            return VIEWMODE
+        }
         function doFlatten() {
             const flat = flatten(everything)
             document.getElementById("selectedEvent").innerHTML = flat
