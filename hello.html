@@ -15,12 +15,14 @@
             min-width: 1000px;
             min-height: 1000px;
         }
-        #left { 
+
+        #left {
             min-width: 500px;
         }
+
         #jsonToSend {
-            width:98%; 
-            min-height:700px;
+            width: 98%;
+            min-height: 700px;
         }
     </style>
     <link rel="icon" href="data:;base64,=">
@@ -62,7 +64,7 @@
                 <!-- <pre id="schema"></pre> -->
                 <textarea id="schema" rows="20" cols="100"></textarea>
 
-                <hr/>
+                <hr />
                 <button>Send</button>
                 <textarea id="jsonToSend"></textarea>
             </td>
@@ -76,15 +78,14 @@
         </tr>
     </table>
 
-
     <script>
-        async function init() { 
+        async function init() {
             // new up MwaAnalytics
             await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
             // set 'everything'
-            setEverything( self.validationModule) 
+            setEverything(self.validationModule)
             // Roll through and set up the different event objects
-            const events = ["app-response", "error", "general-component-interaction","general-component-event","page-products-displayed", "page-view", "product-interaction", "purchase"]
+            const events = ["app-response", "error", "general-component-interaction", "general-component-event", "page-products-displayed", "page-view", "product-interaction", "purchase"]
             events.forEach((thing) => {
                 step0_examineSomething(thing)
             })
@@ -94,20 +95,17 @@
             document.getElementById("selectedEvent").innerHTML = eventName
             const inputObject = categoricalHoH[eventName]["core"]
 
-
             const intermediate = convertObject(inputObject)
 
-            // const intermediate = setFinalForm_1_of_2(Object.keys(inputObject))
-            // const final = setFinalForm_2_of_2(intermediate, inputObject)
-            document.getElementById("schema").value = JSON.stringify(intermediate, null, 2 )
-            document.getElementById("jsonToSend").value = JSON.stringify(inputObject, null, 2 )
-            document.getElementById("receiveInfo").value = JSON.stringify(categoricalHoH[eventName], null, 2  )
+            document.getElementById("schema").value = JSON.stringify(intermediate, null, 2)
+            document.getElementById("jsonToSend").value = JSON.stringify(inputObject, null, 2)
+            document.getElementById("receiveInfo").value = JSON.stringify(categoricalHoH[eventName], null, 2)
         }
 
-        function doFlatten() { 
+        function doFlatten() {
             const flat = flatten(everything)
             document.getElementById("selectedEvent").innerHTML = flat
-            document.getElementById("receiveInfo").value = JSON.stringify(flat, null, 2 )
+            document.getElementById("receiveInfo").value = JSON.stringify(flat, null, 2)
         }
 
         init()
