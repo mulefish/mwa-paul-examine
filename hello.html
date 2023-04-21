@@ -55,6 +55,8 @@
             <td><button onClick='humanChoseAnEvent("product-interaction")'>product-interaction</button></td>
             <td><button onClick='humanChoseAnEvent("purchase")'>purchase</button></td>
             <td id="selectedEvent"></td>
+            <td><button onClick='showExample()'>showExample</button></td>
+
         </tr>
     </table>
     <hr />
@@ -86,6 +88,7 @@
         const VERIFY = "verify_actual_restful_call"
         const DATA_LAYER_EXAMPLE = "data_layer_example"
         let VIEWMODE=VERIFY
+        let currentEventName
         function switch_view() { 
             let view;
             if ( VIEWMODE === VERIFY ) { 
@@ -97,7 +100,10 @@
             }
             document.getElementById("switch_view").innerHTML = view
         }
-
+        function showExample() {
+            // TODO! Delete this function and its associated  button 
+            
+        }
         async function init() {
             // new up MwaAnalytics
             await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
@@ -111,6 +117,7 @@
             console.log("init! MwaAnalytics.initializeAnalytics")
         }
         function humanChoseAnEvent(eventName) {
+            currentEventName = eventName
             document.getElementById("selectedEvent").innerHTML = eventName
             const inputObject = categoricalHoH[eventName]["core"]
 
@@ -118,6 +125,7 @@
             intermediate = intermediate["default"]["payload"]
             document.getElementById("schema").value = JSON.stringify(intermediate, null, 2)
             document.getElementById("jsonToSend").value = JSON.stringify(intermediate, null, 2)
+
 
 
             if ( VIEWMODE === VERIFY ) {
@@ -128,8 +136,9 @@
 
         }
         function getSnippet(json) {
-            console.log( VIEWMODE )
-            return VIEWMODE
+            let x = "THIS WILL TO DATA_LAYER_EXAMPLE\n" + JSON.stringify(categoricalHoH[currentEventName], null, 2)
+            x += "HELLO MY DEAR"
+            return x 
         }
         function doFlatten() {
             const flat = flatten(everything)

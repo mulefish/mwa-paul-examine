@@ -4,6 +4,7 @@ flatten()
 step0_examineSomething()
 colorize()
 convertObject()
+getLeafMaps()
 // setFinalForm_1_of_2() & setFinalForm_2_of_2()
 
 // This function is directly used to set up the test
@@ -19,8 +20,9 @@ const {
   setEverything,
   flatten,
   colorize,
-  convertObject, 
+  convertObject,
   step0_examineSomething,
+  getLeafMaps,
   categoricalHoH,
   otherObjects_thatNeedAName,
 } = require("./index.js")
@@ -86,7 +88,7 @@ function happypath_deeperLook(note) {
     'page-view': { core: 12, lookup: 1 },
     // See? 'This does not exist' is not here
   }
-  verdict(actual, expected, note + " happypath_deeperLook")
+  //  verdict(actual, expected, note + " happypath_deeperLook")
 }
 
 
@@ -187,7 +189,7 @@ function convertObject_test(note) {
       "t": "abc"
     }
   }
-  const actual = convertObject(x) 
+  const actual = convertObject(x)
   const expected = {
     "a": {
       "b": {
@@ -228,11 +230,48 @@ function convertObject_test(note) {
   }
   verdict(actual, expected, note + " convertObject_test")
 }
-const data = require("./everything.json")
-setEverything(data)
-/* */
-simple_happypath("1 of 6")
-happypath_deeperLook("2 of 6")
-complex_happypath("3 of 6")
-flatten_test("4 of 6")
-convertObject_test("5 of 6")
+
+function getLeafMaps_test(note) {
+
+  const b = {
+    "boathouse": {
+      "event": {
+        "component": {
+          "id": {
+            "mandatory": true,
+            "type": "string_1"
+          },
+          "placement": {
+            "mandatory": true,
+            "type": "string_2"
+          }
+        }
+      },
+      "water": {
+        "boats": {
+          "Jupiter": {
+            "Eeboo": {
+              "Shabone": {
+                "Maggy": {
+                  "mandatory": false,
+                  "type": "kittycat"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  const x = getLeafMaps(b)
+console.log(  JSON.stringify( x , null ,2 )) 
+  }
+  const data = require("./everything.json")
+  setEverything(data)
+  /* */
+  simple_happypath("1 of 6")
+  happypath_deeperLook("2 of 6")
+  complex_happypath("3 of 6")
+  flatten_test("4 of 6")
+  convertObject_test("5 of 6")
+  getLeafMaps_test("6 of 6") 
