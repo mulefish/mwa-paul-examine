@@ -89,14 +89,14 @@
             events.forEach((thing) => {
                 step0_examineSomething(thing)
             })
-            console.log("init done MwaAnalytics.initializeAnalytics")
+            console.log("init! MwaAnalytics.initializeAnalytics")
         }
         function doEvent(eventName) {
             document.getElementById("selectedEvent").innerHTML = eventName
             const inputObject = categoricalHoH[eventName]["core"]
 
-            const intermediate = convertObject(inputObject)
-
+            let intermediate = convertObject(inputObject)
+            intermediate = intermediate["default"]
             document.getElementById("schema").value = JSON.stringify(intermediate, null, 2)
             document.getElementById("jsonToSend").value = JSON.stringify(inputObject, null, 2)
             document.getElementById("receiveInfo").value = JSON.stringify(categoricalHoH[eventName], null, 2)
