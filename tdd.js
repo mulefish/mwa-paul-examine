@@ -3,7 +3,8 @@
 flatten()
 step0_examineSomething()
 colorize()
-setFinalForm_1_of_2() & setFinalForm_2_of_2()
+convertObject()
+// setFinalForm_1_of_2() & setFinalForm_2_of_2()
 
 // This function is directly used to set up the test
 setEverything()
@@ -18,8 +19,9 @@ const {
   setEverything,
   flatten,
   colorize,
-  setFinalForm_1_of_2, 
-  setFinalForm_2_of_2, 
+  // setFinalForm_1_of_2, 
+  // setFinalForm_2_of_2, 
+  convertObject, 
   step0_examineSomething,
   categoricalHoH,
   otherObjects_thatNeedAName,
@@ -181,23 +183,90 @@ function colorize_test(note) {
 
 }
 
-function setFinalForm_test(note) { 
-  const intermediate = categoricalHoH["error"]["core"] 
-  // console.log( intermediate)
-  const paths = Object.keys(intermediate)
-  const shell = setFinalForm_1_of_2(paths)
+// function setFinalForm_test(note) { 
+//   const intermediate = categoricalHoH["error"]["core"] 
+//   // console.log( intermediate)
+//   const paths = Object.keys(intermediate)
+//   const shell = setFinalForm_1_of_2(paths)
 
-  const result = setFinalForm_2_of_2(shell, intermediate)
+//   const result = setFinalForm_2_of_2(shell, intermediate)
 
-  console.log( JSON.stringify( result, null, 2 ))
-  verdict(true, false ,note + " setFinalForm_1_of_2_test")
-}
+//   console.log( JSON.stringify( result, null, 2 ))
+//   verdict(true, false ,note + " setFinalForm_1_of_2_test")
+// }
 
 /*
 Not a test : Needed to set run the test
 This is the equivilent of
 let everything =  self.validationModule
 */
+function convertObject_test(note) {
+  const x = {
+    "default.payload.screen.header": {
+      "mandatory": true,
+      "type": "string"
+    },
+    "default.payload.event.attributes.errorMessage": {
+      "mandatory": false,
+      "type": "string"
+    },
+    "default.payload.event.attributes.errorDetails": {
+      "mandatory": false,
+      "type": "string"
+    },
+    "default.payload.event.attributes.errorType": {
+      "mandatory": false,
+      "type": "string"
+    },
+    "default.version": {
+      "mandatory": false,
+      "type": "string"
+    },
+    "default.timestamp": {
+      "mandatory": false,
+      "type": "string"
+    }
+  }
+  const actual = convertObject(x) 
+  const expected = {
+    "default": {
+      "payload": {
+        "screen": {
+          "header": {
+            "mandatory": true,
+            "type": "string"
+          }
+        },
+        "event": {
+          "attributes": {
+            "errorMessage": {
+              "mandatory": false,
+              "type": "string"
+            },
+            "errorDetails": {
+              "mandatory": false,
+              "type": "string"
+            },
+            "errorType": {
+              "mandatory": false,
+              "type": "string"
+            }
+          }
+        }
+      },
+      "version": {
+        "mandatory": false,
+        "type": "string"
+      },
+      "timestamp": {
+        "mandatory": false,
+        "type": "string"
+      }
+    }
+  }
+
+  verdict(actual, expected, note + " convertObject_test")
+}
 const data = require("./everything.json")
 setEverything(data)
 /* */
@@ -205,5 +274,6 @@ simple_happypath("1 of 6")
 happypath_deeperLook("2 of 6")
 complex_happypath("3 of 6")
 flatten_test("4 of 6")
-setFinalForm_test("5 of 6")
+convertObject_test("5 of 6")
+// setFinalForm_test("5 of 6")
 //colorize_test("6 of 6")

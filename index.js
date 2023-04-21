@@ -8,73 +8,93 @@ function setEverything(gaintBallOfJson) {
 
 }
 
-function setFinalForm_1_of_2(inputList) {
-    /* receive a list of flattened paths... e.g., 
-    ['default.something,kitty','default.something,puppy']
-    return this: 
-    { default: { something: {kitty:{}, puppy:{}}}}
-    */ 
-    let outputMap = {};
-    for (let i = 0; i < inputList.length; i++) {
-      let currentPath = inputList[i].split(".");
-      let currentNode = outputMap;
-      for (let j = 0; j < currentPath.length; j++) {
-        let currentKey = currentPath[j];
-        if (!currentNode.hasOwnProperty(currentKey)) {
-          if (j === currentPath.length - 1) {
-            currentNode[currentKey] = {};
-          } else {
-            currentNode[currentKey] = {};
-          }
+function convertObject(simple) {
+    const complex = {}; 
+    for (const key in simple) {
+      const levels = key.split('.');
+      let currLevelObj = complex;
+      for (let i = 0; i < levels.length; i++) {
+        const levelKey = levels[i];
+        if (!currLevelObj.hasOwnProperty(levelKey)) {
+          currLevelObj[levelKey] = {};
         }
-        currentNode = currentNode[currentKey];
+        if (i === levels.length - 1) {
+          currLevelObj[levelKey] = simple[key];
+        }
+        currLevelObj = currLevelObj[levelKey];
       }
     }
-    return outputMap;
+    return complex;
+  }
   
 
-}
+// function setFinalForm_1_of_2(inputList) {
+//     /* receive a list of flattened paths... e.g., 
+//     ['default.something,kitty','default.something,puppy']
+//     return this: 
+//     { default: { something: {kitty:{}, puppy:{}}}}
+//     */ 
+//     let outputMap = {};
+//     for (let i = 0; i < inputList.length; i++) {
+//       let currentPath = inputList[i].split(".");
+//       let currentNode = outputMap;
+//       for (let j = 0; j < currentPath.length; j++) {
+//         let currentKey = currentPath[j];
+//         if (!currentNode.hasOwnProperty(currentKey)) {
+//           if (j === currentPath.length - 1) {
+//             currentNode[currentKey] = {};
+//           } else {
+//             currentNode[currentKey] = {};
+//           }
+//         }
+//         currentNode = currentNode[currentKey];
+//       }
+//     }
+//     return outputMap;
+  
 
-function setFinalForm_2_of_2(inputMap, inputObject) {
+// }
 
-    function mergeMaps(inputObject, inputMap) {
-        let outputMap = {};
-        for (let key in inputMap) {
-          let currentValue = inputMap[key];
-          if (typeof currentValue === "object" && !Array.isArray(currentValue)) {
-            outputMap[key] = mergeMaps(inputObject, currentValue);
-          } else {
-            outputMap[key] = inputObject[key];
-          }
-        }
-        return outputMap;
-      }
+// function setFinalForm_2_of_2(inputMap, inputObject) {
+
+//     function mergeMaps(inputObject, inputMap) {
+//         let outputMap = {};
+//         for (let key in inputMap) {
+//           let currentValue = inputMap[key];
+//           if (typeof currentValue === "object" && !Array.isArray(currentValue)) {
+//             outputMap[key] = mergeMaps(inputObject, currentValue);
+//           } else {
+//             outputMap[key] = inputObject[key];
+//           }
+//         }
+//         return outputMap;
+//       }
       
-      function convertObjectToMap(inputObject) {
-        let outputMap = {};
-        for (let key in inputObject) {
-          let currentPath = key.split(".");
-          let currentNode = outputMap;
-          for (let j = 0; j < currentPath.length; j++) {
-            let currentKey = currentPath[j];
-            if (!currentNode.hasOwnProperty(currentKey)) {
-              if (j === currentPath.length - 1) {
-                currentNode[currentKey] = inputObject[key];
-              } else {
-                currentNode[currentKey] = {};
-              }
-            }
-            currentNode = currentNode[currentKey];
-          }
-        }
-        return outputMap;
-      }
+//       function convertObjectToMap(inputObject) {
+//         let outputMap = {};
+//         for (let key in inputObject) {
+//           let currentPath = key.split(".");
+//           let currentNode = outputMap;
+//           for (let j = 0; j < currentPath.length; j++) {
+//             let currentKey = currentPath[j];
+//             if (!currentNode.hasOwnProperty(currentKey)) {
+//               if (j === currentPath.length - 1) {
+//                 currentNode[currentKey] = inputObject[key];
+//               } else {
+//                 currentNode[currentKey] = {};
+//               }
+//             }
+//             currentNode = currentNode[currentKey];
+//           }
+//         }
+//         return outputMap;
+//       }
 
-      let kittycat = mergeMaps(inputObject, inputMap);
-    //   let outputMap = convertObjectToMap(intermediateMap);
-    //   return outputMap
-return kittycat
-}
+//       let kittycat = mergeMaps(inputObject, inputMap);
+//     //   let outputMap = convertObjectToMap(intermediateMap);
+//     //   return outputMap
+// return kittycat
+// }
 
 
 function colorize(ballOfJson) {
@@ -228,10 +248,11 @@ try {
     module.exports = {
         setEverything,
         flatten,
-        setFinalForm_1_of_2,
-        setFinalForm_2_of_2,
+        // setFinalForm_1_of_2,
+        // setFinalForm_2_of_2,
         colorize,
         step0_examineSomething,
+        convertObject,
         // step1_recursive_getCategoricalOptionalityObjects,
         // step2_findTypescriptObjects,
         // step3_recursive_getNonCategoricalObjects,

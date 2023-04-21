@@ -21,7 +21,7 @@ function convertObject(inputObj) {
 */ 
 
 function convertObject(simple) {
-  const complex = {};
+  const complex = {}; 
   for (const key in simple) {
     const levels = key.split('.');
     let currLevelObj = complex;
