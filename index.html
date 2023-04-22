@@ -344,6 +344,7 @@ function getColorizableHOH(obj) {
             document.getElementById("switch_view").innerHTML = view
         }
         async function init() {
+            try { 
             // new up MwaAnalytics
             await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
             // set 'everything'
@@ -354,6 +355,9 @@ function getColorizableHOH(obj) {
                 step0_examineSomething(thing)
             })
             console.log("init! MwaAnalytics.initializeAnalytics")
+        } catch(boom ) {
+            alert(boom)
+        }
         }
         function humanChoseAnEvent(eventName) {
             currentEventName = eventName
