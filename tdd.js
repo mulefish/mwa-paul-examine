@@ -1,46 +1,13 @@
-/* 
-// These function is directly tested. 
-flatten()
-step0_examineSomething()
-colorize()
-inflateFlatMap()
-getLeafMaps()
-// setFinalForm_1_of_2() & setFinalForm_2_of_2()
-
-// This function is directly used to set up the test
-setEverything()
-// These functions are tested but indirectly. If this were Java 
-// they would be 'private'
-step1_recursive_getCategoricalOptionalityObjects()
-step2_findTypescriptObjects()
-step3_recursive_getNonCategoricalObjects()
-*/
-
 const {
   setEverything,
   flatten,
   colorize,
   inflateFlatMap,
   step0_examineSomething,
-  getLeafMaps,
+  getColorizableHOH,
   categoricalHoH,
   otherObjects_thatNeedAName,
 } = require("./index.js")
-
-const show = (() => {
-  for (let k in categoricalHoH) {
-    const H = categoricalHoH[k]
-    console.log(k)
-    console.log(H)
-  }
-  console.log(" ==== ")
-
-  for (let k in otherObjects_thatNeedAName) {
-    const H = otherObjects_thatNeedAName[k]
-    console.log(k)
-    console.log(H)
-  }
-})
 
 const verdict = ((a, b, msg) => {
   let isOk = "FAIL "
@@ -72,7 +39,7 @@ function simple_happypath(note) {
 function happypath_deeperLook(note) {
 
   const events = ["app-response", "product-interaction", "page-view", "This does not exist"]
-  const thisIsForTDDPurposes = true // Prevent irratating console.log
+  const thisIsForTDDPurposes = true // Prevent irratating console logs
   events.forEach((thing) => {
     step0_examineSomething(thing, thisIsForTDDPurposes)
   })
@@ -149,7 +116,6 @@ function inflateFlatMap_simple_test(note) {
 
 
   const actual = inflateFlatMap(x)
-  console.log(JSON.stringify( actual , null, 2 ))
   verdict(false, true, note + " inflateFlatMap_test")
 
 }
@@ -222,7 +188,7 @@ function inflateFlatMap_complex_test(note) {
   verdict(actual, expected, note + " inflateFlatMap_complex_test")
 }
 
-function getLeafMaps_test(note) {
+function getColorizableHOH_test(note) {
 
   const before = {
     "boathouse": {
@@ -255,23 +221,20 @@ function getLeafMaps_test(note) {
     }
   }
 
-  const after = getLeafMaps(before)
-  
+  const after = getColorizableHOH(before)
   const expected = {
     "for_human": {
-      "boathouse,event,component,id": "string_1",
-      "boathouse,event,component,placement": "string_2",
-      "boathouse,water,boats,Jupiter,Eeboo,Shabone,Maggy": "kittycat"
+      "boathouse.event.component.id": "string_1",
+      "boathouse.event.component.placement": "string_2",
+      "boathouse.water.boats.Jupiter.Eeboo.Shabone.Maggy": "kittycat"
     },
     "for_css": {
-      "boathouse,event,component,id": true,
-      "boathouse,event,component,placement": true,
-      "boathouse,water,boats,Jupiter,Eeboo,Shabone,Maggy": false
+      "boathouse.event.component.id": true,
+      "boathouse.event.component.placement": true,
+      "boathouse.water.boats.Jupiter.Eeboo.Shabone.Maggy": false
     }
   }
-  // console.log( after)
-  verdict(after, expected, note + " getLeafMaps_test")
-
+  verdict(after, expected, note + " getColorizableHOH_test")
 }
 
 function colorize_test(note) {
@@ -307,29 +270,35 @@ function colorize_test(note) {
     }
   }
 
-  const intermediate = getLeafMaps(before)
+  const intermediate = getColorizableHOH(before)
   const human = intermediate["for_human"]
   const css = intermediate["for_css"]
-  // console.log( css)
-  // console.log( human)
-  const result = colorize(human, css)
-  console.log(result)
-  const isOk = false
+  const result = colorize(human, css) // result is a bunch of divs used to colorize a JSON.stringified version of the collection 'before'
+  let isOk = true 
+  const expected_substrings = ['boathouse',
+    '"Maggy": "kittycat"',
+    'class="mandatory"',
+    'class="optional"'
+  ]
+  expected_substrings.forEach((thing)=> { 
+    if ( ! result.includes(thing )) {
+      isOk = false 
+    }
+  })
   verdict(isOk, true, note + " colorize_test")
-
 }
 
 
 
 
   const data = require("./everything.json")
-  // setEverything(data)
-  // /* */
-  // simple_happypath("1 of 7")
-  // happypath_deeperLook("2 of 7")
-  // complex_happypath("3 of 7")
-  // flatten_test("4 of 7")
-  // inflateFlatMap_complex_test("5 of 7")
-  // inflateFlatMap_simple_test("6 of 7")
-  getLeafMaps_test("7 of 7") 
-  // colorize_test("7 of 7")
+  setEverything(data)
+  /* */
+  simple_happypath("1 of 7")
+  happypath_deeperLook("2 of 7")
+  complex_happypath("3 of 7")
+  flatten_test("4 of 7")
+  inflateFlatMap_complex_test("5 of 7")
+  inflateFlatMap_simple_test("6 of 7")
+  getColorizableHOH_test("7 of 7") 
+  colorize_test("7 of 7")

@@ -127,7 +127,7 @@
             let intermediate = inflateFlatMap(inputObject)
             intermediate = intermediate["default"]["payload"]
 
-            const after = getLeafMaps(intermediate)
+            const after = getColorizableHOH(intermediate)
 // console.log( after)
             const human = after["for_human"]
             const css = after["for_css"]

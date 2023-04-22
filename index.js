@@ -31,20 +31,17 @@ function inflateFlatMap(simple) {
 function colorize(forHuman, forCss) {
     const a = inflateFlatMap(forHuman)
     const b = inflateFlatMap(forCss)
-    console.log( JSON.stringify(a, null, 2 ) ) 
+
     const human = JSON.stringify(a, null, 2 ).split("\n")
     const css = JSON.stringify(b, null, 2 ).split("\n")
-
-
 
     let accumulator = "" 
     for ( let i = 0; i < human.length; i++ ) { 
         const h = human[i]
         const c = css[i]
-        // console.log( h + "    " + c )
-        if ( c.includes("true,")) {
+        if ( c.includes("true")) {
             accumulator += `<div class="mandatory">${h}</div>`
-        } else if ( c.includes("false,")){
+        } else if ( c.includes("false")){
             accumulator += `<div class="optional">${h}</div>`
         } else {
             accumulator += `<div>${h}</div>`
@@ -169,7 +166,7 @@ function step0_examineSomething(eventName, isTDD=false) {
     }
 }
 
-function getLeafMaps(obj) {
+function getColorizableHOH(obj) {
     const before = {};
     
     const traverseObject = (obj, path) => {
@@ -187,24 +184,40 @@ function getLeafMaps(obj) {
     // Get raw
     traverseObject(obj, []);
     // Clean up
-    const for_human = {}
-    const for_css = {}  
+
+    const for_human_with_commas = {}
+    const for_css_with_commas = {}  
     for ( k in before) {
       const path_tmp = k.split(".")
 
       const path = path_tmp.slice(0, -1); 
+
       if ( k.endsWith("mandatory")) {
-        for_css[path] = before[k] // This will be true or false boolean 
+        for_css_with_commas[path] = before[k] // This will be true or false boolean 
       }
       else {
-        for_human[path] = before[k] // This wwill be 'string' or 'number' or Kittycats<Vector> etc etc
+        for_human_with_commas[path] = before[k] // This wwill be 'string' or 'number' or Kittycats<Vector> etc etc
       }
     }  
-  
+    // The next replace , for . section is weird, but at this point
+    // the paths in for_human_with_commas and for_css_with_commas are something like:
+    // 'boathouse,event,component,id'
+    // but what is needed would be:
+    // 'boathouse.event.component.id'
+    const for_human = {}
+    const for_css = {}
+    for ( let k in for_human_with_commas) { 
+        // const v = for_human_with_commas[k]
+        const path = k.replace(/,/g, ".")
+        for_human[path] = for_human_with_commas[k]
+        for_css[path] = for_css_with_commas[k]
+    }
+    
     const result = {
       for_human, 
       for_css
     }
+
     return result;
   }
   
@@ -217,7 +230,7 @@ try {
         colorize,
         step0_examineSomething,
         inflateFlatMap,
-        getLeafMaps,
+        getColorizableHOH,
         categoricalHoH,
         otherObjects_thatNeedAName
     };
