@@ -2,6 +2,12 @@
 <html>
 
 <head>
+    <script>
+        // GLOBALS 
+        const categoricalHoH = {}
+        const otherObjects_thatNeedAName = {}
+        let everything = {}
+    </script>
     <style>
         .optional {
             background-color: #ffffe0;
@@ -46,9 +52,6 @@
     <!-- STACKBLITZ does NOT like index.js -->
     <script>
         // let everything = require("./everything.json")
-const categoricalHoH = {}
-const otherObjects_thatNeedAName = {}
-let everything;
 function setEverything(gaintBallOfJson) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
@@ -277,7 +280,7 @@ function getColorizableHOH(obj) {
 </head>
 
 <body>
-    Hello
+    FINCH
     <table border'1'>
         <tr>
             <td><button onClick='doFlatten()'>Flatten</button></td>
