@@ -106,17 +106,28 @@ function inflateFlatMap_simple_test(note) {
   //     "event,attributes,errorDetails": "string",
   //     "event,attributes,errorType": "string"
   // }
-
   const x = {
     "a.b.c.d.i": {
       "bool": true,
       "t": "abc"
     }
   }
-
-
   const actual = inflateFlatMap(x)
-  verdict(false, true, note + " inflateFlatMap_test")
+  const expected = {
+    "a": {
+      "b": {
+        "c": {
+          "d": {
+            "i": {
+              "bool": true,
+              "t": "abc"
+            }
+          }
+        }
+      }
+    }
+  }
+  verdict(actual, expected, note + " inflateFlatMap_test")
 
 }
 function inflateFlatMap_complex_test(note) {
@@ -274,31 +285,28 @@ function colorize_test(note) {
   const human = intermediate["for_human"]
   const css = intermediate["for_css"]
   const result = colorize(human, css) // result is a bunch of divs used to colorize a JSON.stringified version of the collection 'before'
-  let isOk = true 
+  let isOk = true
   const expected_substrings = ['boathouse',
     '"Maggy": "kittycat"',
     'class="mandatory"',
     'class="optional"'
   ]
-  expected_substrings.forEach((thing)=> { 
-    if ( ! result.includes(thing )) {
-      isOk = false 
+  expected_substrings.forEach((thing) => {
+    if (!result.includes(thing)) {
+      isOk = false
     }
   })
   verdict(isOk, true, note + " colorize_test")
 }
 
-
-
-
-  const data = require("./everything.json")
-  setEverything(data)
-  /* */
-  simple_happypath("1 of 7")
-  happypath_deeperLook("2 of 7")
-  complex_happypath("3 of 7")
-  flatten_test("4 of 7")
-  inflateFlatMap_complex_test("5 of 7")
-  inflateFlatMap_simple_test("6 of 7")
-  getColorizableHOH_test("7 of 7") 
-  colorize_test("7 of 7")
+const data = require("./everything.json")
+setEverything(data)
+/* */
+simple_happypath("1 of 8")
+happypath_deeperLook("2 of 8")
+complex_happypath("3 of 8")
+flatten_test("4 of 8")
+inflateFlatMap_complex_test("5 of 8")
+inflateFlatMap_simple_test("6 of 8")
+getColorizableHOH_test("7 of 8")
+colorize_test("8 of 8")
