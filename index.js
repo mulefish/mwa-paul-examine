@@ -119,7 +119,7 @@ function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, 
 }
 //https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking
 
-function step0_examineSomething(eventName) {
+function step0_examineSomething(eventName, isTDD=false) {
     if (everything["categoricalOptionalityObjects"].hasOwnProperty(eventName)) {
         const all = everything["categoricalOptionalityObjects"][eventName]
         const core = {}
@@ -143,7 +143,9 @@ function step0_examineSomething(eventName) {
             }
         }
     } else {
-        console.log("%c MISSING " + eventName, "background:red")
+        if ( isTDD === false ) {
+            console.log("%c MISSING " + eventName, "background:red")
+        }
     }
 }
 

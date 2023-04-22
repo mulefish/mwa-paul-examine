@@ -72,8 +72,9 @@ function simple_happypath(note) {
 function happypath_deeperLook(note) {
 
   const events = ["app-response", "product-interaction", "page-view", "This does not exist"]
+  const thisIsForTDDPurposes = true // Prevent irratating console.log
   events.forEach((thing) => {
-    step0_examineSomething(thing)
+    step0_examineSomething(thing, thisIsForTDDPurposes)
   })
   const actual = {}
   for (let k in categoricalHoH) {
@@ -88,7 +89,7 @@ function happypath_deeperLook(note) {
     'page-view': { core: 12, lookup: 1 },
     // See? 'This does not exist' is not here
   }
-  //  verdict(actual, expected, note + " happypath_deeperLook")
+  verdict(actual, expected, note + " happypath_deeperLook")
 }
 
 
@@ -233,7 +234,7 @@ function convertObject_test(note) {
 
 function getLeafMaps_test(note) {
 
-  const b = {
+  const before = {
     "boathouse": {
       "event": {
         "component": {
@@ -263,9 +264,24 @@ function getLeafMaps_test(note) {
       }
     }
   }
-  const x = getLeafMaps(b)
-console.log(  JSON.stringify( x , null ,2 )) 
+
+  const after = getLeafMaps(before)
+  
+  const expected = {
+    "for_human": {
+      "boathouse,event,component,id": "string_1",
+      "boathouse,event,component,placement": "string_2",
+      "boathouse,water,boats,Jupiter,Eeboo,Shabone,Maggy": "kittycat"
+    },
+    "for_css": {
+      "boathouse,event,component,id": true,
+      "boathouse,event,component,placement": true,
+      "boathouse,water,boats,Jupiter,Eeboo,Shabone,Maggy": false
+    }
   }
+  verdict(after, expected, note + " getLeafMaps_test")
+
+}
   const data = require("./everything.json")
   setEverything(data)
   /* */
