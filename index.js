@@ -32,16 +32,16 @@ function colorize(forHuman, forCss) {
     const a = inflateFlatMap(forHuman)
     const b = inflateFlatMap(forCss)
 
-    const human = JSON.stringify(a, null, 2 ).split("\n")
-    const css = JSON.stringify(b, null, 2 ).split("\n")
+    const human = JSON.stringify(a, null, 2).split("\n")
+    const css = JSON.stringify(b, null, 2).split("\n")
 
-    let accumulator = "" 
-    for ( let i = 0; i < human.length; i++ ) { 
+    let accumulator = ""
+    for (let i = 0; i < human.length; i++) {
         const h = human[i]
         const c = css[i]
-        if ( c.includes("true")) {
+        if (c.includes("true")) {
             accumulator += `<div class="mandatory">${h}</div>`
-        } else if ( c.includes("false")){
+        } else if (c.includes("false")) {
             accumulator += `<div class="optional">${h}</div>`
         } else {
             accumulator += `<div>${h}</div>`
@@ -136,7 +136,7 @@ function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, 
 }
 //https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking
 
-function step0_examineSomething(eventName, isTDD=false) {
+function step0_examineSomething(eventName, isTDD = false) {
     if (everything["categoricalOptionalityObjects"].hasOwnProperty(eventName)) {
         const all = everything["categoricalOptionalityObjects"][eventName]
         const core = {}
@@ -160,7 +160,7 @@ function step0_examineSomething(eventName, isTDD=false) {
             }
         }
     } else {
-        if ( isTDD === false ) {
+        if (isTDD === false) {
             console.log("%c MISSING " + eventName, "background:red")
         }
     }
@@ -168,37 +168,37 @@ function step0_examineSomething(eventName, isTDD=false) {
 
 function getColorizableHOH(obj) {
     const before = {};
-    
+
     const traverseObject = (obj, path) => {
-      for (const [key, value] of Object.entries(obj)) {
-        const currentPath = path.concat([key]);
-        if (typeof value === "object") {
-          traverseObject(value, currentPath);
-        } else if (typeof value === "string" && key === "type") {
-          before[currentPath.join(".")] = value;
-        } else {
-          before[currentPath.join(".")] = value;
+        for (const [key, value] of Object.entries(obj)) {
+            const currentPath = path.concat([key]);
+            if (typeof value === "object") {
+                traverseObject(value, currentPath);
+            } else if (typeof value === "string" && key === "type") {
+                before[currentPath.join(".")] = value;
+            } else {
+                before[currentPath.join(".")] = value;
+            }
         }
-      }
     };
     // Get raw
     traverseObject(obj, []);
     // Clean up
 
     const for_human_with_commas = {}
-    const for_css_with_commas = {}  
-    for ( k in before) {
-      const path_tmp = k.split(".")
+    const for_css_with_commas = {}
+    for (k in before) {
+        const path_tmp = k.split(".")
 
-      const path = path_tmp.slice(0, -1); 
+        const path = path_tmp.slice(0, -1);
 
-      if ( k.endsWith("mandatory")) {
-        for_css_with_commas[path] = before[k] // This will be true or false boolean 
-      }
-      else {
-        for_human_with_commas[path] = before[k] // This wwill be 'string' or 'number' or Kittycats<Vector> etc etc
-      }
-    }  
+        if (k.endsWith("mandatory")) {
+            for_css_with_commas[path] = before[k] // This will be true or false boolean 
+        }
+        else {
+            for_human_with_commas[path] = before[k] // This wwill be 'string' or 'number' or Kittycats<Vector> etc etc
+        }
+    }
     // The next replace , for . section is weird, but at this point
     // the paths in for_human_with_commas and for_css_with_commas are something like:
     // 'boathouse,event,component,id'
@@ -206,22 +206,20 @@ function getColorizableHOH(obj) {
     // 'boathouse.event.component.id'
     const for_human = {}
     const for_css = {}
-    for ( let k in for_human_with_commas) { 
+    for (let k in for_human_with_commas) {
         // const v = for_human_with_commas[k]
         const path = k.replace(/,/g, ".")
         for_human[path] = for_human_with_commas[k]
         for_css[path] = for_css_with_commas[k]
     }
-    
+
     const result = {
-      for_human, 
-      for_css
+        for_human,
+        for_css
     }
 
     return result;
-  }
-  
-
+}
 
 try {
     module.exports = {

@@ -24,10 +24,10 @@
             width: 98%;
             min-height: 700px;
         }
+
         #schema {
-            min-height:300px; 
+            min-height: 300px;
         }
-        
     </style>
     <link rel="icon" href="data:;base64,=">
     <!-- <link rel="stylesheet" href="style.css"> -->
@@ -51,7 +51,9 @@
             <td><button onClick='doFlatten()'>Flatten</button></td>
             <td><button onClick='humanChoseAnEvent("app-response")'>app-response</button></td>
             <td><button onClick='humanChoseAnEvent("error")'>error</button></td>
-            <td><button onClick='humanChoseAnEvent("general-component-interaction")'>general-component-interaction</button></td>
+            <td><button
+                    onClick='humanChoseAnEvent("general-component-interaction")'>general-component-interaction</button>
+            </td>
             <td><button onClick='humanChoseAnEvent("general-component-event")'>general-component-event</button></td>
             <td><button onClick='humanChoseAnEvent("page-products-displayed")'>page-products-displayed</button></td>
             <td><button onClick='humanChoseAnEvent("page-view")'>page-view</button></td>
@@ -66,14 +68,14 @@
         <tr>
             <td valign="top" id="left">
                 Legend:<span class="optional">optional</span>&nbsp;<span class="mandatory">mandatory</span>
-                <hr/>
-                
-            
+                <hr />
+
+
                 <pre id="schema"></pre>
                 <!-- <textarea id="schema" rows="20" cols="100"></textarea> -->
 
                 <hr />
-                <button>Send</button>
+                <button onClick="sendIt()">Send</button>
                 <button onClick="doView()">Name this button</button>
                 <textarea id="jsonToSend"></textarea>
             </td>
@@ -81,7 +83,7 @@
                 &nbsp;
             </td>
             <td valign="top">
-                <button  onClick="switch_view()">Switch view</button>&nbsp;&nbsp;<span id="switch_view">Verify</span>
+                <button onClick="switch_view()">Switch view</button>&nbsp;&nbsp;<span id="switch_view">Verify</span>
                 <textarea id="rightSide_textArea" spellcheck="false"></textarea>
             </td>
 
@@ -93,11 +95,11 @@
         // This 'enum' will be used to determine what to show on the right hand
         const VERIFY = "verify_actual_restful_call"
         const DATA_LAYER_EXAMPLE = "data_layer_example"
-        let VIEWMODE=VERIFY
+        let VIEWMODE = VERIFY
         let currentEventName
-        function switch_view() { 
+        function switch_view() {
             let view;
-            if ( VIEWMODE === VERIFY ) { 
+            if (VIEWMODE === VERIFY) {
                 view = `<a target="_blank" href="https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking">Data Layer Example</a>`
                 VIEWMODE = DATA_LAYER_EXAMPLE
             } else {
@@ -132,21 +134,48 @@
             const jsonToSend = inflateFlatMap(human)
             const colorered = colorize(human, css)
             document.getElementById("schema").innerHTML = colorered
-            document.getElementById("jsonToSend").value = "JtS" + JSON.stringify(jsonToSend, null, 2)
-            if ( VIEWMODE === VERIFY ) {
+            document.getElementById("jsonToSend").value = JSON.stringify(jsonToSend, null, 2)
+            if (VIEWMODE === VERIFY) {
                 document.getElementById("rightSide_textArea").value = JSON.stringify(categoricalHoH[eventName], null, 2)
             } else {
                 document.getElementById("rightSide_textArea").value = getSnippet(jsonToSend)
             }
         }
+
+
+
+        async function sendIt() {
+            const eventName = document.getElementById("selectedEvent").innerHTML
+            // if ( ! signals.hasOwnProperty(event_name)) {
+            //     document.getElementById("receiveInfo").value = "The supplied " + event_name + " is not in the collection"
+            // } else {
+            // const x = signals[event_name]
+            try {
+                const x = JSON.parse(document.getElementById("jsonToSend").value)
+                const theResult = await MwaAnalytics.trackEvent(eventName, x)
+                const base = theResult['payload']['properties'] //["validationResult"] //["data"]["payload"] //['payload']["validationResult"]["data"]["payload"]
+                const product = base["product"]
+                const payloadInner = base['validationResult']['data']['payload']
+                let out = JSON.stringify(product, null, 2)
+                out += "\n-----------------\n"
+                out += JSON.stringify(payloadInner, null, 2)
+                // document.getElementById("receiveInfo").value = out
+                document.getElementById("rightSide_textArea").value = JSON.stringify(theResult, null, 2)
+            } catch (boom) {
+                document.getElementById("rightSide_textArea").value = boom
+            }
+            // }
+        }
+
+
         function getSnippet(json) {
             const j = JSON.stringify(json, null, 2)
-            let x  = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${j}}`
-            return x 
+            let x = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${j}}`
+            return x
         }
-        function doView() { 
+        function doView() {
             const str = document.getElementById("jsonToSend").value
-            let x  = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${str}}`
+            let x = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${str}}`
             document.getElementById("rightSide_textArea").value = x
         }
 
