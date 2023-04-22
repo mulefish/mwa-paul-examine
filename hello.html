@@ -25,7 +25,7 @@
             min-height: 700px;
         }
         #schema {
-            min-height:400px; 
+            min-height:300px; 
         }
         
     </style>
@@ -67,6 +67,10 @@
     <table border="'1">
         <tr>
             <td valign="top" id="left">
+                Legend:<span class="optional">optional</span>&nbsp;<span class="mandatory">mandatory</span>
+                <hr/>
+                
+            
                 <pre id="schema"></pre>
                 <!-- <textarea id="schema" rows="20" cols="100"></textarea> -->
 
@@ -105,7 +109,23 @@
         }
         function showExample() {
             // TODO! Delete this function and its associated  button 
-            
+            const example = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT, { 
+  event: {
+      attributes: {
+          hasImage: [true|false],
+      },
+  },
+  eventSubType: EVENT_TYPE.INTERACTION,
+  component: {
+    id: "reviews:liked",
+    type: [Component Type <string>](pattern library),
+    text: "",
+    position: -1,
+    totalCount: -1,
+  }
+);`
+document.getElementById("receiveInfo").value = example
+
         }
         async function init() {
             // new up MwaAnalytics
@@ -131,11 +151,12 @@
 // console.log( after)
             const human = after["for_human"]
             const css = after["for_css"]
+            const jsonToSend = inflateFlatMap(human)
             // console.log(human)
             // console.log(css)
             const colorered = colorize(human, css)
             document.getElementById("schema").innerHTML = colorered
-            document.getElementById("jsonToSend").value = JSON.stringify(intermediate, null, 2)
+            document.getElementById("jsonToSend").value = JSON.stringify(jsonToSend, null, 2)
 
 
 
