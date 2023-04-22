@@ -8,7 +8,7 @@ function setEverything(gaintBallOfJson) {
 
 }
 
-function convertObject(simple) {
+function inflateFlatMap(simple) {
     const complex = {};
     for (const key in simple) {
         const levels = key.split('.');
@@ -28,9 +28,29 @@ function convertObject(simple) {
 }
 
 
-function colorize(ballOfJson) {
-    console.log("Colorize " + ballOfJson)
-    return JSON.stringify(ballOfJson, null, 2)
+function colorize(forHuman, forCss) {
+    const a = inflateFlatMap(forHuman)
+    const b = inflateFlatMap(forCss)
+    console.log( JSON.stringify(a, null, 2 ) ) 
+    const human = JSON.stringify(a, null, 2 ).split("\n")
+    const css = JSON.stringify(b, null, 2 ).split("\n")
+
+
+
+    let accumulator = "" 
+    for ( let i = 0; i < human.length; i++ ) { 
+        const h = human[i]
+        const c = css[i]
+        // console.log( h + "    " + c )
+        if ( c.includes("true,")) {
+            accumulator += `<div class="mandatory">${h}</div>`
+        } else if ( c.includes("false,")){
+            accumulator += `<div class="optional">${h}</div>`
+        } else {
+            accumulator += `<div>${h}</div>`
+        }
+    }
+    return accumulator
 }
 
 function flatten(objectToFlatten) {
@@ -166,12 +186,12 @@ function getLeafMaps(obj) {
     };
     // Get raw
     traverseObject(obj, []);
-  
     // Clean up
     const for_human = {}
     const for_css = {}  
     for ( k in before) {
       const path_tmp = k.split(".")
+
       const path = path_tmp.slice(0, -1); 
       if ( k.endsWith("mandatory")) {
         for_css[path] = before[k] // This will be true or false boolean 
@@ -196,7 +216,7 @@ try {
         flatten,
         colorize,
         step0_examineSomething,
-        convertObject,
+        inflateFlatMap,
         getLeafMaps,
         categoricalHoH,
         otherObjects_thatNeedAName
