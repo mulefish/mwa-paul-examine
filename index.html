@@ -283,6 +283,7 @@ function getColorizableHOH(obj) {
     FINCH
     <table border'1'>
         <tr>
+            <td><button onClick="init()">Init</button></td>
             <td><button onClick='doFlatten()'>Flatten</button></td>
             <td><button onClick='humanChoseAnEvent("app-response")'>app-response</button></td>
             <td><button onClick='humanChoseAnEvent("error")'>error</button></td>
@@ -344,6 +345,7 @@ function getColorizableHOH(obj) {
             document.getElementById("switch_view").innerHTML = view
         }
         async function init() {
+            console.log("%c INIT ", "background:pink")
             try { 
             // new up MwaAnalytics
             await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
@@ -423,7 +425,8 @@ function getColorizableHOH(obj) {
             document.getElementById("selectedEvent").innerHTML = flat
             document.getElementById("rightSide_textArea").value = JSON.stringify(flat, null, 2)
         }
-        init()
+
+//        init()
     </script>
 
 </body>
