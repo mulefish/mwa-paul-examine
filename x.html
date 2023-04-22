@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .optional {
+            color: #ff6633;
+        }
+
+        .mandatory {
+            color: #0000ff;
+        }
+
+        #receiveInfo {
+            min-width: 1000px;
+            min-height: 1000px;
+        }
+    </style>
+    <link rel="icon" href="data:;base64,=">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
+    <script
+        src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
+    <script src="bagOfFunctions.js"></script>
+</head>
+
+<body>
+    <!-- self.validationModule.categoricalOptionalityObjects 
+    <button onClick="doValidationModule()">validationModule</button>-->
+
+    <table border'1'>
+        <tr>
+            <td><button onClick='doFlatten()'>Flatten</button></td>
+            <td><button onClick='doEvent("app-response")'>app-response</button></td>
+            <td><button onClick='doEvent("error")'>error</button></td>
+            <td><button onClick='doEvent("general-component-interaction")'>general-component-interaction</button></td>
+            <td><button onClick='doEvent("general-component-event")'>general-component-event</button></td>
+            <td><button onClick='doEvent("page-products-displayed")'>page-products-displayed</button></td>
+            <td><button onClick='doEvent("page-view")'>page-view</button></td>
+            <td><button onClick='doEvent("product-interaction")'>product-interaction</button></td>
+            <td><button onClick='doEvent("purchase")'>purchase</button></td>
+            <td id="selectedEvent"></td>
+        </tr>
+    </table>
+    <hr />
+
+    <table border="'1">
+        <tr>
+            <td valign="top">
+                <pre id="schema"></pre>
+            </td>
+            <td valign="top">
+                &nbsp;
+            </td>
+            <td>
+                <textarea id="receiveInfo" spellcheck="false"></textarea>
+            </td>
+
+        </tr>
+    </table>
+
+
+    <script>
+        function init() { 
+            blue("MwaAnalytics.initializeAnalytics('TEST', {}, [], true);")
+            MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
+        }
+
+        let schemaObjects;
+        let categoricalOptionalityObjects;
+        function loadData() {
+            schemaObjects =                 self.validationModule.categoricalValidatorObjects
+            categoricalOptionalityObjects = self.validationModule.categoricalOptionalityObjects
+            const listOfEvents = Object.keys(schemaObjects)
+            // const x = flatten(self.validationModule)
+            // document.getElementById("receiveInfo").innerHTML = JSON.stringify(x, null, 4)
+
+            document.getElementById("receiveInfo").innerHTML = JSON.stringify(self.validationModule["SCREEN"], null, 4)
+        }
+        function doEvent(eventName) {
+            if (schemaObjects === undefined) {
+                loadData()
+            }
+            const obj2 = categoricalOptionalityObjects[eventName]["default"]["payload"]
+           // green(obj2)
+            // const zod = getTypesFromZod(self.validationModule[eventName.toUpperCase()])
+            // blue(zod)
+            // pink( eventName + "   " + eventName.toUpperCase())
+            // const zod = getTypesFromZod(self.validationModule["SCREEN"])
+            // blue(zod )
+            // const zod2 = getTypesFromZod(self.validationModule["EVENT"]["attributes"])
+            // blue(zod2 )
+            // const zod3 = getTypesFromZod(self.validationModule["EVENT"]["component"])
+            // tan(zod3 )
+
+            // document.getElementById("schema").innerHTML = colorize(obj)
+
+            const obj = findTheseZodThings( eventName, self.validationModule)
+            // const colorizedJson = colorize(obj)
+            const colorizedJson = colorize(obj, obj2)
+
+            document.getElementById("schema").innerHTML = colorizedJson
+
+            document.getElementById("selectedEvent").innerHTML = eventName
+        }
+
+        function doFlatten() {
+            // const obj = {
+            //     schemaObjects,
+            //     categoricalOptionalityObjects
+            // }
+            //const everything = flatten(obj)
+            const everything = flatten(self.validationModule)
+            // const self.validationModule
+            document.getElementById("receiveInfo").innerHTML = JSON.stringify(everything, null, 2 )
+        }
+        init()
+    </script>
+
+</body>
+
+</html>
