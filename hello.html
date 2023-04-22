@@ -11,7 +11,7 @@
             background-color: #ADD8E6;
         }
 
-        #receiveInfo {
+        #rightSide_textArea {
             min-width: 1000px;
             min-height: 1000px;
         }
@@ -58,8 +58,6 @@
             <td><button onClick='humanChoseAnEvent("product-interaction")'>product-interaction</button></td>
             <td><button onClick='humanChoseAnEvent("purchase")'>purchase</button></td>
             <td id="selectedEvent"></td>
-            <td><button onClick='showExample()'>showExample</button></td>
-
         </tr>
     </table>
     <hr />
@@ -76,6 +74,7 @@
 
                 <hr />
                 <button>Send</button>
+                <button onClick="doView()">Name this button</button>
                 <textarea id="jsonToSend"></textarea>
             </td>
             <td valign="top">
@@ -83,7 +82,7 @@
             </td>
             <td valign="top">
                 <button  onClick="switch_view()">Switch view</button>&nbsp;&nbsp;<span id="switch_view">Verify</span>
-                <textarea id="receiveInfo" spellcheck="false"></textarea>
+                <textarea id="rightSide_textArea" spellcheck="false"></textarea>
             </td>
 
         </tr>
@@ -107,26 +106,6 @@
             }
             document.getElementById("switch_view").innerHTML = view
         }
-        function showExample() {
-            // TODO! Delete this function and its associated  button 
-            const example = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT, { 
-  event: {
-      attributes: {
-          hasImage: [true|false],
-      },
-  },
-  eventSubType: EVENT_TYPE.INTERACTION,
-  component: {
-    id: "reviews:liked",
-    type: [Component Type <string>](pattern library),
-    text: "",
-    position: -1,
-    totalCount: -1,
-  }
-);`
-document.getElementById("receiveInfo").value = example
-
-        }
         async function init() {
             // new up MwaAnalytics
             await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
@@ -148,36 +127,34 @@ document.getElementById("receiveInfo").value = example
             intermediate = intermediate["default"]["payload"]
 
             const after = getColorizableHOH(intermediate)
-// console.log( after)
             const human = after["for_human"]
             const css = after["for_css"]
             const jsonToSend = inflateFlatMap(human)
-            // console.log(human)
-            // console.log(css)
             const colorered = colorize(human, css)
             document.getElementById("schema").innerHTML = colorered
-            document.getElementById("jsonToSend").value = JSON.stringify(jsonToSend, null, 2)
-
-
-
+            document.getElementById("jsonToSend").value = "JtS" + JSON.stringify(jsonToSend, null, 2)
             if ( VIEWMODE === VERIFY ) {
-                document.getElementById("receiveInfo").value = JSON.stringify(categoricalHoH[eventName], null, 2)
+                document.getElementById("rightSide_textArea").value = JSON.stringify(categoricalHoH[eventName], null, 2)
             } else {
-                document.getElementById("receiveInfo").value = getSnippet(intermediate)
+                document.getElementById("rightSide_textArea").value = getSnippet(jsonToSend)
             }
-
         }
         function getSnippet(json) {
-            let x = "THIS WILL TO DATA_LAYER_EXAMPLE\n" + JSON.stringify(categoricalHoH[currentEventName], null, 2)
-            x += "HELLO MY DEAR"
+            const j = JSON.stringify(json, null, 2)
+            let x  = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${j}}`
             return x 
         }
+        function doView() { 
+            const str = document.getElementById("jsonToSend").value
+            let x  = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${str}}`
+            document.getElementById("rightSide_textArea").value = x
+        }
+
         function doFlatten() {
             const flat = flatten(everything)
             document.getElementById("selectedEvent").innerHTML = flat
-            document.getElementById("receiveInfo").value = JSON.stringify(flat, null, 2)
+            document.getElementById("rightSide_textArea").value = JSON.stringify(flat, null, 2)
         }
-
         init()
     </script>
 
