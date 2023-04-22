@@ -4,474 +4,31 @@
 <head>
     <style>
         .optional {
-            color: #ff6633;
+            background-color: #ffffe0;
         }
 
         .mandatory {
-            color: #0000ff;
+            background-color: #ADD8E6;
         }
 
-        #receiveInfo {
+        #rightSide_textArea {
             min-width: 1000px;
             min-height: 1000px;
         }
+
+        #left {
+            min-width: 500px;
+        }
+
+        #jsonToSend {
+            width: 98%;
+            min-height: 700px;
+        }
+
+        #schema {
+            min-height: 100px;
+        }
     </style>
-
-    <script>
-
-
-const grey = (thing) => {
-    let msg = thing
-    if ((typeof thing) === "object") {
-        msg = JSON.stringify(thing)
-    }
-    console.log("%c " + msg, "background:#e0e0e0")
-}
-const tan = (thing) => {
-    let msg = thing
-    if ((typeof thing) === "object") {
-        msg = JSON.stringify(thing)
-    }
-    console.log("%c " + msg, "background:tan")
-}
-
-const green = (thing) => {
-    let msg = thing
-    if ((typeof thing) === "object") {
-        msg = JSON.stringify(thing, null, 2)
-    }
-    console.log("%c " + msg, "background:lightgreen")
-}
-const pink = (thing) => {
-    let msg = thing
-    if ((typeof thing) === "object") {
-        msg = JSON.stringify(thing, null, 2)
-    }
-    console.log("%c " + msg, "background:pink")
-}
-
-const blue = (thing) => {
-    let msg = thing
-    if ((typeof thing) === "object") {
-        msg = JSON.stringify(thing, null, 2)
-    }
-    console.log("%c " + msg, "background:lightblue")
-}
-
-function doValidationModule() {
-
-    const cvo = self.validationModule.categoricalValidatorObjects["schemaObjects"]
-    const _listOfEvents = Object.keys(cvo)
-    const listOfEvents = _listOfEvents.map(function (x) { return x.toUpperCase(); })
-    // grey(listOfEvents)   
-    grey('self.validationModule.categoricalValidatorObjects["schemaObjects"]')
-    grey("self.validationModule")
-    const listOfvalidationModule = Object.keys(self.validationModule)
-    // green(listOfvalidationModule)
-    // blue( JSON.stringify( self.validationModule, null, 2 ) )
-
-    document.getElementById("sendInfo").value = JSON.stringify(listOfEvents, null, 2)
-
-    document.getElementById("receiveInfo").value = JSON.stringify(self.validationModule, null, 2)
-
-
-    // listOfEvents.forEach((event, i)=> { 
-    //     const obj = self.validationModule[event]
-    //     blue( i + "   " + event)
-    //     green(obj)
-    // })
-
-
-}
-/////////////////////////////// LOGIC FOLLOWS ///////////////////
-async function doFetchNEW(event_name) {
-    // PUNT? 
-    if (!signals.hasOwnProperty(event_name)) {
-        document.getElementById("event_name").innerHTML = "none"
-        document.getElementById("sendInfo").value = "The supplied " + event_name + " is not in the collection"
-    } else {
-        document.getElementById("event_name").innerHTML = event_name
-        const x = signals[event_name]
-        document.getElementById("sendInfo").value = JSON.stringify(x, null, 2)
-    }
-}
-
-async function sendIt() {
-    const event_name = document.getElementById("event_name").innerHTML
-    if (!signals.hasOwnProperty(event_name)) {
-        document.getElementById("receiveInfo").value = "The supplied " + event_name + " is not in the collection"
-    } else {
-        // const x = signals[event_name]
-        const x = JSON.parse(document.getElementById("sendInfo").value)
-        try {
-            const theResult = await MwaAnalytics.trackEvent(event_name, x)
-            const base = theResult['payload']['properties'] //["validationResult"] //["data"]["payload"] //['payload']["validationResult"]["data"]["payload"]
-            const product = base["product"]
-            const payloadInner = base['validationResult']['data']['payload']
-            let out = JSON.stringify(product, null, 2)
-            out += "\n-----------------\n"
-            out += JSON.stringify(payloadInner, null, 2)
-            // document.getElementById("receiveInfo").value = out
-            document.getElementById("receiveInfo").value = JSON.stringify(theResult, null, 2)
-        } catch (boom) {
-            document.getElementById("receiveInfo").value = boom
-        }
-    }
-}
-
-
-
-
-// function colorize(json) {
-//     const raw = JSON.stringify(json, null, 2)
-//     const rows = raw.split("\n");
-//     let output = ""
-//     rows.forEach((row, i) => {
-//         let css = "ignore"
-//         if (row.includes(" false")) {
-//             css = "optional"
-//         } else if (row.includes(" true")) {
-//             css = "mandatory"
-//         }
-//         css = "optional"
-//         output += `<div class='${css}'>${row}</div>`
-
-//     })
-//     return output
-// }
-
-
-
-/* Merge 'optionality' dimension in with the 'type' dimensions - the keys of these maps are identical */ 
-function colorize(jsonTypes, jsonOptions) {
-    const raw = JSON.stringify(jsonTypes, null, 2)
-    const rows = raw.split("\n");
-
-    const raw2 = JSON.stringify(jsonOptions, null, 2)
-    const rows2 = raw2.split("\n");
-
-
-    let output = ""
-    // rows.forEach((row, i) => {
-    for ( let i = 0 ; i < rows.length; i++ ) { 
-        let row = rows[i]
-        let row2 = rows2[i]
-        let css = "ignore"
-        // try {
-        if ( row2 !== undefined ) { 
-        if (row2.includes(" false")) {
-            css = "optional"
-            // blue("rows2 |"+ row2)
-        } else if (row2.includes(" true")) {
-            css = "mandatory"
-            tan("rows2 |" + row2  )
-        }
-    }
-    // } catch(boom ) {
-    //     console.log( boom )
-    // }
-    //    css = "optional"
-        output += `<div class='${css}'>${row}</div>`
-
-    }
-    green(output)
-    return output
-}
-
-
-function flatten(objectToFlatten) {
-    // This will not be used in the logic of the page - but it will be helpful to put this page together
-    function flattenObject(obj) {
-        const accumulator = {};
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                if ((typeof obj[key]) == 'object' && obj[key] != null) {
-                    const flatObject = flattenObject(obj[key]);
-                    for (let x in flatObject) {
-                        if (flatObject.hasOwnProperty(x)) {
-                            accumulator[key + '.' + x] = flatObject[x];
-                        }
-                    }
-                } else {
-                    accumulator[key] = obj[key];
-                }
-            }
-        }
-        return accumulator;
-    }
-    return flattenObject(objectToFlatten)
-}
-// function getTypesFromZod(someJsonFromValidationModule) {
-//     let found = {}
-//     for (let k in someJsonFromValidationModule) {
-//         if (k !== "attributes") {
-//             const v = someJsonFromValidationModule[k]
-//             if ((typeof v) === "object") {
-//                 if (v.hasOwnProperty("zodValidationFn")) {
-//                     // It is a simple Zod thing. Likely a 'string' that has some logic on it
-//                     found[k] = v["zodValidType"]
-//                 } else {
-//                     found[k] = k // It is a zod thing! Good find it.
-//                 }
-//             } else {
-//                 found[k] = v
-//             }
-//         }
-//     }
-//     return found
-// }
-
-function getTypesFromZod(someJsonFromValidationModule) {
-    let found = {}
-    for (let k in someJsonFromValidationModule) {
-        if (k !== "attributes") {
-            const v = someJsonFromValidationModule[k]
-            if ((typeof v) === "object") {
-                if (v.hasOwnProperty("zodValidationFn")) {
-                    // It is a simple Zod thing. Likely a 'string' that has some logic on it
-                    found[k] = v["zodValidType"]
-                } else {
-                    found[k] = k // It is a zod thing! Good find it.
-                }
-            } else {
-                found[k] = v
-            }
-        }
-    }
-    return found
-}
-
-
-function findZodTypesToFind(complexJson) {
-    const flatMap = flatten(complexJson)
-
-}
-
-function getSchemaKeys(categoricalEvent) {
-    const lookup = []
-    switch (categoricalEvent) {
-        case "purchase":
-            lookup.push(["SCREEN"])
-            lookup.push(["EVENT", "attributes"])
-            break;
-        case "product-interaction":
-            lookup.push(["SCREEN"])
-            lookup.push(["EVENT", "component"])
-            break;
-        case "page-view":
-            lookup.push(["SCREEN"])
-            break;
-        case "page-products-displayed":
-            lookup.push(["SCREEN"])
-            break;
-
-        case "general-component-event":
-            lookup.push(["SCREEN"])
-            lookup.push(["EVENT", "component"])
-            break;
-
-        case "general-component-interaction":
-            lookup.push(["SCREEN"])
-            lookup.push(["EVENT", "component"])
-            break;
-
-        case "error":
-            lookup.push(["SCREEN"])
-            lookup.push(["EVENT", "attributes"])
-            break;
-
-        case "app-response":
-            lookup.push(["SCREEN"])
-            break;
-
-        default:
-            console.log("Case statement fall through! This should not have been reached.")
-
-    }
-    return lookup
-}
-
-function findTheseZodThings(eventName, everything) {
-    let found = {}
-    if (eventName === "purchase") {
-        found = {
-            "screen": {
-                "path": everything["SCREEN"]["path"],
-                "type": everything["SCREEN"]["type"],
-                "category": "TODO",
-                "country": everything["SCREEN"]["country"]["zodValidType"],
-                "collections": everything["SCREEN"]["collections"],
-                "currency": everything["SCREEN"]["currency"],
-                "header": "TODO",
-                "language": everything["SCREEN"]["language"]["zodValidType"],
-                "property": everything["SCREEN"]["property"]["zodValidType"],
-                "urlRoute": everything["SCREEN"]["urlRoute"]
-
-            },
-            "event": {
-                "attributes": {
-                    "orderId": everything["EVENT"]["attributes"]["orderId?"]
-                }
-            }
-        }
-
-
-    } else if (eventName === "product-interaction") {
-
-        found = {
-            "screen": {
-
-                "path": everything["SCREEN"]["path"],
-                "type": everything["SCREEN"]["type"],
-                "category": "TODO",
-                "country": everything["SCREEN"]["country"]["zodValidType"],
-                "collections": everything["SCREEN"]["collections"],
-                "currency": everything["SCREEN"]["currency"],
-                "header": "TODO",
-                "language": everything["SCREEN"]["language"]["zodValidType"],
-                "property": everything["SCREEN"]["property"]["zodValidType"],
-                "urlRoute": everything["SCREEN"]["urlRoute"]
-            },
-            "event": {
-                "component": {
-                    "id": everything["EVENT"]["component"]["id"],
-                    "type": everything["EVENT"]["component"]["type"],
-                    "text": everything["EVENT"]["component"]["text"],
-                    "placement": everything["EVENT"]["component"]["placement"]
-                }
-            },
-            "collectionList": "TODO"
-        }
-
-    } else if (eventName === "page-view") {
-        found = {
-            "screen": {
-                "path": everything["SCREEN"]["path"],
-                "type": everything["SCREEN"]["type"],
-                "category": "TODO",
-                "country": everything["SCREEN"]["country"]["zodValidType"],
-                "collections": everything["SCREEN"]["collections"],
-                "currency": everything["SCREEN"]["currency"],
-                "header": "TODO",
-                "language": everything["SCREEN"]["language"]["zodValidType"],
-                "property": everything["SCREEN"]["property"]["zodValidType"],
-                "urlRoute": everything["SCREEN"]["urlRoute"]
-            },
-        }
-    } else if (eventName === "page-products-displayed") {
-        found = {
-            "screen": {
-                "path": everything["SCREEN"]["path"],
-                "type": everything["SCREEN"]["type"],
-                "category": "TODO",
-                "country": everything["SCREEN"]["country"]["zodValidType"],
-                "collections": everything["SCREEN"]["collections"],
-                "currency": everything["SCREEN"]["currency"],
-                "header": "TODO",
-                "language": everything["SCREEN"]["language"]["zodValidType"],
-                "property": everything["SCREEN"]["property"]["zodValidType"],
-                "urlRoute": everything["SCREEN"]["urlRoute"]
-            },
-            "collectionList": "TODO"
-        }
-    } else if ( eventName === "general-component-event") { 
-
-        found = {
-            "screen": {
-                "path": everything["SCREEN"]["path"],
-                "type": everything["SCREEN"]["type"],
-                "category": "TODO",
-                "country": everything["SCREEN"]["country"]["zodValidType"],
-                "collections": everything["SCREEN"]["collections"],
-                "currency": everything["SCREEN"]["currency"],
-                "header": "TODO",
-                "language": everything["SCREEN"]["language"]["zodValidType"],
-                "property": everything["SCREEN"]["property"]["zodValidType"],
-                "urlRoute": everything["SCREEN"]["urlRoute"]
-            },
-            "event": {
-                "component": {
-                    "id": everything["EVENT"]["component"]["id"],
-                    "type": everything["EVENT"]["component"]["type"],
-                    "text": everything["EVENT"]["component"]["text"],
-                    "placement": everything["EVENT"]["component"]["placement"]
-                }
-            }
-        }
-    } else if ( eventName === "general-component-interaction") { 
-        found = {
-            "screen": {
-                "path": everything["SCREEN"]["path"],
-                "type": everything["SCREEN"]["type"],
-                "category": "TODO",
-                "country": everything["SCREEN"]["country"]["zodValidType"],
-                "collections": everything["SCREEN"]["collections"],
-                "currency": everything["SCREEN"]["currency"],
-                "header": "TODO",
-                "language": everything["SCREEN"]["language"]["zodValidType"],
-                "property": everything["SCREEN"]["property"]["zodValidType"],
-                "urlRoute": everything["SCREEN"]["urlRoute"]
-            },
-            "event": {
-                "component": {
-                    "id": everything["EVENT"]["component"]["id"],
-                    "type": everything["EVENT"]["component"]["type"],
-                    "text": everything["EVENT"]["component"]["text"],
-                    "placement": everything["EVENT"]["component"]["placement"]
-                }
-            }
-        }
-    } else if ( eventName === "error") {
-        found = {
-            "screen": {
-                "header": "TODO",
-            },
-            "event": {
-                "attributes": {
-                    "errorMessage": everything["EVENT"]["attributes"]["errorMessage?"],
-                    "errorDetails": everything["EVENT"]["attributes"]["errorDetails?"],
-                    "errorType": everything["EVENT"]["attributes"]["errorType?"],
-                }
-            }
-        }
-    } else if ( eventName === "app-response") {
-        found = {
-            "screen": {
-                "screen": {
-                    "path": everything["SCREEN"]["path"],
-                    "type": everything["SCREEN"]["type"],
-                    "category": "TODO",
-                    "country": everything["SCREEN"]["country"]["zodValidType"],
-                    "collections": everything["SCREEN"]["collections"],
-                    "currency": everything["SCREEN"]["currency"],
-                    "header": "TODO",
-                    "language": everything["SCREEN"]["language"]["zodValidType"],
-                    "property": everything["SCREEN"]["property"]["zodValidType"],
-                    "urlRoute": everything["SCREEN"]["urlRoute"]
-                },   
-            }
-        }
-    }
-    return found
-}
-
-
-try {
-    module.exports = {
-        flatten,
-        colorize,
-        getTypesFromZod,
-        findZodTypesToFind,
-        getSchemaKeys,
-        findTheseZodThings
-    };
-} catch (thisIsJustForNode) {
-    // ignore this error... 
-    // this is just for the TDD for node 
-}
-    </script>
-
-
     <link rel="icon" href="data:;base64,=">
     <!-- <link rel="stylesheet" href="style.css"> -->
     <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
@@ -485,24 +42,23 @@ try {
         src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
     <script
         src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
+    <script src="index.js"></script>
 </head>
 
 <body>
-    <!-- self.validationModule.categoricalOptionalityObjects 
-    <button onClick="doValidationModule()">validationModule</button>-->
-
     <table border'1'>
         <tr>
-            <td><a href="https://github.com/mulefish/mwa-paul-examine/" target="_blank">REPO</a></td>
             <td><button onClick='doFlatten()'>Flatten</button></td>
-            <td><button onClick='doEvent("app-response")'>app-response</button></td>
-            <td><button onClick='doEvent("error")'>error</button></td>
-            <td><button onClick='doEvent("general-component-interaction")'>general-component-interaction</button></td>
-            <td><button onClick='doEvent("general-component-event")'>general-component-event</button></td>
-            <td><button onClick='doEvent("page-products-displayed")'>page-products-displayed</button></td>
-            <td><button onClick='doEvent("page-view")'>page-view</button></td>
-            <td><button onClick='doEvent("product-interaction")'>product-interaction</button></td>
-            <td><button onClick='doEvent("purchase")'>purchase</button></td>
+            <td><button onClick='humanChoseAnEvent("app-response")'>app-response</button></td>
+            <td><button onClick='humanChoseAnEvent("error")'>error</button></td>
+            <td><button
+                    onClick='humanChoseAnEvent("general-component-interaction")'>general-component-interaction</button>
+            </td>
+            <td><button onClick='humanChoseAnEvent("general-component-event")'>general-component-event</button></td>
+            <td><button onClick='humanChoseAnEvent("page-products-displayed")'>page-products-displayed</button></td>
+            <td><button onClick='humanChoseAnEvent("page-view")'>page-view</button></td>
+            <td><button onClick='humanChoseAnEvent("product-interaction")'>product-interaction</button></td>
+            <td><button onClick='humanChoseAnEvent("purchase")'>purchase</button></td>
             <td id="selectedEvent"></td>
         </tr>
     </table>
@@ -510,81 +66,126 @@ try {
 
     <table border="'1">
         <tr>
-            <td valign="top">
+            <td valign="top" id="left">
+                Legend:<span class="optional">optional</span>&nbsp;<span class="mandatory">mandatory</span>
+                <hr />
+
+
                 <pre id="schema"></pre>
+                <!-- <textarea id="schema" rows="20" cols="100"></textarea> -->
+
+                <hr />
+                <button onClick="sendIt()">Send</button>
+                <button onClick="doView()">Name this button</button>
+                <textarea id="jsonToSend"></textarea>
             </td>
             <td valign="top">
                 &nbsp;
             </td>
-            <td>
-                <textarea id="receiveInfo" spellcheck="false"></textarea>
+            <td valign="top">
+                <button onClick="switch_view()">Switch view</button>&nbsp;&nbsp;<span id="switch_view">Verify</span>
+                <textarea id="rightSide_textArea" spellcheck="false"></textarea>
             </td>
 
         </tr>
     </table>
 
-
     <script>
-        function init() { 
-            // blue("MwaAnalytics.initializeAnalytics('TEST', {}, [], true);")
-            console.log("INIT")
-            MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
-        }
-
-        let schemaObjects;
-        let categoricalOptionalityObjects;
-        function loadData() {
-            schemaObjects =                 self.validationModule.categoricalValidatorObjects
-            categoricalOptionalityObjects = self.validationModule.categoricalOptionalityObjects
-            const listOfEvents = Object.keys(schemaObjects)
-            // const x = flatten(self.validationModule)
-            // document.getElementById("receiveInfo").innerHTML = JSON.stringify(x, null, 4)
-
-            document.getElementById("receiveInfo").innerHTML = JSON.stringify(self.validationModule["SCREEN"], null, 4)
-        }
-        function doEvent(eventName) {
-            if (schemaObjects === undefined) {
-                loadData()
+        // Poor man's enum
+        // This 'enum' will be used to determine what to show on the right hand
+        const VERIFY = "verify_actual_restful_call"
+        const DATA_LAYER_EXAMPLE = "data_layer_example"
+        let VIEWMODE = VERIFY
+        let currentEventName
+        function switch_view() {
+            let view;
+            if (VIEWMODE === VERIFY) {
+                view = `<a target="_blank" href="https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking">Data Layer Example</a>`
+                VIEWMODE = DATA_LAYER_EXAMPLE
+            } else {
+                view = 'Verify'
+                VIEWMODE = VERIFY
             }
-            const obj2 = categoricalOptionalityObjects[eventName]["default"]["payload"]
-           // green(obj2)
-            // const zod = getTypesFromZod(self.validationModule[eventName.toUpperCase()])
-            // blue(zod)
-            // pink( eventName + "   " + eventName.toUpperCase())
-            // const zod = getTypesFromZod(self.validationModule["SCREEN"])
-            // blue(zod )
-            // const zod2 = getTypesFromZod(self.validationModule["EVENT"]["attributes"])
-            // blue(zod2 )
-            // const zod3 = getTypesFromZod(self.validationModule["EVENT"]["component"])
-            // tan(zod3 )
-
-            // document.getElementById("schema").innerHTML = colorize(obj)
-
-            const obj = findTheseZodThings( eventName, self.validationModule)
-            // const colorizedJson = colorize(obj)
-            const colorizedJson = colorize(obj, obj2)
-
-            document.getElementById("schema").innerHTML = colorizedJson
-
+            document.getElementById("switch_view").innerHTML = view
+        }
+        async function init() {
+            // new up MwaAnalytics
+            await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
+            // set 'everything'
+            setEverything(self.validationModule)
+            // Roll through and set up the different event objects
+            const events = ["app-response", "error", "general-component-interaction", "general-component-event", "page-products-displayed", "page-view", "product-interaction", "purchase"]
+            events.forEach((thing) => {
+                step0_examineSomething(thing)
+            })
+            console.log("init! MwaAnalytics.initializeAnalytics")
+        }
+        function humanChoseAnEvent(eventName) {
+            currentEventName = eventName
             document.getElementById("selectedEvent").innerHTML = eventName
+            const inputObject = categoricalHoH[eventName]["core"]
+
+            let intermediate = inflateFlatMap(inputObject)
+            intermediate = intermediate["default"]["payload"]
+
+            const after = getColorizableHOH(intermediate)
+            const human = after["for_human"]
+            const css = after["for_css"]
+            const jsonToSend = inflateFlatMap(human)
+            const colorered = colorize(human, css)
+            document.getElementById("schema").innerHTML = colorered
+            document.getElementById("jsonToSend").value = JSON.stringify(jsonToSend, null, 2)
+            if (VIEWMODE === VERIFY) {
+                document.getElementById("rightSide_textArea").value = JSON.stringify(categoricalHoH[eventName], null, 2)
+            } else {
+                document.getElementById("rightSide_textArea").value = getSnippet(jsonToSend)
+            }
+        }
+
+
+
+        async function sendIt() {
+            const eventName = document.getElementById("selectedEvent").innerHTML
+            // if ( ! signals.hasOwnProperty(event_name)) {
+            //     document.getElementById("receiveInfo").value = "The supplied " + event_name + " is not in the collection"
+            // } else {
+            // const x = signals[event_name]
+            try {
+                const x = JSON.parse(document.getElementById("jsonToSend").value)
+                const theResult = await MwaAnalytics.trackEvent(eventName, x)
+                const base = theResult['payload']['properties'] //["validationResult"] //["data"]["payload"] //['payload']["validationResult"]["data"]["payload"]
+                const product = base["product"]
+                const payloadInner = base['validationResult']['data']['payload']
+                let out = JSON.stringify(product, null, 2)
+                out += "\n-----------------\n"
+                out += JSON.stringify(payloadInner, null, 2)
+                // document.getElementById("receiveInfo").value = out
+                document.getElementById("rightSide_textArea").value = JSON.stringify(theResult, null, 2)
+            } catch (boom) {
+                document.getElementById("rightSide_textArea").value = boom
+            }
+            // }
+        }
+
+
+        function getSnippet(json) {
+            const j = JSON.stringify(json, null, 2)
+            let x = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${j}}`
+            return x
+        }
+        function doView() {
+            const str = document.getElementById("jsonToSend").value
+            let x = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${str}}`
+            document.getElementById("rightSide_textArea").value = x
         }
 
         function doFlatten() {
-            // const obj = {
-            //     schemaObjects,
-            //     categoricalOptionalityObjects
-            // }
-            //const everything = flatten(obj)
-            const everything = flatten(self.validationModule)
-            // const self.validationModule
-            document.getElementById("receiveInfo").innerHTML = JSON.stringify(everything, null, 2 )
+            const flat = flatten(everything)
+            document.getElementById("selectedEvent").innerHTML = flat
+            document.getElementById("rightSide_textArea").value = JSON.stringify(flat, null, 2)
         }
         init()
     </script>
-
-
-
-
 
 </body>
 
