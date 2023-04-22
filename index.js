@@ -34,17 +34,17 @@ function colorize(forHuman, forCss) {
 
     const human = JSON.stringify(a, null, 2).split("\n")
     const css = JSON.stringify(b, null, 2).split("\n")
-
+    contenteditable="true"
     let accumulator = ""
     for (let i = 0; i < human.length; i++) {
         const h = human[i]
         const c = css[i]
         if (c.includes("true")) {
-            accumulator += `<div class="mandatory">${h}</div>`
+            accumulator += `<div class="mandatory" contenteditable="true">${h}</div>`
         } else if (c.includes("false")) {
-            accumulator += `<div class="optional">${h}</div>`
+            accumulator += `<div class="optional" contenteditable="true">${h}</div>`
         } else {
-            accumulator += `<div>${h}</div>`
+            accumulator += `<div contenteditable="true">${h}</div>`
         }
     }
     return accumulator
