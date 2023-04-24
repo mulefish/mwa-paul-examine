@@ -2,47 +2,31 @@
 <html>
 
 <head>
-    <style>
-        .optional {
-            background-color: #ffffe0;
-        }
-
-        .mandatory {
-            background-color: #ADD8E6;
-        }
-
-        #rightSide_textArea {
-            min-width: 1000px;
-            min-height: 1000px;
-        }
-
-        #left {
-            min-width: 500px;
-        }
-
-        #jsonToSend {
-            width: 98%;
-            min-height: 700px;
-        }
-
-        #schema {
-            min-height: 100px;
-        }
-    </style>
     <link rel="icon" href="data:;base64,=">
-    <!-- <link rel="stylesheet" href="style.css"> -->
-    <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
-    <script src="index.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+    function getDynamicaSrc () { 
+        const version = "latest"
+        const now = Date.now()
+        const host = 'https://dxa4wb90x7ize.cloudfront.net/stage/';
+        const resources = [
+            `https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js`,
+            `${host}transformation-configs/${version}/transformation-configs-remoteEntry.js?time=${now}`,
+            `${host}validation-configs/${version}/validation-configs-remoteEntry.js?time=${now}`,
+            `${host}lam-model/${version}/lam-model-remoteEntry.js?time=${now}`,
+            `${host}experiment-module/${version}/experiment-module-remoteEntry.js?time=${now}`,
+            `${host}%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=${now}`,
+            `index.js`
+        ]
+        resources.forEach((thing) => { 
+            console.log(thing)
+            // console.log("%c LOADING " + thing , "background:lightgreen")
+            document.write(`<script src="${thing}" ><\/script>`)
+        })        
+    } 
+    getDynamicaSrc()
+    </script>
+
 </head>
 
 <body>
@@ -184,6 +168,10 @@
             document.getElementById("selectedEvent").innerHTML = flat
             document.getElementById("rightSide_textArea").value = JSON.stringify(flat, null, 2)
         }
+
+
+
+
         init()
     </script>
 
