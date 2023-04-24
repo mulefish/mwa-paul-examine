@@ -1,0 +1,13 @@
+{
+  "name": "mwa-paul-examine",
+  "version": "1.0.0",
+  "description": "[Edit on StackBlitz ⚡️](https://stackblitz.com/edit/mwa-paul-examine)",
+  "main": "server.js",
+  "scripts": {
+    "test": "node tdd.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
