@@ -5,7 +5,7 @@
     <link rel="icon" href="data:;base64,=">
     <link rel="stylesheet" href="style.css">
     <script>
-    function getDynamicaSrc () { 
+    async function getDynamicaSrc () {
         const version = "latest"
         const now = Date.now()
         const host = 'https://dxa4wb90x7ize.cloudfront.net/stage/';
@@ -24,7 +24,6 @@
             document.write(`<script src="${thing}" ><\/script>`)
         })        
     } 
-    getDynamicaSrc()
     </script>
 
 </head>
@@ -93,6 +92,11 @@
             document.getElementById("switch_view").innerHTML = view
         }
         async function init() {
+
+alert("hello")
+            await getDynamicaSrc()
+
+
             // new up MwaAnalytics
             await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
             // set 'everything'
