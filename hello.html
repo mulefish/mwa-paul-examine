@@ -1,192 +1,97 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <style>
-        .optional {
-            background-color: #ffffe0;
-        }
-
-        .mandatory {
-            background-color: #ADD8E6;
-        }
-
-        #rightSide_textArea {
-            min-width: 1000px;
-            min-height: 1000px;
-        }
-
-        #left {
-            min-width: 500px;
-        }
-
-        #jsonToSend {
-            width: 98%;
-            min-height: 700px;
-        }
-
-        #schema {
-            min-height: 100px;
-        }
-    </style>
+  <head>
     <link rel="icon" href="data:;base64,=">
-    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="style.css">
     <script src="https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
-    <script
-        src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
-    <script src="index.js"></script>
-</head>
-
-<body>
-    <table border'1'>
-        <tr>
-            <td><button onClick='doFlatten()'>Flatten</button></td>
-            <td><button onClick='humanChoseAnEvent("app-response")'>app-response</button></td>
-            <td><button onClick='humanChoseAnEvent("error")'>error</button></td>
-            <td><button
-                    onClick='humanChoseAnEvent("general-component-interaction")'>general-component-interaction</button>
-            </td>
-            <td><button onClick='humanChoseAnEvent("general-component-event")'>general-component-event</button></td>
-            <td><button onClick='humanChoseAnEvent("page-products-displayed")'>page-products-displayed</button></td>
-            <td><button onClick='humanChoseAnEvent("page-view")'>page-view</button></td>
-            <td><button onClick='humanChoseAnEvent("product-interaction")'>product-interaction</button></td>
-            <td><button onClick='humanChoseAnEvent("purchase")'>purchase</button></td>
-            <td id="selectedEvent"></td>
-        </tr>
-    </table>
-    <hr />
-
-    <table border="'1">
-        <tr>
-            <td valign="top" id="left">
-                Legend:<span class="optional">optional</span>&nbsp;<span class="mandatory">mandatory</span>
-                <hr />
-
-
-                <pre id="schema"></pre>
-                <!-- <textarea id="schema" rows="20" cols="100"></textarea> -->
-
-                <hr />
-                <button onClick="sendIt()">Send</button>
-                <button onClick="doView()">Name this button</button>
-                <textarea id="jsonToSend"></textarea>
-            </td>
-            <td valign="top">
-                &nbsp;
-            </td>
-            <td valign="top">
-                <button onClick="switch_view()">Switch view</button>&nbsp;&nbsp;<span id="switch_view">Verify</span>
-                <textarea id="rightSide_textArea" spellcheck="false"></textarea>
-            </td>
-
-        </tr>
-    </table>
-
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/lam-model/latest/lam-model-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1681256080369"></script>
+    <script src="https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1681256080369"></script>
+    <script src="logic.js"></script>
+    <!-- <script src="
+https://cdn.jsdelivr.net/npm/zod-to-json-schema@3.20.4/index.min.js
+"></script> -->
+  </head>
+  <body>
     <script>
-        // Poor man's enum
-        // This 'enum' will be used to determine what to show on the right hand
-        const VERIFY = "verify_actual_restful_call"
-        const DATA_LAYER_EXAMPLE = "data_layer_example"
-        let VIEWMODE = VERIFY
-        let currentEventName
-        function switch_view() {
-            let view;
-            if (VIEWMODE === VERIFY) {
-                view = `<a target="_blank" href="https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking">Data Layer Example</a>`
-                VIEWMODE = DATA_LAYER_EXAMPLE
-            } else {
-                view = 'Verify'
-                VIEWMODE = VERIFY
-            }
-            document.getElementById("switch_view").innerHTML = view
-        }
-        async function init() {
-            // new up MwaAnalytics
-            await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
-            // set 'everything'
-            setEverything(self.validationModule)
-            // Roll through and set up the different event objects
-            const events = ["app-response", "error", "general-component-interaction", "general-component-event", "page-products-displayed", "page-view", "product-interaction", "purchase"]
-            events.forEach((thing) => {
-                step0_examineSomething(thing)
-            })
-            console.log("init! MwaAnalytics.initializeAnalytics")
-        }
-        function humanChoseAnEvent(eventName) {
-            currentEventName = eventName
-            document.getElementById("selectedEvent").innerHTML = eventName
-            const inputObject = categoricalHoH[eventName]["core"]
-
-            let intermediate = inflateFlatMap(inputObject)
-            intermediate = intermediate["default"]["payload"]
-
-            const after = getColorizableHOH(intermediate)
-            const human = after["for_human"]
-            const css = after["for_css"]
-            const jsonToSend = inflateFlatMap(human)
-            const colorered = colorize(human, css)
-            document.getElementById("schema").innerHTML = colorered
-            document.getElementById("jsonToSend").value = JSON.stringify(jsonToSend, null, 2)
-            if (VIEWMODE === VERIFY) {
-                document.getElementById("rightSide_textArea").value = JSON.stringify(categoricalHoH[eventName], null, 2)
-            } else {
-                document.getElementById("rightSide_textArea").value = getSnippet(jsonToSend)
-            }
-        }
-
-
-
-        async function sendIt() {
-            const eventName = document.getElementById("selectedEvent").innerHTML
-            // if ( ! signals.hasOwnProperty(event_name)) {
-            //     document.getElementById("receiveInfo").value = "The supplied " + event_name + " is not in the collection"
-            // } else {
-            // const x = signals[event_name]
-            try {
-                const x = JSON.parse(document.getElementById("jsonToSend").value)
-                const theResult = await MwaAnalytics.trackEvent(eventName, x)
-                const base = theResult['payload']['properties'] //["validationResult"] //["data"]["payload"] //['payload']["validationResult"]["data"]["payload"]
-                const product = base["product"]
-                const payloadInner = base['validationResult']['data']['payload']
-                let out = JSON.stringify(product, null, 2)
-                out += "\n-----------------\n"
-                out += JSON.stringify(payloadInner, null, 2)
-                // document.getElementById("receiveInfo").value = out
-                document.getElementById("rightSide_textArea").value = JSON.stringify(theResult, null, 2)
-            } catch (boom) {
-                document.getElementById("rightSide_textArea").value = boom
-            }
-            // }
-        }
-
-
-        function getSnippet(json) {
-            const j = JSON.stringify(json, null, 2)
-            let x = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${j}}`
-            return x
-        }
-        function doView() {
-            const str = document.getElementById("jsonToSend").value
-            let x = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${str}}`
-            document.getElementById("rightSide_textArea").value = x
-        }
-
-        function doFlatten() {
-            const flat = flatten(everything)
-            document.getElementById("selectedEvent").innerHTML = flat
-            document.getElementById("rightSide_textArea").value = JSON.stringify(flat, null, 2)
-        }
-        init()
+//      MwaAnalytics.initializeAnalytics('TEST', {}, [], true);
+      async function doFetch() {
+        const theResult = await MwaAnalytics.trackEvent('product-interaction', {
+          event: {
+            attributes: {
+              action: 'view',
+              algorithm: 'personalized',
+            },
+          },
+          component: {
+            id: 'recommendation:recently-`viewed',
+            type: 'ProductCarousel',
+            text: 'Buy now',
+            position: 2,
+            totalCount: 3,
+          },
+          product: {
+            skuID: 'ca_123',
+            productID: 'prod789',
+            unifiedID: '',
+            name: 'cool 22" pants',
+            localizedName: '',
+            price: '68.99',
+            salePrice: '',
+            isSale: false,
+            categoryUnifiedID: '',
+          },
+          collection: {
+            type: 'recommendation',
+            id: 'recently-viewed',
+          },
+        });
+        console.log(
+          '%c ' +
+            JSON.stringify(
+              theResult['payload']['properties']['validationResult']['data'][
+                'payload'
+              ],
+              null,
+              2
+            ),
+          'background:lightgreen'
+        );
+      }
     </script>
+    <!-- <button onClick="doFetch()">doFetch OLD </button>-->
+    
+    <button onClick="doFetchNEW('product-interaction')">product-interaction</button>
+    <button onClick="doFetchNEW('general-component-interaction')">general-component-interaction</button>
+    <button onClick="doFetchNEW('page-view')">page-view</button>
+    |
+    <button onClick="doValidationModule()">validationModule</button>
 
-</body>
 
+
+
+    
+    <span id="event_name"></span>
+    
+    <hr/>
+    <table border="'1">
+      <tr>
+        <td>
+          <textarea id="sendInfo"></textarea>
+        </td>
+        <td valign="top" id="middleRow">
+          <center>
+            <button onClick="sendIt()" id="sendBtn"> >>> </button>
+          </center>
+        </td>
+        <td>
+          <textarea id="receiveInfo"></textarea>
+        </td>
+
+      </tr>
+    </table>
+
+  </body>
 </html>
