@@ -5,7 +5,8 @@
     <link rel="icon" href="data:;base64,=">
     <link rel="stylesheet" href="style.css">
   
-  
+    
+    <!-- NOT DYNAMIC! --> 
     <script src='https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js'></script>
     <script src='https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1682365437836'></script>
     <script src='https://dxa4wb90x7ize.cloudfront.net/stage/validation-configs/latest/validation-configs-remoteEntry.js?time=1682365437836'></script>
@@ -15,29 +16,25 @@
     <script src='index.js'></script>
     
   <script>
+    async function getDynamicaSrc () {
 
-
-
-
-//     async function getDynamicaSrc () {
-
-//         const version = "latest"
-//         const now = Date.now()
-//         const host = 'https://dxa4wb90x7ize.cloudfront.net/stage/';
-//         const resources = [
-//             `https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js`,
-//             `${host}transformation-configs/${version}/transformation-configs-remoteEntry.js?time=${now}`,
-//             `${host}validation-configs/${version}/validation-configs-remoteEntry.js?time=${now}`,
-//             `${host}lam-model/${version}/lam-model-remoteEntry.js?time=${now}`,
-//             `${host}experiment-module/${version}/experiment-module-remoteEntry.js?time=${now}`,
-//             `${host}%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=${now}`,
-//             `index.js`
-//         ]
-//         resources.forEach((thing) => { 
-//             console.log(thing)
-// //            document.write(`<script src="${thing}" ><\/script>`)
-//         })        
-//     } 
+        // const version = "latest"
+        // const now = Date.now()
+        // const host = 'https://dxa4wb90x7ize.cloudfront.net/stage/';
+        // const resources = [
+        //     `https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js`,
+        //     `${host}transformation-configs/${version}/transformation-configs-remoteEntry.js?time=${now}`,
+        //     `${host}validation-configs/${version}/validation-configs-remoteEntry.js?time=${now}`,
+        //     `${host}lam-model/${version}/lam-model-remoteEntry.js?time=${now}`,
+        //     `${host}experiment-module/${version}/experiment-module-remoteEntry.js?time=${now}`,
+        //     `${host}%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=${now}`,
+        //     `index.js`
+        // ]
+        // resources.forEach((thing) => { 
+        //     console.log(thing)
+        //     document.write(`<script src="${thing}" ><\/script>`)
+        // })        
+    } 
     </script>
 
 </head>
@@ -48,8 +45,7 @@
             <td><button onClick='doFlatten()'>Flatten</button></td>
             <td><button onClick='humanChoseAnEvent("app-response")'>app-response</button></td>
             <td><button onClick='humanChoseAnEvent("error")'>error</button></td>
-            <td><button
-                    onClick='humanChoseAnEvent("general-component-interaction")'>general-component-interaction</button>
+            <td><button onClick='humanChoseAnEvent("general-component-interaction")'>general-component-interaction</button>
             </td>
             <td><button onClick='humanChoseAnEvent("general-component-event")'>general-component-event</button></td>
             <td><button onClick='humanChoseAnEvent("page-products-displayed")'>page-products-displayed</button></td>
@@ -106,10 +102,7 @@
             document.getElementById("switch_view").innerHTML = view
         }
         async function init() {
-
-
-//             await getDynamicaSrc()
-
+            await getDynamicaSrc()
 
             // new up MwaAnalytics
             await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
