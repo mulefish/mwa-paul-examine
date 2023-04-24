@@ -5,7 +5,6 @@ let everything;
 function setEverything(gaintBallOfJson) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
-
 }
 
 function inflateFlatMap(simple) {

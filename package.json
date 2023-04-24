@@ -4,6 +4,7 @@
   "description": "[Edit on StackBlitz ⚡️](https://stackblitz.com/edit/mwa-paul-examine)",
   "main": "server.js",
   "scripts": {
+    "tdd": "node tdd.js",
     "test": "node tdd.js",
     "start": "node server.js"
   },

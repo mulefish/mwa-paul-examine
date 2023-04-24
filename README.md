@@ -10,6 +10,7 @@ http://localhost:4040/
 # TDD : run 
 node tdd.js
 Sadly - For Stackblizt's purposes I had shoved ALL the index.js into index.html. And thus sort of rendering the tdd.js moot.  
+
 # TDD : results
 PASS  1 of 8 simple_happypath  
 PASS  2 of 8 happypath_deeperLook  
@@ -20,5 +21,6 @@ PASS  6 of 8 inflateFlatMap_test
 PASS  7 of 8 getColorizableHOH_test  
 PASS  8 of 8 colorize_test
 
-
+# Headwaters?
+index.html has an init. That is the 'begining', but the interesting begining is a function entitled 'setEverything()' - Look for where that is called from. That will be the interesting begining. 
 
