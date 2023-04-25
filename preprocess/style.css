@@ -1,5 +1,6 @@
 
-        .optional {
+/* CSS_BEGIN */
+.optional {
     background-color: #ffffe0;
 }
 
@@ -24,3 +25,4 @@
 #schema {
     min-height: 100px;
 }
+/* CSS_END */

@@ -54,10 +54,10 @@ with open(stackblizt, 'r') as file:
         for k in semaphores:
             if k in line: 
                 state = semaphores[k]
+
         if state == 0:
             page += line
         elif state == 2:
-            # print(payloads[pointer])
             page += payloads[pointer]
             pointer += 1
             state = 0 
