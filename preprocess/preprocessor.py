@@ -47,7 +47,7 @@ semaphores = {
 }   
 
 page = ""
-stackblizt = "template.html"
+stackblizt = "index.html"
 with open(stackblizt, 'r') as file:
     for line in file:
         # line = line.rstrip()
