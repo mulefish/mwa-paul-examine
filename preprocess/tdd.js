@@ -7,7 +7,7 @@ const {
   getColorizableHOH,
   categoricalHoH,
   otherObjects_thatNeedAName,
-} = require("./index.js")
+} = require("./logic.js")
 
 const verdict = ((a, b, msg) => {
   let isOk = "FAIL "
