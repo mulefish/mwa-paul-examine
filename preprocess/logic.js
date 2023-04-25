@@ -11,6 +11,7 @@ function setEverything(gaintBallOfJson) {
 }
 
 function inflateFlatMap(simple) {
+
     const complex = {};
     for (const key in simple) {
         const levels = key.split('.');
@@ -76,6 +77,7 @@ function flatten(objectToFlatten) {
 }
 
 function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
+console.log( `${thing} ${parent} ${history}  ${loop}  ${result}`)
     if (parent.length > 0) {
         history += parent + "."
     }
@@ -131,6 +133,7 @@ function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, 
         }
     } else {
         if (parent !== "zodValidType") {
+
             history = history.slice(0, -1); // Zap the trailing '.'
             result[history] = { type: thing, parent }
         }
@@ -229,6 +232,7 @@ try {
         flatten,
         colorize,
         step0_examineSomething,
+        step1_recursive_getCategoricalOptionalityObjects,
         inflateFlatMap,
         getColorizableHOH,
         categoricalHoH,
