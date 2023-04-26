@@ -9,6 +9,9 @@ function setEverything(gaintBallOfJson) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
 }
+function getEverything() { 
+    return everything
+}
 
 function inflateFlatMap(simple) {
 
@@ -226,6 +229,22 @@ function getColorizableHOH(obj) {
     return result;
 }
 
+///////////// 
+
+function getTypesForNamedEvent(namedEvent_anLowerCase) { 
+    const namedEvent = namedEvent_anLowerCase.toUpperCase() 
+    const obj = everything[namedEvent]
+
+
+
+    return obj
+
+}
+
+
+
+
+
 try {
     module.exports = {
         setEverything,
@@ -235,6 +254,8 @@ try {
         step1_recursive_getCategoricalOptionalityObjects,
         inflateFlatMap,
         getColorizableHOH,
+        getEverything,
+        getTypesForNamedEvent, 
         categoricalHoH,
         otherObjects_thatNeedAName
     };

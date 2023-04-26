@@ -6,6 +6,8 @@ const {
   step0_examineSomething,
   step1_recursive_getCategoricalOptionalityObjects,
   getColorizableHOH,
+  getEverything,
+  getTypesForNamedEvent, 
   categoricalHoH,
   otherObjects_thatNeedAName,
 } = require("./logic.js")
@@ -299,25 +301,79 @@ function colorize_test(note) {
   })
   verdict(isOk, true, note + " colorize_test")
 }
-function header_test(note) { 
-  const eventType = "error"
-  step0_examineSomething(eventType)
-//  console.log( categoricalHoH[eventType] )  
+function version2_test(note) {
+  const ignore = ["MODULE_VERSION"]
+  const categoricalValidatorObjects = {}
+  const other = {}
+  const everything = getEverything()
+
+  const categoricalOptionalityObjects = everything['categoricalOptionalityObjects']
+
+ console.log( Object.keys(categoricalOptionalityObjects))
+ for ( let k in categoricalOptionalityObjects ) { 
+  const v = categoricalOptionalityObjects[k]["default"]["payload"]
+  console.log( " *********************************** " + k )
+  //  console.log( JSON.stringify( v , null, 2 ) )
+  console.log( Object.keys( v ))
+ }
+}
+
+function getTypesForNamedEvent_test(note) { 
+  let seen = {} 
+  const obj = getTypesForNamedEvent("screen")
+  // console.log( Object.keys( obj ))
+  // console.log( obj )
+  for ( let k in obj ) {
+    let v = obj[k]
+    if ( ( typeof v ) === "string") {
+      if ( v.includes("Array<string>")) { 
+        seen[k] = "ary_string" 
+      } else { 
+        if ( v.includes("Record<any>")) {
+          seen[k] = "rec_any" 
+        } else {
+          // This is the happy path
+          seen[k] = v
+        }
+      }
+    } else {
+      if ( v.hasOwnProperty("zodValidType")) {
+        if ( v["zodValidType"] === "string") {
+          seen[k] = "zod_string"
+        } else {
+          console.log("%c A: MISSED A POSSIBLE! k=" + k +" v=" + JSON.stringify( v ), "background:red")
+        }
+      } else if ( v.hasOwnProperty("hierarchy")) {
+         const otherKey = Object.keys(v).filter(key => key !== "hierarchy")[0];
+         seen[otherKey] = "ary_" + v[otherKey]
+      } else {
+        console.log("%c B: MISSED A POSSIBLE! k=" + k +" v=" + JSON.stringify( v ), "background:red")
+
+      }
+
+    }
 
 
-  verdict(false, true, note + " header_test")
+  }
+//  console.log(" ... ")
+  console.log( seen)
+
 
 }
+
+
 const data = require("./everything.json")
 setEverything(data)
 /* */
-simple_happypath("1 of 8")
-happypath_deeperLook("2 of 8")
-complex_happypath("3 of 8")
-flatten_test("4 of 8")
-inflateFlatMap_complex_test("5 of 8")
-inflateFlatMap_simple_test("6 of 8")
-getColorizableHOH_test("7 of 8")
-colorize_test("8 of 8")
+// simple_happypath("1 of 8")
+// happypath_deeperLook("2 of 8")
+// complex_happypath("3 of 8")
+// flatten_test("4 of 8")
+// inflateFlatMap_complex_test("5 of 8")
+// inflateFlatMap_simple_test("6 of 8")
+// getColorizableHOH_test("7 of 8")
+// colorize_test("8 of 8")
 
-
+// version2_test("v2 1")
+getTypesForNamedEvent_test("v2 2") 
+// screen_test("v2 2")
