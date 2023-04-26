@@ -5,11 +5,6 @@
     <link rel="icon" href="data:;base64,=">
     <style>
 
-
-
-
-
-
 /* CSS_BEGIN */
 .optional {
     background-color: #ffffe0;
@@ -41,18 +36,13 @@
 
 
 
+    </style>
 
 
-
-
-
-</style>
-
- 
 
 
     <!-- NOT DYNAMIC! -->
-    <script src='https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js'></script>
+    <!-- <script src='https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js'></script>
     <script
         src='https://dxa4wb90x7ize.cloudfront.net/stage/transformation-configs/latest/transformation-configs-remoteEntry.js?time=1682365437836'></script>
     <script
@@ -62,28 +52,28 @@
     <script
         src='https://dxa4wb90x7ize.cloudfront.net/stage/experiment-module/latest/experiment-module-remoteEntry.js?time=1682365437836'></script>
     <script
-        src='https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1682365437836'></script>
+        src='https://dxa4wb90x7ize.cloudfront.net/stage/%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=1682365437836'></script> -->
 
 
     <script>
         async function getDynamicaSrc() {
-            console.log("%c NOT USING getDynamicalSrc", "background:tan")
-            // const version = "latest"
-            // const now = Date.now()
-            // const host = 'https://dxa4wb90x7ize.cloudfront.net/stage/';
-            // const resources = [
-            //     `https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js`,
-            //     `${host}transformation-configs/${version}/transformation-configs-remoteEntry.js?time=${now}`,
-            //     `${host}validation-configs/${version}/validation-configs-remoteEntry.js?time=${now}`,
-            //     `${host}lam-model/${version}/lam-model-remoteEntry.js?time=${now}`,
-            //     `${host}experiment-module/${version}/experiment-module-remoteEntry.js?time=${now}`,
-            //     `${host}%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=${now}`,
-            //     `index.js`
-            // ]
-            // resources.forEach((thing) => { 
-            //     console.log(thing)
-            //     document.write(`<script src="${thing}" ><\/script>`)
-            // })        
+
+            console.log("%cgetDynamicalSrc()", "background:tan")
+            const version = "latest"
+            const now = Date.now()
+            const host = 'https://dxa4wb90x7ize.cloudfront.net/stage/';
+            const resources = [
+                `https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js`,
+                `${host}transformation-configs/${version}/transformation-configs-remoteEntry.js?time=${now}`,
+                `${host}validation-configs/${version}/validation-configs-remoteEntry.js?time=${now}`,
+                `${host}lam-model/${version}/lam-model-remoteEntry.js?time=${now}`,
+                `${host}experiment-module/${version}/experiment-module-remoteEntry.js?time=${now}`,
+                `${host}%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=${now}`,
+//                `index.js`
+            ]
+            resources.forEach((thing) => {                
+                document.write(`<script src="${thing}" ><\/script>`)
+            })
         } 
     </script>
 
@@ -153,18 +143,28 @@
             document.getElementById("switch_view").innerHTML = view
         }
         async function init() {
+
+            async function loadMwaAnalytics() {
+                try {
+                    await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
+                    setEverything(self.validationModule)
+
+                    // Roll through and set up the different event objects
+                    // TODO: Discover the different possible event objects dynamically!
+                    const events = ["app-response", "error", "general-component-interaction", "general-component-event", "page-products-displayed", "page-view", "product-interaction", "purchase"]
+                    events.forEach((thing) => {
+                        step0_examineSomething(thing)
+                    })
+                    console.log("init! MwaAnalytics.initializeAnalytics")
+                } catch (boom) {
+                    alert("Likely the dynamic CDN scripts haven't been loaded yet...\n" + boom)
+                }
+            }
             await getDynamicaSrc()
 
-            // new up MwaAnalytics
-            await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
-            // set 'everything'
-            setEverything(self.validationModule)
-            // Roll through and set up the different event objects
-            const events = ["app-response", "error", "general-component-interaction", "general-component-event", "page-products-displayed", "page-view", "product-interaction", "purchase"]
-            events.forEach((thing) => {
-                step0_examineSomething(thing)
-            })
-            console.log("init! MwaAnalytics.initializeAnalytics")
+            setTimeout(function () {
+                loadMwaAnalytics()
+            }, 1000);
         }
         function humanChoseAnEvent(eventName) {
             currentEventName = eventName
@@ -241,6 +241,8 @@
 
 
 
+
+
 /* MAIN_LOGIC_BEGIN :  TEMPLATING - DO NOT REMOVE */
 
 
@@ -253,6 +255,7 @@ function setEverything(gaintBallOfJson) {
 }
 
 function inflateFlatMap(simple) {
+
     const complex = {};
     for (const key in simple) {
         const levels = key.split('.');
@@ -318,6 +321,7 @@ function flatten(objectToFlatten) {
 }
 
 function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
+console.log( `${thing} ${parent} ${history}  ${loop}  ${result}`)
     if (parent.length > 0) {
         history += parent + "."
     }
@@ -373,6 +377,7 @@ function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, 
         }
     } else {
         if (parent !== "zodValidType") {
+
             history = history.slice(0, -1); // Zap the trailing '.'
             result[history] = { type: thing, parent }
         }
@@ -471,6 +476,7 @@ try {
         flatten,
         colorize,
         step0_examineSomething,
+        step1_recursive_getCategoricalOptionalityObjects,
         inflateFlatMap,
         getColorizableHOH,
         categoricalHoH,

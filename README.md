@@ -48,3 +48,6 @@ PASS  7 of 8 getColorizableHOH_test
 PASS  8 of 8 colorize_test
 
 
+# TODO
+TODO: Discover the different possible event objects dynamically!
+TODO: BUG: header
