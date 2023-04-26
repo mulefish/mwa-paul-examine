@@ -77,7 +77,7 @@ function flatten(objectToFlatten) {
 }
 
 function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
-console.log( `${thing} ${parent} ${history}  ${loop}  ${result}`)
+
     if (parent.length > 0) {
         history += parent + "."
     }

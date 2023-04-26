@@ -302,7 +302,7 @@ function colorize_test(note) {
 function header_test(note) { 
   const eventType = "error"
   step0_examineSomething(eventType)
-  console.log( categoricalHoH[eventType] )  
+//  console.log( categoricalHoH[eventType] )  
 
 
   verdict(false, true, note + " header_test")
@@ -311,14 +311,13 @@ function header_test(note) {
 const data = require("./everything.json")
 setEverything(data)
 /* */
-// simple_happypath("1 of 8")
-// happypath_deeperLook("2 of 8")
-// complex_happypath("3 of 8")
-// flatten_test("4 of 8")
-// inflateFlatMap_complex_test("5 of 8")
-// inflateFlatMap_simple_test("6 of 8")
-// getColorizableHOH_test("7 of 8")
-// colorize_test("8 of 8")
+simple_happypath("1 of 8")
+happypath_deeperLook("2 of 8")
+complex_happypath("3 of 8")
+flatten_test("4 of 8")
+inflateFlatMap_complex_test("5 of 8")
+inflateFlatMap_simple_test("6 of 8")
+getColorizableHOH_test("7 of 8")
+colorize_test("8 of 8")
 
-header_test("header_test")
 
