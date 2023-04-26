@@ -1,36 +1,56 @@
 <html>
-<body>
+  <body>
     <button onClick="doit()">doit</button>ReallyPink
     <hr />
     <img id="original-image" src="really_pink.png" alt="really pink">
     <canvas id="modified-image"></canvas>
     <script>
-        function doit() {
-            const originalImg = document.getElementById('original-image');
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = originalImg.width;
-            canvas.height = originalImg.height;
-            ctx.drawImage(originalImg, 0, 0);
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < imageData.data.length; i += 4) {
-                let r = imageData.data[i + 0]
-                let g = imageData.data[i + 1]
-                let b = imageData.data[i + 2]
-                if (r > 150 && (r - g > 150) && (r - b > 50)) {
-                    // FYI: PINK is rgb(159, 43, 104)
-                    // and: GREEN is rgb(124,252,0)
-                    r -= 100
-                    g += 200
-                    b -= 50
-                }
-                imageData.data[i] = r
-                imageData.data[i + 1] = g
-                imageData.data[i + 2] = b
-            }
-            ctx.putImageData(imageData, 0, 0);
-            originalImg.src = canvas.toDataURL('image/png');
+      function rgb_to_yuv(r, g, b) {
+        const y = 0.299 * r + 0.587 * g + 0.114 * b;
+        const u = -0.14713 * r - 0.2886 * g + 0.436 * b;
+        const v = 0.615 * r - 0.436 * g - 0.1 * b;
+        return [y, u, v];
+      }
+
+      function rgbCompare(rgb1, rgb2, tolerance) {
+
+        const yuv1 = rgb_to_yuv(...rgb1);
+        const yuv2 = rgb_to_yuv(...rgb2);
+        const yuvOffset = [0.0, 0.5, 0.5];
+        const yuvThreshold = [0.188235294, 0.02745098, 0.023529412];
+        const diff = [(yuv1[0] + yuvOffset[0]) - (yuv2[0] + yuvOffset[0]), (yuv1[1] + yuvOffset[1]) - (yuv2[1] + yuvOffset[1]), (yuv1[2] + yuvOffset[2]) - (yuv2[2] + yuvOffset[2]), ];
+        const weightedDiff = [diff[0] * yuvThreshold[0], diff[1] * yuvThreshold[1], diff[2] * yuvThreshold[2], ];
+        const euclideanDistance = Math.sqrt(weightedDiff[0] * weightedDiff[0] + weightedDiff[1] * weightedDiff[1] + weightedDiff[2] * weightedDiff[2]);
+        return euclideanDistance > tolerance;
+      }
+
+      function doit() {
+        const originalImg = document.getElementById('original-image');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = originalImg.width;
+        canvas.height = originalImg.height;
+        ctx.drawImage(originalImg, 0, 0);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          let r = imageData.data[i + 0]
+          let g = imageData.data[i + 1]
+          let b = imageData.data[i + 2]
+          //if (r > 150 && (r - g > 150) && (r - b > 50)) {
+          if (rgbCompare( {r,g,b}, {r:124,g:252,b:0}, 100) == true ) { 
+            // FYI: PINK is rgb(159, 43, 104)
+            // and: GREEN is rgb(124,252,0)
+            r -= 100
+            g += 200
+            b -= 50
+          }
+          imageData.data[i] = r
+          imageData.data[i + 1] = g
+          imageData.data[i + 2] = b
         }
+        ctx.putImageData(imageData, 0, 0);
+        originalImg.src = canvas.toDataURL('image/png');
+      }
     </script>
-</body>
+  </body>
 </html>
