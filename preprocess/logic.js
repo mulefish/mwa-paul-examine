@@ -9,7 +9,7 @@ function setEverything(gaintBallOfJson) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
 }
-function getEverything() { 
+function getEverything() {
     return everything
 }
 
@@ -229,18 +229,43 @@ function getColorizableHOH(obj) {
     return result;
 }
 
-///////////// 
+///////////// version 2 ///////////////
 
-function getTypesForNamedEvent(namedEvent_anLowerCase) { 
-    const namedEvent = namedEvent_anLowerCase.toUpperCase() 
+function getTypesForNamedEvent(namedEvent_lowerCase) {
+    const namedEvent = namedEvent_lowerCase.toUpperCase()
+    console.log("namedEvent: " + namedEvent)
     const obj = everything[namedEvent]
-
-
-
     return obj
-
 }
 
+function inflateObject(eventType) {
+    const EVENT_TYPE = eventType.toUpperCase()
+    const tmp = flatten( everything[EVENT_TYPE ]) 
+    const seen = {} 
+    for ( let k in tmp ) {
+        if ( k.includes("zodValidationFn")) {
+            // ignore it 
+        } else {
+            seen[k] = tmp[k]
+        }
+    }
+    return seen
+}
+function getAllNeededNamedEvents() {
+    let seen = {}
+    const coo = Object.keys(everything['categoricalOptionalityObjects'])
+    coo.forEach((thing, i) => {
+        const payloads = Object.keys(everything['categoricalOptionalityObjects'][thing]["default"]["payload"])
+        payloads.forEach((payload) => {
+            if (seen.hasOwnProperty(payload)) {
+                seen[payload]++
+            } else {
+                seen[payload] = 1
+            }
+        })
+    })
+    return seen
+}
 
 
 
@@ -255,7 +280,9 @@ try {
         inflateFlatMap,
         getColorizableHOH,
         getEverything,
-        getTypesForNamedEvent, 
+        getTypesForNamedEvent,
+        inflateObject, // version 2 
+        getAllNeededNamedEvents, // version 2 
         categoricalHoH,
         otherObjects_thatNeedAName
     };

@@ -7,7 +7,9 @@ const {
   step1_recursive_getCategoricalOptionalityObjects,
   getColorizableHOH,
   getEverything,
-  getTypesForNamedEvent, 
+  getTypesForNamedEvent,
+  inflateObject, // version 2 
+  getAllNeededNamedEvents, // version 2 
   categoricalHoH,
   otherObjects_thatNeedAName,
 } = require("./logic.js")
@@ -309,45 +311,50 @@ function version2_test(note) {
 
   const categoricalOptionalityObjects = everything['categoricalOptionalityObjects']
 
- console.log( Object.keys(categoricalOptionalityObjects))
- for ( let k in categoricalOptionalityObjects ) { 
-  const v = categoricalOptionalityObjects[k]["default"]["payload"]
-  console.log( " *********************************** " + k )
-  //  console.log( JSON.stringify( v , null, 2 ) )
-  console.log( Object.keys( v ))
- }
+  console.log(Object.keys(categoricalOptionalityObjects))
+  for (let k in categoricalOptionalityObjects) {
+    const v = categoricalOptionalityObjects[k]["default"]["payload"]
+    console.log(" *********************************** " + k)
+    //  console.log( JSON.stringify( v , null, 2 ) )
+    console.log(Object.keys(v))
+  }
 }
 
-function getTypesForNamedEvent_test(note) { 
-  let seen = {} 
+function getTypesForNamedEvent_test(note) {
+  let seen = {}
+
+
+
+
+
   const obj = getTypesForNamedEvent("screen")
   // console.log( Object.keys( obj ))
   // console.log( obj )
-  for ( let k in obj ) {
+  for (let k in obj) {
     let v = obj[k]
-    if ( ( typeof v ) === "string") {
-      if ( v.includes("Array<string>")) { 
-        seen[k] = "ary_string" 
-      } else { 
-        if ( v.includes("Record<any>")) {
-          seen[k] = "rec_any" 
+    if ((typeof v) === "string") {
+      if (v.includes("Array<string>")) {
+        seen[k] = "ary_string"
+      } else {
+        if (v.includes("Record<any>")) {
+          seen[k] = "rec_any"
         } else {
           // This is the happy path
           seen[k] = v
         }
       }
     } else {
-      if ( v.hasOwnProperty("zodValidType")) {
-        if ( v["zodValidType"] === "string") {
+      if (v.hasOwnProperty("zodValidType")) {
+        if (v["zodValidType"] === "string") {
           seen[k] = "zod_string"
         } else {
-          console.log("%c A: MISSED A POSSIBLE! k=" + k +" v=" + JSON.stringify( v ), "background:red")
+          console.log("%c A: MISSED A POSSIBLE! k=" + k + " v=" + JSON.stringify(v), "background:red")
         }
-      } else if ( v.hasOwnProperty("hierarchy")) {
-         const otherKey = Object.keys(v).filter(key => key !== "hierarchy")[0];
-         seen[otherKey] = "ary_" + v[otherKey]
+      } else if (v.hasOwnProperty("hierarchy")) {
+        const otherKey = Object.keys(v).filter(key => key !== "hierarchy")[0];
+        seen[otherKey] = "ary_" + v[otherKey]
       } else {
-        console.log("%c B: MISSED A POSSIBLE! k=" + k +" v=" + JSON.stringify( v ), "background:red")
+        console.log("%c B: MISSED A POSSIBLE! k=" + k + " v=" + JSON.stringify(v), "background:red")
 
       }
 
@@ -355,9 +362,49 @@ function getTypesForNamedEvent_test(note) {
 
 
   }
-//  console.log(" ... ")
-  console.log( seen)
 
+
+}
+
+
+function inflateObject_screen_test(note) {
+  let x = getEverything() 
+  const actual = inflateObject("screen")
+
+  const n = Object.keys(actual).length 
+  const isOk = n === 14
+  // console.log( actual)
+  verdict(isOk, true, note + " inflateObject_screen_test n=" + n )
+
+}
+
+
+
+function getAllNeededNamedEvents_test(note) { 
+  const actual = getAllNeededNamedEvents() 
+  const expected = { screen: 8, event: 5, collectionList: 3 }  
+  verdict(actual, expected, note + " getAllNeededNamedEvents_test" )
+}
+
+function inflateObject_everything_test(note) {
+  const namedEventKeys = getAllNeededNamedEvents() 
+  const wittnessed = {} 
+  for ( let namedEvent in namedEventKeys ) {
+    const x = inflateObject(namedEvent)
+    const n = Object.keys(x).length 
+    wittnessed[namedEvent] = n
+  }
+  const expected =  {"screen":14,"event":28,"collectionList":0}
+  verdict(wittnessed, expected, note + " inflateObject_everything_test " + JSON.stringify( wittnessed )  )
+}
+
+function inflateObject_event_test(note) {
+  let x = getEverything() 
+  const actual = inflateObject("event")
+  const n = Object.keys(actual).length 
+  const isOk = n === 28
+  // console.log( actual)
+  verdict(isOk, true, note + " inflateObject_event_test n=" + n )
 
 }
 
@@ -373,7 +420,11 @@ setEverything(data)
 // inflateFlatMap_simple_test("6 of 8")
 // getColorizableHOH_test("7 of 8")
 // colorize_test("8 of 8")
-
 // version2_test("v2 1")
-getTypesForNamedEvent_test("v2 2") 
+// getTypesForNamedEvent_test("v2 2") 
 // screen_test("v2 2")
+///// 
+ inflateObject_screen_test("v2")
+ getAllNeededNamedEvents_test("v2")
+ inflateObject_everything_test("v2")
+  inflateObject_event_test("v2")
