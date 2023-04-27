@@ -19,6 +19,7 @@
 
 
 
+
 /* CSS_BEGIN */
 .optional {
     background-color: #ffffe0;
@@ -46,6 +47,10 @@
     min-height: 100px;
 }
 /* CSS_END */
+
+
+
+
 
 
 
@@ -245,8 +250,7 @@
             document.getElementById("selectedEvent").innerHTML = eventName
 
 
-            const x = getChosenEvent(eventName)
-console.log(x)
+            const inputObject = getChosenEvent(eventName)
 
 
             // const inputObject = categoricalHoH[eventName]["core"]
@@ -254,21 +258,21 @@ console.log(x)
 
 
 
-            // let intermediate = inflateFlatMap(inputObject)
-            // intermediate = intermediate["default"]["payload"]
+            let intermediate = inflateFlatMap(inputObject)
+            intermediate = intermediate["default"]["payload"]
 
             // const after = getColorizableHOH(intermediate)
             // const human = after["for_human"]
             // const css = after["for_css"]
             // const jsonToSend = inflateFlatMap(human)
             // const colorered = colorize(human, css)
-            // document.getElementById("schema").innerHTML = colorered
-            // document.getElementById("jsonToSend").value = JSON.stringify(jsonToSend, null, 2)
-            // if (VIEWMODE === VERIFY) {
-            //     document.getElementById("rightSide_textArea").value = JSON.stringify(categoricalHoH[eventName], null, 2)
-            // } else {
-            //     document.getElementById("rightSide_textArea").value = getSnippet(jsonToSend)
-            // }
+            document.getElementById("schema").innerHTML = inputObject
+            document.getElementById("jsonToSend").value = JSON.stringify(inputObject, null, 2)
+            if (VIEWMODE === VERIFY) {
+                document.getElementById("rightSide_textArea").value = JSON.stringify(categoricalHoH[eventName], null, 2)
+            } else {
+                document.getElementById("rightSide_textArea").value = getSnippet(jsonToSend)
+            }
         }
 
 
@@ -337,6 +341,7 @@ console.log(x)
 
 
 
+
 /* MAIN_LOGIC_BEGIN :  TEMPLATING - DO NOT REMOVE */
 
 
@@ -358,6 +363,14 @@ function getChosenEvent(whichEvent) {
 }
 function getEverything() {
     return everything
+}
+
+function createObjectToSend(event) { 
+
+    const ary_of_keys_to_send = Object.keys(event["default"]["payload"])
+    return ary_of_keys_to_send
+
+
 }
 
 function inflateFlatMap(simple) {
@@ -432,10 +445,14 @@ function getLookup() {
     return lookup
 }
 function getNamedEvents() {
-    return namedEvents; // finch
+
+    
+    return namedEvents;
+
+
 } 
 async function stepA(isForTddPurposes=false) { 
-    if ( isForTddPurposes===true) {
+    if ( isForTddPurposes===false) {
         // emit to browser
         console.log("%c stepA", "background:lightgreen")
     }
@@ -602,7 +619,6 @@ function getColorizableHOH(obj) {
 
 function getTypesForNamedEvent(namedEvent_lowerCase) {
     const namedEvent = namedEvent_lowerCase.toUpperCase()
-    console.log("namedEvent: " + namedEvent)
     const obj = everything[namedEvent]
     return obj
 }
@@ -656,6 +672,7 @@ try {
         stepA, // version2 
         getNamedEvents, // version2 
         getChosenEvent,
+        createObjectToSend, // version2 
         categoricalHoH,
         otherObjects_thatNeedAName
     };

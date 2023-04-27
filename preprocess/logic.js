@@ -22,6 +22,14 @@ function getEverything() {
     return everything
 }
 
+function createObjectToSend(event) { 
+
+    const ary_of_keys_to_send = Object.keys(event["default"]["payload"])
+    return ary_of_keys_to_send
+
+
+}
+
 function inflateFlatMap(simple) {
 
     const complex = {};
@@ -94,10 +102,14 @@ function getLookup() {
     return lookup
 }
 function getNamedEvents() {
-    return namedEvents; // finch
+
+    
+    return namedEvents;
+
+
 } 
 async function stepA(isForTddPurposes=false) { 
-    if ( isForTddPurposes===true) {
+    if ( isForTddPurposes===false) {
         // emit to browser
         console.log("%c stepA", "background:lightgreen")
     }
@@ -264,7 +276,6 @@ function getColorizableHOH(obj) {
 
 function getTypesForNamedEvent(namedEvent_lowerCase) {
     const namedEvent = namedEvent_lowerCase.toUpperCase()
-    console.log("namedEvent: " + namedEvent)
     const obj = everything[namedEvent]
     return obj
 }
@@ -318,6 +329,7 @@ try {
         stepA, // version2 
         getNamedEvents, // version2 
         getChosenEvent,
+        createObjectToSend, // version2 
         categoricalHoH,
         otherObjects_thatNeedAName
     };

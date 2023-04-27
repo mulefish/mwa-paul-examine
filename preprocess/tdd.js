@@ -10,10 +10,11 @@ const {
   getTypesForNamedEvent,
   inflateObject, // version 2 
   getAllNeededNamedEvents, // version 2 
-  getLookup, // version2 
   stepA, // version2 
   getNamedEvents,
   getChosenEvent, // versoin2
+  createObjectToSend, // version2 
+  getLookup, //version2 
   categoricalHoH,
   otherObjects_thatNeedAName,
 } = require("./logic.js")
@@ -315,15 +316,15 @@ function version2_test(note) {
 
   const categoricalOptionalityObjects = everything['categoricalOptionalityObjects']
 
-  console.log(Object.keys(categoricalOptionalityObjects))
+  // c onsole.log(Object.keys(categoricalOptionalityObjects))
   for (let k in categoricalOptionalityObjects) {
     const v = categoricalOptionalityObjects[k]["default"]["payload"]
-    console.log(" *********************************** " + k)
-    //  console.log( JSON.stringify( v , null, 2 ) )
-    console.log(Object.keys(v))
+    // c onsole.log(" *********************************** " + k)
+    //  c onsole.log( JSON.stringify( v , null, 2 ) )
+    // c onsole.log(Object.keys(v))
   }
 }
-
+/* 
 function getTypesForNamedEvent_test(note) {
   let seen = {}
 
@@ -332,8 +333,8 @@ function getTypesForNamedEvent_test(note) {
 
 
   const obj = getTypesForNamedEvent("screen")
-  // console.log( Object.keys( obj ))
-  // console.log( obj )
+  // c onsole.log( Object.keys( obj ))
+  // c onsole.log( obj )
   for (let k in obj) {
     let v = obj[k]
     if ((typeof v) === "string") {
@@ -352,13 +353,13 @@ function getTypesForNamedEvent_test(note) {
         if (v["zodValidType"] === "string") {
           seen[k] = "zod_string"
         } else {
-          console.log("%c A: MISSED A POSSIBLE! k=" + k + " v=" + JSON.stringify(v), "background:red")
+          c onsole.log("%c A: MISSED A POSSIBLE! k=" + k + " v=" + JSON.stringify(v), "background:red")
         }
       } else if (v.hasOwnProperty("hierarchy")) {
         const otherKey = Object.keys(v).filter(key => key !== "hierarchy")[0];
         seen[otherKey] = "ary_" + v[otherKey]
       } else {
-        console.log("%c B: MISSED A POSSIBLE! k=" + k + " v=" + JSON.stringify(v), "background:red")
+        c onsole.log("%c B: MISSED A POSSIBLE! k=" + k + " v=" + JSON.stringify(v), "background:red")
 
       }
 
@@ -369,7 +370,7 @@ function getTypesForNamedEvent_test(note) {
 
 
 }
-
+*/ 
 
 function inflateObject_screen_test(note) {
   let x = getEverything()
@@ -377,7 +378,7 @@ function inflateObject_screen_test(note) {
 
   const n = Object.keys(actual).length
   const isOk = n === 14
-  // console.log( actual)
+  // c onsole.log( actual)
   verdict(isOk, true, note + " inflateObject_screen_test n=" + n)
 
 }
@@ -407,13 +408,12 @@ function inflateObject_event_test(note) {
   const actual = inflateObject("event")
   const n = Object.keys(actual).length
   const isOk = n === 28
-  // console.log( actual)
+  // c onsole.log( actual)
   verdict(isOk, true, note + " inflateObject_event_test n=" + n)
 
 }
 
 function stepA_test(note) {
-  // stepA will set 'namedEvents' and 'lookup'
   const isForTddPurposes=true 
   stepA(isForTddPurposes)   /// THIS!!!! 
   // lookup is a {collection} of objects that look something like this: 
@@ -473,10 +473,44 @@ function getChosenEvent_test(note) {
   verdict(actual, expected, note + " getChosenEvent_test")
 }
 
+function createObjectToSend_test(note) { 
+  const x ={
+    "default": {
+      "payload": {
+        "screen": {
+          "header": true
+        },
+        "event": {
+          "attributes": {
+            "errorMessage": false,
+            "errorDetails": false,
+            "errorType": false
+          }
+        }
+      },
+      "version": false,
+      "timestamp": false
+    }
+  }
+  const keys = createObjectToSend(x)
+  const lookup = getLookup() 
+  let isOk = true 
+  keys.forEach((key)=> { 
+    const x = lookup[key]
+    const n = Object.keys(x).length 
+    if ( ! n > 10 ) {
+      isOk = false 
+    }
+    // console.log( x )
+  })
 
+
+  verdict(isOk, true, note + " createObjectToSend_test ")
+}
 const data = require("./everything.json")
 const thisIsTDD=true
 setEverything(data, thisIsTDD)
+
 /* */
 // simple_happypath("1 of 8")
 // happypath_deeperLook("2 of 8")
@@ -496,3 +530,4 @@ setEverything(data, thisIsTDD)
 //   inflateObject_event_test("v2")
 stepA_test("Set up")
 getChosenEvent_test("v2") 
+createObjectToSend_test("v2")
