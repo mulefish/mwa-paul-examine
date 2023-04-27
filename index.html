@@ -20,6 +20,8 @@
 
 
 
+
+
 /* CSS_BEGIN */
 .optional {
     background-color: #ffffe0;
@@ -47,6 +49,14 @@
     min-height: 100px;
 }
 /* CSS_END */
+
+
+
+
+
+
+
+
 
 
 
@@ -251,7 +261,10 @@
 
 
             const inputObject = getChosenEvent(eventName)
+            const sendThis = createObjectToSend(inputObject)
 
+    //        const keys = createObjectToSend(inputObject)
+  //const lookup = getLookup() 
 
             // const inputObject = categoricalHoH[eventName]["core"]
 
@@ -269,9 +282,9 @@
             document.getElementById("schema").innerHTML = inputObject
             document.getElementById("jsonToSend").value = JSON.stringify(inputObject, null, 2)
             if (VIEWMODE === VERIFY) {
-                document.getElementById("rightSide_textArea").value = JSON.stringify(categoricalHoH[eventName], null, 2)
+                document.getElementById("rightSide_textArea").value = JSON.stringify(sendThis, null, 2)
             } else {
-                document.getElementById("rightSide_textArea").value = getSnippet(jsonToSend)
+                document.getElementById("rightSide_textArea").value = getSnippet(sendThis)
             }
         }
 
@@ -342,6 +355,8 @@
 
 
 
+
+
 /* MAIN_LOGIC_BEGIN :  TEMPLATING - DO NOT REMOVE */
 
 
@@ -368,7 +383,13 @@ function getEverything() {
 function createObjectToSend(event) { 
 
     const ary_of_keys_to_send = Object.keys(event["default"]["payload"])
-    return ary_of_keys_to_send
+    const sendThis = [] 
+    ary_of_keys_to_send.forEach((key)=> { 
+      const x = lookup[key]
+      sendThis.push(x)
+    })
+    return sendThis
+
 
 
 }
