@@ -11,9 +11,9 @@ const {
   inflateObject, // version 2 
   getAllNeededNamedEvents, // version 2 
   getLookup, // version2 
-stepA, // version2 
-getNamedEvents, 
-getChosenEvent, // versoin2
+  stepA, // version2 
+  getNamedEvents,
+  getChosenEvent, // versoin2
   categoricalHoH,
   otherObjects_thatNeedAName,
 } = require("./logic.js")
@@ -372,49 +372,50 @@ function getTypesForNamedEvent_test(note) {
 
 
 function inflateObject_screen_test(note) {
-  let x = getEverything() 
+  let x = getEverything()
   const actual = inflateObject("screen")
 
-  const n = Object.keys(actual).length 
+  const n = Object.keys(actual).length
   const isOk = n === 14
   // console.log( actual)
-  verdict(isOk, true, note + " inflateObject_screen_test n=" + n )
+  verdict(isOk, true, note + " inflateObject_screen_test n=" + n)
 
 }
 
 
 
-function getAllNeededNamedEvents_test(note) { 
-  const actual = getAllNeededNamedEvents() 
-  const expected = { screen: 8, event: 5, collectionList: 3 }  
-  verdict(actual, expected, note + " getAllNeededNamedEvents_test" )
+function getAllNeededNamedEvents_test(note) {
+  const actual = getAllNeededNamedEvents()
+  const expected = { screen: 8, event: 5, collectionList: 3 }
+  verdict(actual, expected, note + " getAllNeededNamedEvents_test")
 }
 
 function inflateObject_everything_test(note) {
-  const namedEventKeys = getAllNeededNamedEvents() 
-  const wittnessed = {} 
-  for ( let namedEvent in namedEventKeys ) {
+  const namedEventKeys = getAllNeededNamedEvents()
+  const wittnessed = {}
+  for (let namedEvent in namedEventKeys) {
     const x = inflateObject(namedEvent)
-    const n = Object.keys(x).length 
+    const n = Object.keys(x).length
     wittnessed[namedEvent] = n
   }
-  const expected =  {"screen":14,"event":28,"collectionList":0}
-  verdict(wittnessed, expected, note + " inflateObject_everything_test " + JSON.stringify( wittnessed )  )
+  const expected = { "screen": 14, "event": 28, "collectionList": 0 }
+  verdict(wittnessed, expected, note + " inflateObject_everything_test " + JSON.stringify(wittnessed))
 }
 
 function inflateObject_event_test(note) {
-  let x = getEverything() 
+  let x = getEverything()
   const actual = inflateObject("event")
-  const n = Object.keys(actual).length 
+  const n = Object.keys(actual).length
   const isOk = n === 28
   // console.log( actual)
-  verdict(isOk, true, note + " inflateObject_event_test n=" + n )
+  verdict(isOk, true, note + " inflateObject_event_test n=" + n)
 
 }
 
 function stepA_test(note) {
   // stepA will set 'namedEvents' and 'lookup'
-  stepA()   /// THIS!!!! 
+  const isForTddPurposes=true 
+  stepA(isForTddPurposes)   /// THIS!!!! 
   // lookup is a {collection} of objects that look something like this: 
   /* 
   {
@@ -434,8 +435,8 @@ function stepA_test(note) {
     'category.gender': 'string',
     attributes: 'Record<any>'
   },
-  */ 
-  const lookup = getLookup() 
+  */
+  const lookup = getLookup()
 
   /* 
   namedEvents will look something like: 
@@ -450,30 +451,32 @@ function stepA_test(note) {
   'purchase'
   */
   const namedEvents = getNamedEvents()
-  
-  const howManyObjects = Object.keys(lookup).length 
+
+  const howManyObjects = Object.keys(lookup).length
   const counts = []
 
-  for ( let key in lookup ) {
+  for (let key in lookup) {
     const n = Object.keys(lookup[key]).length
     counts.push(n)
   }
   const isOk = true
-  if ( ! howManyObjects > 0 ) { isOk = false }
-  if ( ! namedEvents.length  > 0 ) { isOk = false }
+  if (!howManyObjects > 0) { isOk = false }
+  if (!namedEvents.length > 0) { isOk = false }
 
-  verdict(isOk, true, note + " stepA_test n=" + howManyObjects + " Lookup's member counts: " + counts + " namedEvents=" + namedEvents.length )
+  verdict(isOk, true, note + " stepA_test n=" + howManyObjects + " Lookup's member counts: " + counts + " namedEvents=" + namedEvents.length)
 
 
 }
-function getChosenEvent_test() { 
-const x = getChosenEvent("page-view")
-//console.log(x)
+function getChosenEvent_test(note) {
+  const actual = getChosenEvent("page-view")
+  const expected = { "default": { "payload": { "screen": { "path": false, "type": false, "category": false, "country": false, "collections": false, "currency": false, "header": false, "language": false, "property": false, "urlRoute": false } }, "version": false, "timestamp": false } }
+  verdict(actual, expected, note + " getChosenEvent_test")
 }
 
 
 const data = require("./everything.json")
-setEverything(data)
+const thisIsTDD=true
+setEverything(data, thisIsTDD)
 /* */
 // simple_happypath("1 of 8")
 // happypath_deeperLook("2 of 8")
@@ -492,4 +495,4 @@ setEverything(data)
 //  inflateObject_everything_test("v2")
 //   inflateObject_event_test("v2")
 stepA_test("Set up")
-getChosenEvent_test() 
+getChosenEvent_test("v2") 

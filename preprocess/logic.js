@@ -7,13 +7,16 @@ const otherObjects_thatNeedAName = {}
 let everything;
 let lookup = {} 
 let namedEvents = {}
-async function setEverything(gaintBallOfJson) {
+async function setEverything(gaintBallOfJson, isForTddPurposes=false ) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
-    console.log("%c SET EVERYTHING " + Object.keys( everything).length )
+    if (isForTddPurposes === false ) {
+        // Emit out to the browser!
+        console.log("%c SET EVERYTHING " + Object.keys( everything).length )
+    }
 }
 function getChosenEvent(whichEvent) {
-    return everything
+    return everything["categoricalOptionalityObjects"][whichEvent]
 }
 function getEverything() {
     return everything
@@ -93,8 +96,11 @@ function getLookup() {
 function getNamedEvents() {
     return namedEvents; // finch
 } 
-async function stepA() { 
-    console.log("%c stepA", "background:lightgreen")
+async function stepA(isForTddPurposes=false) { 
+    if ( isForTddPurposes===true) {
+        // emit to browser
+        console.log("%c stepA", "background:lightgreen")
+    }
     namedEvents = Object.keys(everything["categoricalOptionalityObjects"])
     const namedEventKeys = getAllNeededNamedEvents() 
     for ( let namedEvent in namedEventKeys ) {
