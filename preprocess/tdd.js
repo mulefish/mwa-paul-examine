@@ -466,7 +466,8 @@ function stepA_test(note) {
 
 }
 function getChosenEvent_test() { 
-getChosenEvent("page-view")
+const x = getChosenEvent("page-view")
+console.log(x)
 }
 
 

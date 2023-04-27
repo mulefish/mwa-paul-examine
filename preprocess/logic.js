@@ -12,7 +12,7 @@ function setEverything(gaintBallOfJson) {
     everything = gaintBallOfJson
 }
 function getChosenEvent(whichEvent) {
-    console.log(whichEvent)
+    return everything['categoricalOptionalityObjects'][whichEvent]
 }
 function getEverything() {
     return everything
