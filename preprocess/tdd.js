@@ -450,6 +450,7 @@ function stepA_test(note) {
   'purchase'
   */
   const namedEvents = getNamedEvents()
+  
   const howManyObjects = Object.keys(lookup).length 
   const counts = []
 
@@ -467,7 +468,7 @@ function stepA_test(note) {
 }
 function getChosenEvent_test() { 
 const x = getChosenEvent("page-view")
-console.log(x)
+//console.log(x)
 }
 
 
