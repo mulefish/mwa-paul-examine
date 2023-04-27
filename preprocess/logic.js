@@ -25,7 +25,13 @@ function getEverything() {
 function createObjectToSend(event) { 
 
     const ary_of_keys_to_send = Object.keys(event["default"]["payload"])
-    return ary_of_keys_to_send
+    const sendThis = [] 
+    ary_of_keys_to_send.forEach((key)=> { 
+      const x = lookup[key]
+      sendThis.push(x)
+    })
+    return sendThis
+
 
 
 }

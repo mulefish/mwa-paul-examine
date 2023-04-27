@@ -492,19 +492,8 @@ function createObjectToSend_test(note) {
       "timestamp": false
     }
   }
-  const keys = createObjectToSend(x)
-  const lookup = getLookup() 
-  let isOk = true 
-  keys.forEach((key)=> { 
-    const x = lookup[key]
-    const n = Object.keys(x).length 
-    if ( ! n > 10 ) {
-      isOk = false 
-    }
-    // console.log( x )
-  })
-
-
+  const sendThis = createObjectToSend(x)
+  const isOk = sendThis.length === 2 
   verdict(isOk, true, note + " createObjectToSend_test ")
 }
 const data = require("./everything.json")
