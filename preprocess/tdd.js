@@ -13,6 +13,7 @@ const {
   getLookup, // version2 
 stepA, // version2 
 getNamedEvents, 
+getChosenEvent, // versoin2
   categoricalHoH,
   otherObjects_thatNeedAName,
 } = require("./logic.js")
@@ -464,6 +465,11 @@ function stepA_test(note) {
 
 
 }
+function getChosenEvent_test() { 
+getChosenEvent("page-view")
+}
+
+
 const data = require("./everything.json")
 setEverything(data)
 /* */
@@ -484,3 +490,4 @@ setEverything(data)
 //  inflateObject_everything_test("v2")
 //   inflateObject_event_test("v2")
 stepA_test("Set up")
+getChosenEvent_test() 

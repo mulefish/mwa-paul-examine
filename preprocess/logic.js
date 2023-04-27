@@ -11,6 +11,9 @@ function setEverything(gaintBallOfJson) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
 }
+function getChosenEvent(whichEvent) {
+    console.log(whichEvent)
+}
 function getEverything() {
     return everything
 }
@@ -306,6 +309,7 @@ try {
         getLookup, // version2 
         stepA, // version2 
         getNamedEvents, // version2 
+        getChosenEvent,
         categoricalHoH,
         otherObjects_thatNeedAName
     };
