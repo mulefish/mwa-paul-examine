@@ -12,6 +12,11 @@
     min-width: 1000px;
     min-height: 1000px;
 }
+#bottom_textArea {
+        width: 100%;
+        min-height: 1000px;
+        box-sizing: border-box;
+}
 
 #left {
     min-width: 500px;
@@ -26,7 +31,4 @@
     min-height: 100px;
 }
 /* CSS_END */
-
-
-
 

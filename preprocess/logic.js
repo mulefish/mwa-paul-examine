@@ -344,10 +344,6 @@ try {
         otherObjects_thatNeedAName
     };
 } catch (thisIsJustForNode) {
-    // ignore this error... 
-    // this is just for the TDD for node 
+//    console.log( thisIsJustForNode)
 }
-///////////// END OUGHT TO BE IN DIFFERENT
-
-
 /* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */

@@ -4,31 +4,6 @@
 <head>
     <link rel="icon" href="data:;base64,=">
     <style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* CSS_BEGIN */
 .optional {
     background-color: #ffffe0;
@@ -43,6 +18,13 @@
     min-height: 1000px;
 }
 
+#bottom_textArea {
+        width: 100%;
+        min-height: 1000px;
+        box-sizing: border-box;
+}
+
+
 #left {
     min-width: 500px;
 }
@@ -55,110 +37,21 @@
 #schema {
     min-height: 100px;
 }
+
+#floating-box {
+    padding-top:10px;
+    padding-left:10px;
+  position: absolute;
+  top: 5.0%;
+  left: 66.67%;
+  width: 30%;
+  height: 50%;
+  border: 1px solid black;
+  background-color: #e9e9e9;
+}
+
 /* CSS_END */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </style>
-
-
     <script>
         async function getDynamicaSrc() {
 
@@ -185,50 +78,24 @@
 </head>
 
 <body>
-    <div id="buttons"></div>
-    <!-- <table border'1'>
-        <tr>
-            <td><button onClick='doFlatten()'>Flatten</button></td>
-            <td><button onClick='humanChoseAnEvent("app-response")'>app-response</button></td>
-            <td><button onClick='humanChoseAnEvent("error")'>error</button></td>
-            <td><button
-                    onClick='humanChoseAnEvent("general-component-interaction")'>general-component-interaction</button>
-            </td>
-            <td><button onClick='humanChoseAnEvent("general-component-event")'>general-component-event</button></td>
-            <td><button onClick='humanChoseAnEvent("page-products-displayed")'>page-products-displayed</button></td>
-            <td><button onClick='humanChoseAnEvent("page-view")'>page-view</button></td>
-            <td><button onClick='humanChoseAnEvent("product-interaction")'>product-interaction</button></td>
-            <td><button onClick='humanChoseAnEvent("purchase")'>purchase</button></td>
-            <td id="selectedEvent"></td>
-        </tr>
-    </table> -->
+
+    <div id="floating-box">
+        <div id="buttons"></div>
+        <hr/>
+        <button onClick="sendIt()">Send</button>
+        <button onClick="doView()">Name this button</button>
+        <button onClick="switch_view()">Switch view</button>&nbsp;&nbsp;<span id="switch_view">Verify</span>
+
+
+    </div>
+
+
     <hr />
-
-    <table border="'1">
-        <tr>
-            <td valign="top" id="left">
-                Legend:<span class="optional">optional</span>&nbsp;<span class="mandatory">mandatory</span>
-                <hr />
-
-
+                <!-- Legend:<span class="optional">optional</span>&nbsp;<span class="mandatory">mandatory</span> -->
                 <pre id="schema"></pre>
-                <!-- <textarea id="schema" rows="20" cols="100"></textarea> -->
-
                 <hr />
-                <button onClick="sendIt()">Send</button>
-                <button onClick="doView()">Name this button</button>
-                <textarea id="jsonToSend"></textarea>
-            </td>
-            <td valign="top">
-                &nbsp;
-            </td>
-            <td valign="top">
-                <button onClick="switch_view()">Switch view</button>&nbsp;&nbsp;<span id="switch_view">Verify</span>
-                <textarea id="rightSide_textArea" spellcheck="false"></textarea>
-            </td>
+                <textarea id="bottom_textArea" spellcheck="false"></textarea>
 
-        </tr>
-    </table>
 
     <script>
         // Poor man's enum
@@ -266,18 +133,12 @@
                     await stepA()
 
                     const namedEvents = getNamedEvents()
-                        let buttons = `<table border'1'><tr><td><button onClick='doFlatten()'>Flatten</button></td>`
+                        let buttons = `<button onClick='doFlatten()'>Flatten</button>`
                             namedEvents.forEach((thing)=> { 
-                                buttons += `<td><button onClick='humanChoseAnEvent("${thing}")'>${thing}</button></td>`
+                                buttons += `<button onClick='humanChoseAnEvent("${thing}")'>${thing}</button>`
                             })
-                            buttons += `<td id="selectedEvent"></td></tr></table>`
+                            buttons += `<div id="selectedEvent" />`
                             document.getElementById("buttons").innerHTML = buttons 
-
-
-
-
-
-
                     console.log("init! MwaAnalytics.initializeAnalytics")
                 } catch (boom) {
                     alert(boom)
@@ -315,11 +176,10 @@
             // const jsonToSend = inflateFlatMap(human)
             // const colorered = colorize(human, css)
             document.getElementById("schema").innerHTML =JSON.stringify( inputObject, null, 2 ) 
-            document.getElementById("jsonToSend").value = JSON.stringify(sendThis, null, 2)
             if (VIEWMODE === VERIFY) {
-                document.getElementById("rightSide_textArea").value = JSON.stringify(sendThis, null, 2)
+                document.getElementById("bottom_textArea").value = JSON.stringify(sendThis, null, 2)
             } else {
-                document.getElementById("rightSide_textArea").value = getSnippet(sendThis)
+                document.getElementById("bottom_textArea").value = getSnippet(sendThis)
             }
         }
 
@@ -341,9 +201,9 @@
                 out += "\n-----------------\n"
                 out += JSON.stringify(payloadInner, null, 2)
                 // document.getElementById("receiveInfo").value = out
-                document.getElementById("rightSide_textArea").value = JSON.stringify(theResult, null, 2)
+                document.getElementById("bottom_textArea").value = JSON.stringify(theResult, null, 2)
             } catch (boom) {
-                document.getElementById("rightSide_textArea").value = boom
+                document.getElementById("bottom_textArea").value = boom
             }
             // }
         }
@@ -357,13 +217,13 @@
         function doView() {
             const str = document.getElementById("jsonToSend").value
             let x = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${str}}`
-            document.getElementById("rightSide_textArea").value = x
+            document.getElementById("bottom_textArea").value = x
         }
 
         function doFlatten() {
             const flat = flatten(everything)
             document.getElementById("selectedEvent").innerHTML = flat
-            document.getElementById("rightSide_textArea").value = JSON.stringify(flat, null, 2)
+            document.getElementById("bottom_textArea").value = JSON.stringify(flat, null, 2)
         }
 
 

@@ -5,6 +5,31 @@
     <link rel="icon" href="data:;base64,=">
     <style>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* CSS_BEGIN */
 .optional {
     background-color: #ffffe0;
@@ -17,6 +42,11 @@
 #rightSide_textArea {
     min-width: 1000px;
     min-height: 1000px;
+}
+#bottom_textArea {
+        height: 99%;
+        width: 100%;
+        box-sizing: border-box;
 }
 
 #left {
@@ -32,6 +62,103 @@
     min-height: 100px;
 }
 /* CSS_END */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -65,7 +192,8 @@
 </head>
 
 <body>
-    <table border'1'>
+    <div id="buttons"></div>
+    <!-- <table border'1'>
         <tr>
             <td><button onClick='doFlatten()'>Flatten</button></td>
             <td><button onClick='humanChoseAnEvent("app-response")'>app-response</button></td>
@@ -80,7 +208,7 @@
             <td><button onClick='humanChoseAnEvent("purchase")'>purchase</button></td>
             <td id="selectedEvent"></td>
         </tr>
-    </table>
+    </table> -->
     <hr />
 
     <table border="'1">
@@ -131,31 +259,56 @@
 
             async function loadMwaAnalytics() {
                 try {
-                    await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
-                    setEverything(self.validationModule)
 
-                    // Roll through and set up the different event objects
-                    // TODO: Discover the different possible event objects dynamically!
-                    const events = ["app-response", "error", "general-component-interaction", "general-component-event", "page-products-displayed", "page-view", "product-interaction", "purchase"]
-                    events.forEach((thing) => {
-                        step0_examineSomething(thing)
-                    })
+                    await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
+                    console.log("%c FIRE 2 of 2 ", "background:pink")
+                    await setEverything(self.validationModule)
+
+                    // // Roll through and set up the different event objects
+                    // // TODO: Discover the different possible event objects dynamically!
+                    // const events = ["app-response", "error", "general-component-interaction", "general-component-event", "page-products-displayed", "page-view", "product-interaction", "purchase"]
+                    // events.forEach((thing) => {
+                    //     step0_examineSomething(thing)
+                    // })
+                    await stepA()
+
+                    const namedEvents = getNamedEvents()
+                        let buttons = `<table border'1'><tr><td><button onClick='doFlatten()'>Flatten</button></td>`
+                            namedEvents.forEach((thing)=> { 
+                                buttons += `<td><button onClick='humanChoseAnEvent("${thing}")'>${thing}</button></td>`
+                            })
+                            buttons += `<td id="selectedEvent"></td></tr></table>`
+                            document.getElementById("buttons").innerHTML = buttons 
+
+
+
+
+
+
                     console.log("init! MwaAnalytics.initializeAnalytics")
                 } catch (boom) {
-                    alert("Likely the dynamic CDN scripts haven't been loaded yet...\n" + boom)
+                    alert(boom)
+                    console.log(boom )
                 }
             }
             await getDynamicaSrc()
-
+            console.log("%c PAUSE 1 of 2", "background:pink")
             setTimeout(function () {
                 loadMwaAnalytics()
             }, 1000);
-            // loadMwaAnalytics()
         }
         function humanChoseAnEvent(eventName) {
             currentEventName = eventName
             document.getElementById("selectedEvent").innerHTML = eventName
-            const inputObject = categoricalHoH[eventName]["core"]
+
+
+            const inputObject = getChosenEvent(eventName)
+            const sendThis = createObjectToSend(inputObject)
+
+    //        const keys = createObjectToSend(inputObject)
+  //const lookup = getLookup() 
+
+            // const inputObject = categoricalHoH[eventName]["core"]
 
 
 
@@ -163,17 +316,17 @@
             let intermediate = inflateFlatMap(inputObject)
             intermediate = intermediate["default"]["payload"]
 
-            const after = getColorizableHOH(intermediate)
-            const human = after["for_human"]
-            const css = after["for_css"]
-            const jsonToSend = inflateFlatMap(human)
-            const colorered = colorize(human, css)
-            document.getElementById("schema").innerHTML = colorered
-            document.getElementById("jsonToSend").value = JSON.stringify(jsonToSend, null, 2)
+            // const after = getColorizableHOH(intermediate)
+            // const human = after["for_human"]
+            // const css = after["for_css"]
+            // const jsonToSend = inflateFlatMap(human)
+            // const colorered = colorize(human, css)
+            document.getElementById("schema").innerHTML =JSON.stringify( inputObject, null, 2 ) 
+            document.getElementById("jsonToSend").value = JSON.stringify(sendThis, null, 2)
             if (VIEWMODE === VERIFY) {
-                document.getElementById("rightSide_textArea").value = JSON.stringify(categoricalHoH[eventName], null, 2)
+                document.getElementById("rightSide_textArea").value = JSON.stringify(sendThis, null, 2)
             } else {
-                document.getElementById("rightSide_textArea").value = getSnippet(jsonToSend)
+                document.getElementById("rightSide_textArea").value = getSnippet(sendThis)
             }
         }
 
@@ -229,15 +382,66 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* MAIN_LOGIC_BEGIN :  TEMPLATING - DO NOT REMOVE */
 
 
 const categoricalHoH = {}
 const otherObjects_thatNeedAName = {}
 let everything;
-function setEverything(gaintBallOfJson) {
+let lookup = {} 
+// let namedEvents = {}
+async function setEverything(gaintBallOfJson, isForTddPurposes=false ) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
+    if (isForTddPurposes === false ) {
+        // Emit out to the browser!
+        console.log("%c setEverything() " + Object.keys( everything).length, "background:tan;" )
+    }
+}
+function getChosenEvent(whichEvent) {
+    return everything["categoricalOptionalityObjects"][whichEvent]
+}
+function getEverything() {
+    return everything
+}
+
+function createObjectToSend(event) { 
+
+    const ary_of_keys_to_send = Object.keys(event["default"]["payload"])
+    const sendThis = {} 
+    ary_of_keys_to_send.forEach((key)=> { 
+      const x = lookup[key]
+      sendThis[key] = x
+    })
+    return sendThis
+
+
+
 }
 
 function inflateFlatMap(simple) {
@@ -306,8 +510,38 @@ function flatten(objectToFlatten) {
     return flattenObject(objectToFlatten)
 }
 
+
+
+function getLookup() { 
+    return lookup
+}
+function setLookup(x) { 
+    // lookup will be stuff like 'screen' or 'event' or 'collectiontion'... 
+    lookup = x
+}
+function getNamedEvents() {
+    return namedEvents;
+} 
+async function stepA(isForTddPurposes=false) { 
+    if ( isForTddPurposes===false) {
+        // emit to browser
+        console.log("%c stepA", "background:lightgreen")
+    }
+    namedEvents = Object.keys(everything["categoricalOptionalityObjects"])
+    const ignore = ["general-component-interaction"]    
+    namedEvents = namedEvents.filter((x) => !ignore.includes(x));
+    const namedEventKeys = getAllNeededNamedEvents() 
+    let l = {} 
+    for ( let namedEvent in namedEventKeys ) {
+      const x = inflateObject(namedEvent)
+      // const n = Object.keys(x).length 
+      l[namedEvent] = x
+    }
+    setLookup(l)
+}
+
 function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
-console.log( `${thing} ${parent} ${history}  ${loop}  ${result}`)
+
     if (parent.length > 0) {
         history += parent + "."
     }
@@ -456,6 +690,46 @@ function getColorizableHOH(obj) {
     return result;
 }
 
+///////////// version 2 ///////////////
+
+function getTypesForNamedEvent(namedEvent_lowerCase) {
+    const namedEvent = namedEvent_lowerCase.toUpperCase()
+    const obj = everything[namedEvent]
+    return obj
+}
+
+function inflateObject(eventType) {
+    const EVENT_TYPE = eventType.toUpperCase()
+    const tmp = flatten( everything[EVENT_TYPE ]) 
+    const seen = {} 
+    for ( let k in tmp ) {
+        if ( k.includes("zodValidationFn")) {
+            // ignore it 
+        } else {
+            seen[k] = tmp[k]
+        }
+    }
+    return seen
+}
+function getAllNeededNamedEvents() {
+    let seen = {}
+    const coo = Object.keys(everything['categoricalOptionalityObjects'])
+    coo.forEach((thing, i) => {
+        const payloads = Object.keys(everything['categoricalOptionalityObjects'][thing]["default"]["payload"])
+        payloads.forEach((payload) => {
+            if (seen.hasOwnProperty(payload)) {
+                seen[payload]++
+            } else {
+                seen[payload] = 1
+            }
+        })
+    })
+    return seen
+}
+
+
+
+
 try {
     module.exports = {
         setEverything,
@@ -465,18 +739,22 @@ try {
         step1_recursive_getCategoricalOptionalityObjects,
         inflateFlatMap,
         getColorizableHOH,
+        getEverything,
+        getTypesForNamedEvent,
+        inflateObject, // version 2 
+        getAllNeededNamedEvents, // version 2 
+        getLookup, // version2 
+        stepA, // version2 
+        getNamedEvents, // version2 
+        getChosenEvent,
+        createObjectToSend, // version2 
         categoricalHoH,
         otherObjects_thatNeedAName
     };
 } catch (thisIsJustForNode) {
-    // ignore this error... 
-    // this is just for the TDD for node 
+//    console.log( thisIsJustForNode)
 }
-///////////// END OUGHT TO BE IN DIFFERENT
-
-
 /* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */
-
         init()
 
 
