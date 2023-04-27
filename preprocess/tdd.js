@@ -493,7 +493,8 @@ function createObjectToSend_test(note) {
     }
   }
   const sendThis = createObjectToSend(x)
-  const isOk = sendThis.length === 2 
+  // console.log( sendThis)
+  const isOk = Object.keys(sendThis).length === 2 
   verdict(isOk, true, note + " createObjectToSend_test ")
 }
 const data = require("./everything.json")

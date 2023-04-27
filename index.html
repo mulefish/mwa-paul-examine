@@ -279,8 +279,8 @@
             // const css = after["for_css"]
             // const jsonToSend = inflateFlatMap(human)
             // const colorered = colorize(human, css)
-            document.getElementById("schema").innerHTML = inputObject
-            document.getElementById("jsonToSend").value = JSON.stringify(inputObject, null, 2)
+            document.getElementById("schema").innerHTML =JSON.stringify( inputObject, null, 2 ) 
+            document.getElementById("jsonToSend").value = JSON.stringify(sendThis, null, 2)
             if (VIEWMODE === VERIFY) {
                 document.getElementById("rightSide_textArea").value = JSON.stringify(sendThis, null, 2)
             } else {
