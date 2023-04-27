@@ -5,6 +5,8 @@
 const categoricalHoH = {}
 const otherObjects_thatNeedAName = {}
 let everything;
+let lookup = {} 
+let namedEvents = {}
 function setEverything(gaintBallOfJson) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
@@ -77,6 +79,24 @@ function flatten(objectToFlatten) {
         return accumulator;
     }
     return flattenObject(objectToFlatten)
+}
+
+
+
+function getLookup() { 
+    return lookup
+}
+function getNamedEvents() {
+    return namedEvents; // finch
+} 
+function stepA() { 
+    namedEvents = Object.keys(everything["categoricalOptionalityObjects"])
+    const namedEventKeys = getAllNeededNamedEvents() 
+    for ( let namedEvent in namedEventKeys ) {
+      const x = inflateObject(namedEvent)
+      // const n = Object.keys(x).length 
+      lookup[namedEvent] = x
+    }
 }
 
 function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
@@ -283,6 +303,9 @@ try {
         getTypesForNamedEvent,
         inflateObject, // version 2 
         getAllNeededNamedEvents, // version 2 
+        getLookup, // version2 
+        stepA, // version2 
+        getNamedEvents, // version2 
         categoricalHoH,
         otherObjects_thatNeedAName
     };

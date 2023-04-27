@@ -10,6 +10,9 @@ const {
   getTypesForNamedEvent,
   inflateObject, // version 2 
   getAllNeededNamedEvents, // version 2 
+  getLookup, // version2 
+stepA, // version2 
+getNamedEvents, 
   categoricalHoH,
   otherObjects_thatNeedAName,
 } = require("./logic.js")
@@ -408,7 +411,59 @@ function inflateObject_event_test(note) {
 
 }
 
+function stepA_test(note) {
+  // stepA will set 'namedEvents' and 'lookup'
+  stepA()
+  // lookup is a {collection} of objects that look something like this: 
+  /* 
+  {
+  screen: {
+    urlRoute: 'string',
+    path: 'string',
+    type: 'string',
+    'country.zodValidType': 'string',
+    collections: 'Array<string>',
+    currency: 'string',
+    'property.zodValidType': 'string',
+    'language.zodValidType': 'string',
+    'header.zodValidType': 'header',
+    'header.localized': 'string',
+    'header.unified': 'string',
+    'category.hierarchy': 'Array<hierarchy>',
+    'category.gender': 'string',
+    attributes: 'Record<any>'
+  },
+  */ 
+  const lookup = getLookup() 
 
+  /* 
+  namedEvents will look something like: 
+  [
+  'app-response',
+  'error',
+  'general-component-interaction',
+  'general-component-event',
+  'page-products-displayed',
+  'page-view',
+  'product-interaction',
+  'purchase'
+  */
+  const namedEvents = getNamedEvents()
+  const howManyObjects = Object.keys(lookup).length 
+  const counts = []
+
+  for ( let key in lookup ) {
+    const n = Object.keys(lookup[key]).length
+    counts.push(n)
+  }
+  const isOk = true
+  if ( ! howManyObjects > 0 ) { isOk = false }
+  if ( ! namedEvents.length  > 0 ) { isOk = false }
+
+  verdict(isOk, true, note + " stepA_test n=" + howManyObjects + " Lookup's member counts: " + counts + " namedEvents=" + namedEvents.length )
+
+
+}
 const data = require("./everything.json")
 setEverything(data)
 /* */
@@ -424,7 +479,8 @@ setEverything(data)
 // getTypesForNamedEvent_test("v2 2") 
 // screen_test("v2 2")
 ///// 
- inflateObject_screen_test("v2")
- getAllNeededNamedEvents_test("v2")
- inflateObject_everything_test("v2")
-  inflateObject_event_test("v2")
+//  inflateObject_screen_test("v2")
+//  getAllNeededNamedEvents_test("v2")
+//  inflateObject_everything_test("v2")
+//   inflateObject_event_test("v2")
+stepA_test("Set up")
