@@ -413,7 +413,7 @@ function inflateObject_event_test(note) {
 
 function stepA_test(note) {
   // stepA will set 'namedEvents' and 'lookup'
-  stepA()
+  stepA()   /// THIS!!!! 
   // lookup is a {collection} of objects that look something like this: 
   /* 
   {

@@ -8,6 +8,10 @@
 
 
 
+
+
+
+
 /* CSS_BEGIN */
 .optional {
     background-color: #ffffe0;
@@ -35,6 +39,22 @@
     min-height: 100px;
 }
 /* CSS_END */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -146,25 +166,32 @@
 
             async function loadMwaAnalytics() {
                 try {
-                    await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
-                    setEverything(self.validationModule)
 
-                    // Roll through and set up the different event objects
-                    // TODO: Discover the different possible event objects dynamically!
-                    const events = ["app-response", "error", "general-component-interaction", "general-component-event", "page-products-displayed", "page-view", "product-interaction", "purchase"]
-                    events.forEach((thing) => {
-                        step0_examineSomething(thing)
-                    })
+                    await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
+                    console.log("%c FIRE 2 of 2 ", "background:pink")
+
+                    // setEverything(self.validationModule)
+
+                    // // Roll through and set up the different event objects
+                    // // TODO: Discover the different possible event objects dynamically!
+                    // const events = ["app-response", "error", "general-component-interaction", "general-component-event", "page-products-displayed", "page-view", "product-interaction", "purchase"]
+                    // events.forEach((thing) => {
+                    //     step0_examineSomething(thing)
+                    // })
+                    
+
+                    stepA()
+
                     console.log("init! MwaAnalytics.initializeAnalytics")
                 } catch (boom) {
                     alert("Likely the dynamic CDN scripts haven't been loaded yet...\n" + boom)
                 }
             }
             await getDynamicaSrc()
-
+            console.log("%c PAUSE 1 of 2", "background:pink")
             setTimeout(function () {
                 loadMwaAnalytics()
-            }, 1000);
+            }, 3000);
             // loadMwaAnalytics()
         }
         function humanChoseAnEvent(eventName) {
@@ -247,15 +274,24 @@
 
 
 
+
+
+
+
 /* MAIN_LOGIC_BEGIN :  TEMPLATING - DO NOT REMOVE */
 
 
 const categoricalHoH = {}
 const otherObjects_thatNeedAName = {}
 let everything;
+let lookup = {} 
+let namedEvents = {}
 function setEverything(gaintBallOfJson) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
+}
+function getEverything() {
+    return everything
 }
 
 function inflateFlatMap(simple) {
@@ -324,8 +360,26 @@ function flatten(objectToFlatten) {
     return flattenObject(objectToFlatten)
 }
 
+
+
+function getLookup() { 
+    return lookup
+}
+function getNamedEvents() {
+    return namedEvents; // finch
+} 
+function stepA() { 
+    namedEvents = Object.keys(everything["categoricalOptionalityObjects"])
+    const namedEventKeys = getAllNeededNamedEvents() 
+    for ( let namedEvent in namedEventKeys ) {
+      const x = inflateObject(namedEvent)
+      // const n = Object.keys(x).length 
+      lookup[namedEvent] = x
+    }
+}
+
 function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
-console.log( `${thing} ${parent} ${history}  ${loop}  ${result}`)
+
     if (parent.length > 0) {
         history += parent + "."
     }
@@ -474,6 +528,47 @@ function getColorizableHOH(obj) {
     return result;
 }
 
+///////////// version 2 ///////////////
+
+function getTypesForNamedEvent(namedEvent_lowerCase) {
+    const namedEvent = namedEvent_lowerCase.toUpperCase()
+    console.log("namedEvent: " + namedEvent)
+    const obj = everything[namedEvent]
+    return obj
+}
+
+function inflateObject(eventType) {
+    const EVENT_TYPE = eventType.toUpperCase()
+    const tmp = flatten( everything[EVENT_TYPE ]) 
+    const seen = {} 
+    for ( let k in tmp ) {
+        if ( k.includes("zodValidationFn")) {
+            // ignore it 
+        } else {
+            seen[k] = tmp[k]
+        }
+    }
+    return seen
+}
+function getAllNeededNamedEvents() {
+    let seen = {}
+    const coo = Object.keys(everything['categoricalOptionalityObjects'])
+    coo.forEach((thing, i) => {
+        const payloads = Object.keys(everything['categoricalOptionalityObjects'][thing]["default"]["payload"])
+        payloads.forEach((payload) => {
+            if (seen.hasOwnProperty(payload)) {
+                seen[payload]++
+            } else {
+                seen[payload] = 1
+            }
+        })
+    })
+    return seen
+}
+
+
+
+
 try {
     module.exports = {
         setEverything,
@@ -483,6 +578,13 @@ try {
         step1_recursive_getCategoricalOptionalityObjects,
         inflateFlatMap,
         getColorizableHOH,
+        getEverything,
+        getTypesForNamedEvent,
+        inflateObject, // version 2 
+        getAllNeededNamedEvents, // version 2 
+        getLookup, // version2 
+        stepA, // version2 
+        getNamedEvents, // version2 
         categoricalHoH,
         otherObjects_thatNeedAName
     };
