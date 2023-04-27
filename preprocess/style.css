@@ -18,6 +18,20 @@
         box-sizing: border-box;
 }
 
+
+
+#floating-box {
+    padding-top:10px;
+    padding-left:10px;
+  position: absolute;
+  top: 5.0%;
+  left: 66.67%;
+  width: 30%;
+  height: 50%;
+  border: 1px solid black;
+  background-color: #e9e9e9;
+}
+
 #left {
     min-width: 500px;
 }
