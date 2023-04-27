@@ -6,13 +6,13 @@ const categoricalHoH = {}
 const otherObjects_thatNeedAName = {}
 let everything;
 let lookup = {} 
-let namedEvents = {}
+// let namedEvents = {}
 async function setEverything(gaintBallOfJson, isForTddPurposes=false ) {
     // This needs to be set either from xTDD.js OR from the real page.
     everything = gaintBallOfJson
     if (isForTddPurposes === false ) {
         // Emit out to the browser!
-        console.log("%c SET EVERYTHING " + Object.keys( everything).length )
+        console.log("%c setEverything() " + Object.keys( everything).length, "background:tan;" )
     }
 }
 function getChosenEvent(whichEvent) {
@@ -107,12 +107,12 @@ function flatten(objectToFlatten) {
 function getLookup() { 
     return lookup
 }
+function setLookup(x) { 
+    // lookup will be stuff like 'screen' or 'event' or 'collectiontion'... 
+    lookup = x
+}
 function getNamedEvents() {
-
-    
     return namedEvents;
-
-
 } 
 async function stepA(isForTddPurposes=false) { 
     if ( isForTddPurposes===false) {
@@ -120,12 +120,16 @@ async function stepA(isForTddPurposes=false) {
         console.log("%c stepA", "background:lightgreen")
     }
     namedEvents = Object.keys(everything["categoricalOptionalityObjects"])
+    const ignore = ["general-component-interaction"]    
+    namedEvents = namedEvents.filter((x) => !ignore.includes(x));
     const namedEventKeys = getAllNeededNamedEvents() 
+    let l = {} 
     for ( let namedEvent in namedEventKeys ) {
       const x = inflateObject(namedEvent)
       // const n = Object.keys(x).length 
-      lookup[namedEvent] = x
+      l[namedEvent] = x
     }
+    setLookup(l)
 }
 
 function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
