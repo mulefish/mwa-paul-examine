@@ -232,6 +232,9 @@ function beautifulJson( HoH ) {
     inflateFlatMap
     return result
 }
+/* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */
+
+
 
 try {
     module.exports = {
@@ -253,7 +256,6 @@ try {
         categoricalHoH,
         otherObjects_thatNeedAName
     };
-} catch (thisIsJustForNode) {
-
+} catch (boom) {
+    console.log(boom)
 }
-/* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */

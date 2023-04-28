@@ -30,9 +30,14 @@ with open('style.css', 'r') as file:
 
 # Read in the javascript logic!
 logic = ""
+keepAlive = True
 with open('logic.js', 'r') as file:
     for line in file:
-        logic += line 
+        if keepAlive == True:        
+            logic += line
+        if "MAIN_LOGIC_END" in line:
+            # This 'keepAlive' is to prevent node TDD code from getting into the HTML.
+            keepAlive = False  
 
 payloads = [css, logic]
 

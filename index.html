@@ -5,6 +5,9 @@
     <link rel="icon" href="data:;base64,=">
     <style>
 
+
+
+
 /* CSS_BEGIN */
 .optional {
     background-color: #ffffe0;
@@ -29,8 +32,8 @@
     padding-left: 3px;
     position: absolute;
     top: 1%;
-    left: 66.67%;
-    width: 20%;
+    left: 79.0%;
+    width: 16%;
     height: 95%;
     border: 1px solid black;
     background-color: #e9e9e9;
@@ -48,7 +51,24 @@
 #schema {
     min-height: 100px;
 }
+
+/* .button {
+    background-color: grey;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+  } */
+  
+  .active {
+    background-color: green;
+  }
+
 /* CSS_END */
+
+
+
 
     </style>
     <script>
@@ -72,6 +92,26 @@
                 document.head.appendChild(script);
             })
         } 
+
+
+        let lastClickedButton = "button1";
+
+// Define a function to handle button clicks
+function handleButtonClick(buttonNumber) {
+  // If a button was previously clicked, remove the "active" class from it
+  if (lastClickedButton) {
+    lastClickedButton.classList.remove("active");
+  }
+  
+  // Get a reference to the button that was clicked
+  const button = document.getElementById(`button${buttonNumber}`);
+  
+  // Add the "active" class to the clicked button
+  button.classList.add("active");
+  
+  // Update the lastClickedButton variable to point to the clicked button
+  lastClickedButton = button;
+}
     </script>
 
 </head>
@@ -81,11 +121,15 @@
     <div id="floating-box">
         <div id="buttons"></div>
         <hr />
-        <button onClick="sendIt()">Send</button>
-        <button onClick="doView()">Name this button</button>
-        <button onClick="switch_view()">Switch view</button>&nbsp;&nbsp;<span id="switch_view">Verify</span>
+        <!-- <button onClick="sendIt()">Send</button><br/>
+        <button onClick="doView()">Name this button</button><br/>
+        <button onClick="switch_view()">Switch view</button><br/> -->
 
+        <button id="button1" class="active" onclick="handleButtonClick(1)">Craft</button>
+        <button id="button2" onclick="handleButtonClick(2)">Send</button>
+        <button id="button3" onclick="handleButtonClick(3)">Code</button>
 
+        <span id="switch_view">Verify</span><br/>
     </div>
 
 
@@ -124,9 +168,9 @@
                     await setEverything(self.validationModule)
                     await stepA()
                     const namedEvents = getNamedEvents()
-                    let buttons = `<button onClick='doFlatten()'>Flatten</button>`
+                    let buttons = `<button onClick='doFlatten()'>flatten</button><br/>`
                     namedEvents.forEach((thing) => {
-                        buttons += `<button onClick='humanChoseAnEvent("${thing}")'>${thing}</button>`
+                        buttons += `<button onClick='humanChoseAnEvent("${thing}")'>${thing}</button><br/>`
                     })
                     buttons += `<hr/><div id="selectedEvent" /><hr/>`
                     document.getElementById("buttons").innerHTML = buttons
@@ -200,6 +244,15 @@
             document.getElementById("selectedEvent").innerHTML = flat
             document.getElementById("bottom_textArea").value = JSON.stringify(flat, null, 2)
         }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -338,101 +391,6 @@ async function stepA(isForTddPurposes=false) {
     setLookup(l)
 }
 
-function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
-
-    if (parent.length > 0) {
-        history += parent + "."
-    }
-    if (typeof thing === "object") {
-        for (let k in thing) {
-            if (thing[k] !== undefined) {
-                step1_recursive_getCategoricalOptionalityObjects(thing[k], k, history, ++loop, result)
-            }
-        }
-    } else {
-        const type = "string"
-        // Zap the trailing '.'
-        history = history.slice(0, -1);
-        // Prevent impossible things from getting into the state
-        if (thing !== undefined) {
-            result[history] = { mandatory: thing, type }
-        }
-    }
-}
-function step2_findTypescriptObjects(HoH) {
-    // This is a map of objects like: 
-    // 'default.payload.screen.path': { mandatory: false, type: 'string' },
-    // 
-    // Here, for this example the goal was to find 'screen'
-    let found = {}
-    for (let k in HoH) {
-        if (k.includes("payload.")) {
-            //[ 'screen', 'path' ]
-            const path = k.split("payload.")[1]
-            // 'screen'
-            const objectOfInterest = path.split(".")[0]
-            // Look to see if this key is in 'everything'. Purpose? 
-            // Prevent 'COLLECTIONLIST' from getting into the system. 
-            // If 'COLLECTIONLIST' is doing something - then...  change this. 
-            if (everything.hasOwnProperty(objectOfInterest.toUpperCase())) {
-                // UPPER CASE : lower case
-                found[objectOfInterest.toUpperCase()] = objectOfInterest
-            }
-        }
-    }
-    return found
-}
-
-function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, result) {
-    if (parent.length > 0) {
-        history += parent + "."
-    }
-    if (typeof thing === "object") {
-        for (let k in thing) {
-            if (thing[k] !== undefined && k !== "zodValidationFn") {
-                step3_recursive_getNonCategoricalObjects(thing[k], k, history, ++loop, result)
-            }
-        }
-    } else {
-        if (parent !== "zodValidType") {
-
-            history = history.slice(0, -1); // Zap the trailing '.'
-            result[history] = { type: thing, parent }
-        }
-    }
-}
-//https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking
-
-function step0_examineSomething(eventName, isTDD = false) {
-    if (everything["categoricalOptionalityObjects"].hasOwnProperty(eventName)) {
-        const all = everything["categoricalOptionalityObjects"][eventName]
-        const core = {}
-        step1_recursive_getCategoricalOptionalityObjects(all, "", "", 0, core)
-        const lookup = step2_findTypescriptObjects(core)
-
-        categoricalHoH[eventName] = {
-            "core": core,
-            "lookup": lookup
-        }
-
-        for (let k in categoricalHoH) {
-            const v = categoricalHoH[k]
-        }
-
-        for (let k in categoricalHoH[eventName]["lookup"]) {
-            if (!otherObjects_thatNeedAName.hasOwnProperty(k)) {
-                const cleaned = {}
-                step3_recursive_getNonCategoricalObjects(everything[k], "", "", 0, cleaned)
-                otherObjects_thatNeedAName[k] = cleaned
-            }
-        }
-    } else {
-        if (isTDD === false) {
-            console.log("%c MISSING " + eventName, "background:red")
-        }
-    }
-}
-
 function getColorizableHOH(obj) {
     const before = {};
 
@@ -489,7 +447,6 @@ function getColorizableHOH(obj) {
 }
 
 ///////////// version 2 ///////////////
-
 function getTypesForNamedEvent(namedEvent_lowerCase) {
     const namedEvent = namedEvent_lowerCase.toUpperCase()
     const obj = everything[namedEvent]
@@ -534,55 +491,29 @@ function beautifulJson( HoH ) {
     inflateFlatMap
     return result
 }
-
-try {
-    module.exports = {
-        setEverything,
-        flatten,
-        colorize,
-        step0_examineSomething,
-        step1_recursive_getCategoricalOptionalityObjects,
-        inflateFlatMap,
-        getColorizableHOH,
-        getEverything,
-        getTypesForNamedEvent,
-        inflateObject, // version 2 
-        getAllNeededNamedEvents, // version 2 
-        getLookup, // version2 
-        stepA, // version2 
-        getNamedEvents, // version2 
-        getChosenEvent,
-        createObjectToSend, // version2 
-        beautifulJson,
-        categoricalHoH,
-        otherObjects_thatNeedAName
-    };
-} catch (thisIsJustForNode) {
-//    console.log( thisIsJustForNode)
-}
 /* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */
 
         init()
 
         ////////////////////// DRAGGING 
-        var box = document.getElementById("floating-box"); // finch 
-        var isDragging = false;
-        var dragOffset = { x: 0, y: 0 };
+        let box = document.getElementById("floating-box"); // finch 
+        let isDragging = false;
+        let dragOffset = { x: 0, y: 0 };
 
-        box.addEventListener("mousedown", function (event) {
+        box.addEventListener("mousedown", (event) =>{
             isDragging = true;
             dragOffset.x = event.clientX - box.offsetLeft;
             dragOffset.y = event.clientY - box.offsetTop;
         });
 
-        box.addEventListener("mousemove", function (event) {
+        box.addEventListener("mousemove", (event) => {
             if (isDragging) {
                 box.style.left = (event.clientX - dragOffset.x) + "px";
                 box.style.top = (event.clientY - dragOffset.y) + "px";
             }
         });
 
-        box.addEventListener("mouseup", function (event) {
+        box.addEventListener("mouseup", (event) =>{
             isDragging = false;
         });
 
