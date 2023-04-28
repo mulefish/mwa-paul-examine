@@ -3,8 +3,6 @@ const {
   flatten,
   colorize,
   inflateFlatMap,
-  step0_examineSomething,
-  step1_recursive_getCategoricalOptionalityObjects,
   getColorizableHOH,
   getEverything,
   getTypesForNamedEvent,
@@ -28,81 +26,6 @@ const verdict = ((a, b, msg) => {
   console.log(isOk + " " + msg)
 })
 
-function simple_happypath(note) {
-  step0_examineSomething("app-response")
-
-  const cKeys = Object.keys(categoricalHoH)
-  const lookup = Object.keys(categoricalHoH["app-response"]["lookup"])
-  const oKeys = Object.keys(otherObjects_thatNeedAName)
-  const actual = {
-    "categorical_keys": cKeys,
-    "lookup": lookup.sort(),
-    "other_keys": oKeys.sort()
-  }
-  const expected = {
-    categorical_keys: ['app-response'],
-    lookup: ['SCREEN'],
-    other_keys: ['SCREEN']
-  }
-  verdict(actual, expected, note + " simple_happypath")
-}
-
-function happypath_deeperLook(note) {
-
-  const events = ["app-response", "product-interaction", "page-view", "This does not exist"]
-  const thisIsForTDDPurposes = true // Prevent irratating console logs
-  events.forEach((thing) => {
-    step0_examineSomething(thing, thisIsForTDDPurposes)
-  })
-  const actual = {}
-  for (let k in categoricalHoH) {
-    actual[k] = {
-      core: Object.keys(categoricalHoH[k]["core"]).length,
-      lookup: Object.keys(categoricalHoH[k]["lookup"]).length,
-    }
-  }
-  const expected = {
-    'app-response': { core: 12, lookup: 1 },
-    'product-interaction': { core: 17, lookup: 2 },
-    'page-view': { core: 12, lookup: 1 },
-    // See? 'This does not exist' is not here
-  }
-  verdict(actual, expected, note + " happypath_deeperLook")
-}
-
-
-function complex_happypath(note) {
-  step0_examineSomething("error")
-  step0_examineSomething("product-interaction")
-  step0_examineSomething("purchase")
-  step0_examineSomething("page-view")
-  step0_examineSomething("page-products-displayed")
-  step0_examineSomething("page-products-displayed")
-  step0_examineSomething("general-component-event")
-  step0_examineSomething("general-component-interaction")
-  step0_examineSomething("app-response")
-
-  const cKeys = Object.keys(categoricalHoH)
-  const oKeys = Object.keys(otherObjects_thatNeedAName)
-  const actual = {
-    "categorical_keys": cKeys.sort(),
-    "other_keys": oKeys.sort()
-  }
-  const expected = {
-    categorical_keys: [
-      'error',
-      'product-interaction',
-      'purchase',
-      'page-view',
-      'page-products-displayed',
-      'general-component-event',
-      'general-component-interaction',
-      'app-response'
-    ].sort(),
-    other_keys: ['SCREEN', 'EVENT'].sort() // Yes, this is correct and yes this tinyness surprises me.
-  }
-  verdict(actual, expected, note + " complex_happypath")
-}
 
 function flatten_test(note) {
   const flat = flatten(data)
@@ -634,9 +557,6 @@ const thisIsTDD=true
 setEverything(data, thisIsTDD)
 
 /* */
-simple_happypath("1 of 8")
-happypath_deeperLook("2 of 8")
-complex_happypath("3 of 8")
 flatten_test("4 of 8")
 inflateFlatMap_complex_test("5 of 8")
 inflateFlatMap_simple_test("6 of 8")

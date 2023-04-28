@@ -132,101 +132,6 @@ async function stepA(isForTddPurposes=false) {
     setLookup(l)
 }
 
-function step1_recursive_getCategoricalOptionalityObjects(thing, parent, history, loop, result) {
-
-    if (parent.length > 0) {
-        history += parent + "."
-    }
-    if (typeof thing === "object") {
-        for (let k in thing) {
-            if (thing[k] !== undefined) {
-                step1_recursive_getCategoricalOptionalityObjects(thing[k], k, history, ++loop, result)
-            }
-        }
-    } else {
-        const type = "string"
-        // Zap the trailing '.'
-        history = history.slice(0, -1);
-        // Prevent impossible things from getting into the state
-        if (thing !== undefined) {
-            result[history] = { mandatory: thing, type }
-        }
-    }
-}
-function step2_findTypescriptObjects(HoH) {
-    // This is a map of objects like: 
-    // 'default.payload.screen.path': { mandatory: false, type: 'string' },
-    // 
-    // Here, for this example the goal was to find 'screen'
-    let found = {}
-    for (let k in HoH) {
-        if (k.includes("payload.")) {
-            //[ 'screen', 'path' ]
-            const path = k.split("payload.")[1]
-            // 'screen'
-            const objectOfInterest = path.split(".")[0]
-            // Look to see if this key is in 'everything'. Purpose? 
-            // Prevent 'COLLECTIONLIST' from getting into the system. 
-            // If 'COLLECTIONLIST' is doing something - then...  change this. 
-            if (everything.hasOwnProperty(objectOfInterest.toUpperCase())) {
-                // UPPER CASE : lower case
-                found[objectOfInterest.toUpperCase()] = objectOfInterest
-            }
-        }
-    }
-    return found
-}
-
-function step3_recursive_getNonCategoricalObjects(thing, parent, history, loop, result) {
-    if (parent.length > 0) {
-        history += parent + "."
-    }
-    if (typeof thing === "object") {
-        for (let k in thing) {
-            if (thing[k] !== undefined && k !== "zodValidationFn") {
-                step3_recursive_getNonCategoricalObjects(thing[k], k, history, ++loop, result)
-            }
-        }
-    } else {
-        if (parent !== "zodValidType") {
-
-            history = history.slice(0, -1); // Zap the trailing '.'
-            result[history] = { type: thing, parent }
-        }
-    }
-}
-//https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking
-
-function step0_examineSomething(eventName, isTDD = false) {
-    if (everything["categoricalOptionalityObjects"].hasOwnProperty(eventName)) {
-        const all = everything["categoricalOptionalityObjects"][eventName]
-        const core = {}
-        step1_recursive_getCategoricalOptionalityObjects(all, "", "", 0, core)
-        const lookup = step2_findTypescriptObjects(core)
-
-        categoricalHoH[eventName] = {
-            "core": core,
-            "lookup": lookup
-        }
-
-        for (let k in categoricalHoH) {
-            const v = categoricalHoH[k]
-        }
-
-        for (let k in categoricalHoH[eventName]["lookup"]) {
-            if (!otherObjects_thatNeedAName.hasOwnProperty(k)) {
-                const cleaned = {}
-                step3_recursive_getNonCategoricalObjects(everything[k], "", "", 0, cleaned)
-                otherObjects_thatNeedAName[k] = cleaned
-            }
-        }
-    } else {
-        if (isTDD === false) {
-            console.log("%c MISSING " + eventName, "background:red")
-        }
-    }
-}
-
 function getColorizableHOH(obj) {
     const before = {};
 
@@ -334,8 +239,6 @@ try {
         setEverything,
         flatten,
         colorize,
-        step0_examineSomething,
-        step1_recursive_getCategoricalOptionalityObjects,
         inflateFlatMap,
         getColorizableHOH,
         getEverything,
