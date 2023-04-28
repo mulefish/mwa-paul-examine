@@ -4,52 +4,52 @@
 <head>
     <link rel="icon" href="data:;base64,=">
     <style>
-        /* CSS_BEGIN */
-        .optional {
-            background-color: #ffffe0;
-        }
 
-        .mandatory {
-            background-color: #ADD8E6;
-        }
+/* CSS_BEGIN */
+.optional {
+    background-color: #ffffe0;
+}
 
-        #rightSide_textArea {
-            min-width: 1000px;
-            min-height: 1000px;
-        }
+.mandatory {
+    background-color: #ADD8E6;
+}
 
-        #bottom_textArea {
-            width: 100%;
-            min-height: 1000px;
-            box-sizing: border-box;
-        }
+#rightSide_textArea {
+    min-width: 1000px;
+    min-height: 1000px;
+}
+#bottom_textArea {
+        width: 100%;
+        min-height: 1000px;
+        box-sizing: border-box;
+}
 
-        #floating-box {
-            padding-top: 10px;
-            padding-left: 3px;
-            position: absolute;
-            top: 1%;
-            left: 79.0%;
-            width: 16%;
-            height: 95%;
-            border: 1px solid black;
-            background-color: #e9e9e9;
-        }
+#floating-box {
+    padding-top: 10px;
+    padding-left: 3px;
+    position: absolute;
+    top: 1%;
+    left: 79.0%;
+    width: 16%;
+    height: 95%;
+    border: 1px solid black;
+    background-color: #e9e9e9;
+}
 
-        #left {
-            min-width: 500px;
-        }
+#left {
+    min-width: 500px;
+}
 
-        #jsonToSend {
-            width: 98%;
-            min-height: 700px;
-        }
+#jsonToSend {
+    width: 98%;
+    min-height: 700px;
+}
 
-        #schema {
-            min-height: 100px;
-        }
+#schema {
+    min-height: 100px;
+}
 
-        /* .button {
+/* .button {
     background-color: grey;
     color: white;
     border: none;
@@ -57,12 +57,13 @@
     margin: 5px;
     cursor: pointer;
   } */
+  
+  .active {
+    background-color: green;
+  }
 
-        .active {
-            background-color: green;
-        }
+/* CSS_END */
 
-        /* CSS_END */
     </style>
     <script>
         async function getDynamicaSrc() {
@@ -151,15 +152,16 @@
 
             async function loadMwaAnalytics() {
                 try {
-
                     await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
                     console.log("%c FIRE 2 of 2 ", "background:pink")
                     await setEverything(self.validationModule)
                     await stepA()
                     const namedEvents = getNamedEvents()
                     let buttons = `<button onClick='doFlatten()'>flatten</button><br/>`
+                    
                     namedEvents.forEach((thing) => {
-                        buttons += `<button onClick='humanChoseAnEvent("${thing}")'>${thing}</button><br/>`
+                        buttons += `<button onClick='humanChoseAnEvent("${thing}")'>MIN ${thing}</button><br/>`
+                        buttons += `<button onClick='humanChoseAnEventMax("${thing}")'>MAX ${thing}</button><br/>`
                     })
                     buttons += `<hr/><div id="selectedEvent" /><hr/>`
                     document.getElementById("buttons").innerHTML = buttons
@@ -175,23 +177,31 @@
                 loadMwaAnalytics()
             }, 1000);
         }
-        function humanChoseAnEvent(eventName) {
+        function humanChoseAnEventMax(eventName ) { 
             currentEventName = eventName
             document.getElementById("selectedEvent").innerHTML = eventName
-
-
             const inputObject = getChosenEvent(eventName)
             const sendThis_flat = createObjectToSend(inputObject)
             const sendThis = beautifulJson(sendThis_flat)
-            let intermediate = inflateFlatMap(inputObject)
-            intermediate = intermediate["default"]["payload"]
-            document.getElementById("schema").innerHTML = JSON.stringify(intermediate, null, 2)
-            const flat_intermediate = flatten(intermediate)
-            const flat_sendThis = flatten(sendThis)
-            console.log( JSON.stringify( flat_intermediate, null, 2 ))
-            console.log( JSON.stringify( flat_sendThis, null, 2 ))
+            let schema = inflateFlatMap(inputObject)
+            schema = schema["default"]["payload"]
+            document.getElementById("schema").innerHTML = JSON.stringify(schema, null, 2)
             document.getElementById("bottom_textArea").value = JSON.stringify(sendThis, null, 2)
-
+        }
+        function humanChoseAnEvent(eventName) {
+            currentEventName = eventName
+            document.getElementById("selectedEvent").innerHTML = eventName
+            const inputObject = getChosenEvent(eventName)
+            const sendThis_flat = createObjectToSend(inputObject)
+            const sendThis = beautifulJson(sendThis_flat)
+            let schema = inflateFlatMap(inputObject)
+            schema = schema["default"]["payload"]
+            document.getElementById("schema").innerHTML = JSON.stringify(schema, null, 2)
+            const flat_schema = flatten(schema)
+            const flat_sendThis = flatten(sendThis)
+            const union_flat = makeJsonToSendMatchMinimumSchema(flat_schema, flat_sendThis)
+            const union = inflateFlatMap(union_flat)
+            document.getElementById("bottom_textArea").value = JSON.stringify(union, null, 2)
         }
 
         async function beautifyJson() {
@@ -245,240 +255,265 @@
             document.getElementById("bottom_textArea").value = JSON.stringify(flat, null, 2)
         }
 
-        /* MAIN_LOGIC_BEGIN :  TEMPLATING - DO NOT REMOVE */
+
+/* MAIN_LOGIC_BEGIN :  TEMPLATING - DO NOT REMOVE */
 
 
-        const categoricalHoH = {}
-        const otherObjects_thatNeedAName = {}
-        let everything;
-        let lookup = {}
-        // let namedEvents = {}
-        async function setEverything(gaintBallOfJson, isForTddPurposes = false) {
-            // This needs to be set either from xTDD.js OR from the real page.
-            everything = gaintBallOfJson
-            if (isForTddPurposes === false) {
-                // Emit out to the browser!
-                console.log("%c setEverything() " + Object.keys(everything).length, "background:tan;")
+const categoricalHoH = {}
+const otherObjects_thatNeedAName = {}
+let everything;
+let lookup = {} 
+// let namedEvents = {}
+async function setEverything(gaintBallOfJson, isForTddPurposes=false ) {
+    // This needs to be set either from xTDD.js OR from the real page.
+    everything = gaintBallOfJson
+    if (isForTddPurposes === false ) {
+        // Emit out to the browser!
+        console.log("%c setEverything() " + Object.keys( everything).length, "background:tan;" )
+    }
+}
+function getChosenEvent(whichEvent) {
+    return everything["categoricalOptionalityObjects"][whichEvent]
+}
+function getEverything() {
+    return everything
+}
+
+function createObjectToSend(event) { 
+
+    const ary_of_keys_to_send = Object.keys(event["default"]["payload"])
+    const sendThis = {} 
+    ary_of_keys_to_send.forEach((key)=> { 
+      const x = lookup[key]
+      sendThis[key] = x
+    })
+    return sendThis
+
+
+
+}
+
+function inflateFlatMap(simple) {
+
+    const complex = {};
+    for (const key in simple) {
+        const levels = key.split('.');
+        let currLevelObj = complex;
+        for (let i = 0; i < levels.length; i++) {
+            const levelKey = levels[i];
+            if (!currLevelObj.hasOwnProperty(levelKey)) {
+                currLevelObj[levelKey] = {};
             }
-        }
-        function getChosenEvent(whichEvent) {
-            return everything["categoricalOptionalityObjects"][whichEvent]
-        }
-        function getEverything() {
-            return everything
-        }
-
-        function createObjectToSend(event) {
-
-            const ary_of_keys_to_send = Object.keys(event["default"]["payload"])
-            const sendThis = {}
-            ary_of_keys_to_send.forEach((key) => {
-                const x = lookup[key]
-                sendThis[key] = x
-            })
-            return sendThis
-
-
-
-        }
-
-        function inflateFlatMap(simple) {
-
-            const complex = {};
-            for (const key in simple) {
-                const levels = key.split('.');
-                let currLevelObj = complex;
-                for (let i = 0; i < levels.length; i++) {
-                    const levelKey = levels[i];
-                    if (!currLevelObj.hasOwnProperty(levelKey)) {
-                        currLevelObj[levelKey] = {};
-                    }
-                    if (i === levels.length - 1) {
-                        currLevelObj[levelKey] = simple[key];
-                    }
-                    currLevelObj = currLevelObj[levelKey];
-                }
+            if (i === levels.length - 1) {
+                currLevelObj[levelKey] = simple[key];
             }
-            return complex;
+            currLevelObj = currLevelObj[levelKey];
         }
+    }
+    return complex;
+}
 
 
-        function colorize(forHuman, forCss) {
-            const a = inflateFlatMap(forHuman)
-            const b = inflateFlatMap(forCss)
+function colorize(forHuman, forCss) {
+    const a = inflateFlatMap(forHuman)
+    const b = inflateFlatMap(forCss)
 
-            const human = JSON.stringify(a, null, 2).split("\n")
-            const css = JSON.stringify(b, null, 2).split("\n")
-            contenteditable = "true"
-            let accumulator = ""
-            for (let i = 0; i < human.length; i++) {
-                const h = human[i]
-                const c = css[i]
-                if (c.includes("true")) {
-                    accumulator += `<div class="mandatory" contenteditable="true">${h}</div>`
-                } else if (c.includes("false")) {
-                    accumulator += `<div class="optional" contenteditable="true">${h}</div>`
-                } else {
-                    accumulator += `<div contenteditable="true">${h}</div>`
-                }
-            }
-            return accumulator
+    const human = JSON.stringify(a, null, 2).split("\n")
+    const css = JSON.stringify(b, null, 2).split("\n")
+    contenteditable = "true"
+    let accumulator = ""
+    for (let i = 0; i < human.length; i++) {
+        const h = human[i]
+        const c = css[i]
+        if (c.includes("true")) {
+            accumulator += `<div class="mandatory" contenteditable="true">${h}</div>`
+        } else if (c.includes("false")) {
+            accumulator += `<div class="optional" contenteditable="true">${h}</div>`
+        } else {
+            accumulator += `<div contenteditable="true">${h}</div>`
         }
+    }
+    return accumulator
+}
 
-        function flatten(objectToFlatten) {
-            // This will not be used in the logic of the page - but it will be helpful to put this page together
-            function flattenObject(obj) {
-                const accumulator = {};
-                for (let key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        if ((typeof obj[key]) == 'object' && obj[key] != null) {
-                            const flatObject = flattenObject(obj[key]);
-                            for (let x in flatObject) {
-                                if (flatObject.hasOwnProperty(x)) {
-                                    accumulator[key + '.' + x] = flatObject[x];
-                                }
-                            }
-                        } else {
-                            accumulator[key] = obj[key];
+function flatten(objectToFlatten) {
+    // This will not be used in the logic of the page - but it will be helpful to put this page together
+    function flattenObject(obj) {
+        const accumulator = {};
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                if ((typeof obj[key]) == 'object' && obj[key] != null) {
+                    const flatObject = flattenObject(obj[key]);
+                    for (let x in flatObject) {
+                        if (flatObject.hasOwnProperty(x)) {
+                            accumulator[key + '.' + x] = flatObject[x];
                         }
                     }
-                }
-                return accumulator;
-            }
-            return flattenObject(objectToFlatten)
-        }
-
-
-
-        function getLookup() {
-            return lookup
-        }
-        function setLookup(x) {
-            // lookup will be stuff like 'screen' or 'event' or 'collectiontion'... 
-            lookup = x
-        }
-        function getNamedEvents() {
-            return namedEvents;
-        }
-        async function stepA(isForTddPurposes = false) {
-            if (isForTddPurposes === false) {
-                // emit to browser
-                console.log("%c stepA", "background:lightgreen")
-            }
-            namedEvents = Object.keys(everything["categoricalOptionalityObjects"])
-            const ignore = ["general-component-interaction"]
-            namedEvents = namedEvents.filter((x) => !ignore.includes(x));
-            const namedEventKeys = getAllNeededNamedEvents()
-            let l = {}
-            for (let namedEvent in namedEventKeys) {
-                const x = inflateObject(namedEvent)
-                // const n = Object.keys(x).length 
-                l[namedEvent] = x
-            }
-            setLookup(l)
-        }
-
-        function getColorizableHOH(obj) {
-            const before = {};
-
-            const traverseObject = (obj, path) => {
-                for (const [key, value] of Object.entries(obj)) {
-                    const currentPath = path.concat([key]);
-                    if (typeof value === "object") {
-                        traverseObject(value, currentPath);
-                    } else if (typeof value === "string" && key === "type") {
-                        before[currentPath.join(".")] = value;
-                    } else {
-                        before[currentPath.join(".")] = value;
-                    }
-                }
-            };
-            // Get raw
-            traverseObject(obj, []);
-            // Clean up
-
-            const for_human_with_commas = {}
-            const for_css_with_commas = {}
-            for (k in before) {
-                const path_tmp = k.split(".")
-
-                const path = path_tmp.slice(0, -1);
-
-                if (k.endsWith("mandatory")) {
-                    for_css_with_commas[path] = before[k] // This will be true or false boolean 
-                }
-                else {
-                    for_human_with_commas[path] = before[k] // This wwill be 'string' or 'number' or Kittycats<Vector> etc etc
-                }
-            }
-            // The next replace , for . section is weird, but at this point
-            // the paths in for_human_with_commas and for_css_with_commas are something like:
-            // 'boathouse,event,component,id'
-            // but what is needed would be:
-            // 'boathouse.event.component.id'
-            const for_human = {}
-            const for_css = {}
-            for (let k in for_human_with_commas) {
-                // const v = for_human_with_commas[k]
-                const path = k.replace(/,/g, ".")
-                for_human[path] = for_human_with_commas[k]
-                for_css[path] = for_css_with_commas[k]
-            }
-
-            const result = {
-                for_human,
-                for_css
-            }
-
-            return result;
-        }
-
-        ///////////// version 2 ///////////////
-        function getTypesForNamedEvent(namedEvent_lowerCase) {
-            const namedEvent = namedEvent_lowerCase.toUpperCase()
-            const obj = everything[namedEvent]
-            return obj
-        }
-
-        function inflateObject(eventType) {
-            const EVENT_TYPE = eventType.toUpperCase()
-            const tmp = flatten(everything[EVENT_TYPE])
-            const seen = {}
-            for (let k in tmp) {
-                if (k.includes("zodValidationFn")) {
-                    // ignore it 
                 } else {
-                    seen[k] = tmp[k]
+                    accumulator[key] = obj[key];
                 }
             }
-            return seen
         }
-        function getAllNeededNamedEvents() {
-            let seen = {}
-            const coo = Object.keys(everything['categoricalOptionalityObjects'])
-            coo.forEach((thing, i) => {
-                const payloads = Object.keys(everything['categoricalOptionalityObjects'][thing]["default"]["payload"])
-                payloads.forEach((payload) => {
-                    if (seen.hasOwnProperty(payload)) {
-                        seen[payload]++
-                    } else {
-                        seen[payload] = 1
-                    }
-                })
-            })
-            return seen
-        }
+        return accumulator;
+    }
+    return flattenObject(objectToFlatten)
+}
 
 
-        function beautifulJson(HoH) {
-            let result = {}
-            for (let k in HoH) {
-                result[k] = inflateFlatMap(HoH[k])
+
+function getLookup() { 
+    return lookup
+}
+function setLookup(x) { 
+    // lookup will be stuff like 'screen' or 'event' or 'collectiontion'... 
+    lookup = x
+}
+function getNamedEvents() {
+    return namedEvents;
+} 
+async function stepA(isForTddPurposes=false) { 
+    if ( isForTddPurposes===false) {
+        // emit to browser
+        console.log("%c stepA", "background:lightgreen")
+    }
+    namedEvents = Object.keys(everything["categoricalOptionalityObjects"])
+    const ignore = ["general-component-interaction"]    
+    namedEvents = namedEvents.filter((x) => !ignore.includes(x));
+    const namedEventKeys = getAllNeededNamedEvents() 
+    let l = {} 
+    for ( let namedEvent in namedEventKeys ) {
+      const x = inflateObject(namedEvent)
+      // const n = Object.keys(x).length 
+      l[namedEvent] = x
+    }
+    setLookup(l)
+}
+
+function getColorizableHOH(obj) {
+    const before = {};
+
+    const traverseObject = (obj, path) => {
+        for (const [key, value] of Object.entries(obj)) {
+            const currentPath = path.concat([key]);
+            if (typeof value === "object") {
+                traverseObject(value, currentPath);
+            } else if (typeof value === "string" && key === "type") {
+                before[currentPath.join(".")] = value;
+            } else {
+                before[currentPath.join(".")] = value;
             }
-            inflateFlatMap
-            return result
         }
-        /* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */
+    };
+    // Get raw
+    traverseObject(obj, []);
+    // Clean up
+
+    const for_human_with_commas = {}
+    const for_css_with_commas = {}
+    for (k in before) {
+        const path_tmp = k.split(".")
+
+        const path = path_tmp.slice(0, -1);
+
+        if (k.endsWith("mandatory")) {
+            for_css_with_commas[path] = before[k] // This will be true or false boolean 
+        }
+        else {
+            for_human_with_commas[path] = before[k] // This wwill be 'string' or 'number' or Kittycats<Vector> etc etc
+        }
+    }
+    // The next replace , for . section is weird, but at this point
+    // the paths in for_human_with_commas and for_css_with_commas are something like:
+    // 'boathouse,event,component,id'
+    // but what is needed would be:
+    // 'boathouse.event.component.id'
+    const for_human = {}
+    const for_css = {}
+    for (let k in for_human_with_commas) {
+        // const v = for_human_with_commas[k]
+        const path = k.replace(/,/g, ".")
+        for_human[path] = for_human_with_commas[k]
+        for_css[path] = for_css_with_commas[k]
+    }
+
+    const result = {
+        for_human,
+        for_css
+    }
+
+    return result;
+}
+
+///////////// version 2 ///////////////
+function getTypesForNamedEvent(namedEvent_lowerCase) {
+    const namedEvent = namedEvent_lowerCase.toUpperCase()
+    const obj = everything[namedEvent]
+    return obj
+}
+
+function inflateObject(eventType) {
+    const EVENT_TYPE = eventType.toUpperCase()
+    const tmp = flatten( everything[EVENT_TYPE ]) 
+    const seen = {} 
+    for ( let k in tmp ) {
+        if ( k.includes("zodValidationFn")) {
+            // ignore it 
+        } else {
+            seen[k] = tmp[k]
+        }
+    }
+    return seen
+}
+function getAllNeededNamedEvents() {
+    let seen = {}
+    const coo = Object.keys(everything['categoricalOptionalityObjects'])
+    coo.forEach((thing, i) => {
+        const payloads = Object.keys(everything['categoricalOptionalityObjects'][thing]["default"]["payload"])
+        payloads.forEach((payload) => {
+            if (seen.hasOwnProperty(payload)) {
+                seen[payload]++
+            } else {
+                seen[payload] = 1
+            }
+        })
+    })
+    return seen
+}
+
+
+function beautifulJson( HoH ) {
+    let result = {} 
+    for (let k in HoH ) { 
+        result[k] = inflateFlatMap( HoH[k])
+    }
+    inflateFlatMap
+    return result
+}
+
+
+function makeJsonToSendMatchMinimumSchema(schemaMap_flat, toSendMap_flat) { 
+    let union_keys = []
+    for ( let k in schemaMap_flat ) {
+      for ( let k2 in toSendMap_flat ) {
+        if ( k2.startsWith(k)) {
+          if ( k2.endsWith("zodValidType")) {
+            // ignore it
+          } else {
+            union_keys.push(k2)
+          }
+        }
+      }
+    }
+    let union = {} 
+    union_keys.forEach((key)=> { 
+      let clean_key = key.replace("?","") // Strip ? from keys
+      union[clean_key] = toSendMap_flat[key]
+    })
+    return union
+}
+
+
+/* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */
 
         init()
 
