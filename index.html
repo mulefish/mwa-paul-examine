@@ -24,18 +24,16 @@
         box-sizing: border-box;
 }
 
-
-
 #floating-box {
-    padding-top:10px;
-    padding-left:10px;
-  position: absolute;
-  top: 5.0%;
-  left: 66.67%;
-  width: 30%;
-  height: 50%;
-  border: 1px solid black;
-  background-color: #e9e9e9;
+    padding-top: 10px;
+    padding-left: 3px;
+    position: absolute;
+    top: 1%;
+    left: 66.67%;
+    width: 20%;
+    height: 95%;
+    border: 1px solid black;
+    background-color: #e9e9e9;
 }
 
 #left {
@@ -202,6 +200,7 @@
             document.getElementById("selectedEvent").innerHTML = flat
             document.getElementById("bottom_textArea").value = JSON.stringify(flat, null, 2)
         }
+
 
 
 
@@ -561,7 +560,32 @@ try {
 } catch (thisIsJustForNode) {
 //    console.log( thisIsJustForNode)
 }
-/* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */        init()
+/* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */
+
+        init()
+
+        ////////////////////// DRAGGING 
+        var box = document.getElementById("floating-box"); // finch 
+        var isDragging = false;
+        var dragOffset = { x: 0, y: 0 };
+
+        box.addEventListener("mousedown", function (event) {
+            isDragging = true;
+            dragOffset.x = event.clientX - box.offsetLeft;
+            dragOffset.y = event.clientY - box.offsetTop;
+        });
+
+        box.addEventListener("mousemove", function (event) {
+            if (isDragging) {
+                box.style.left = (event.clientX - dragOffset.x) + "px";
+                box.style.top = (event.clientY - dragOffset.y) + "px";
+            }
+        });
+
+        box.addEventListener("mouseup", function (event) {
+            isDragging = false;
+        });
+
 
 
     </script>
