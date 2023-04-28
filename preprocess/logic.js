@@ -320,7 +320,14 @@ function getAllNeededNamedEvents() {
 }
 
 
-
+function beautifulJson( HoH ) {
+    let result = {} 
+    for (let k in HoH ) { 
+        result[k] = inflateFlatMap( HoH[k])
+    }
+    inflateFlatMap
+    return result
+}
 
 try {
     module.exports = {
@@ -340,6 +347,7 @@ try {
         getNamedEvents, // version2 
         getChosenEvent,
         createObjectToSend, // version2 
+        beautifulJson,
         categoricalHoH,
         otherObjects_thatNeedAName
     };

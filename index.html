@@ -68,7 +68,7 @@
                 `${host}experiment-module/${version}/experiment-module-remoteEntry.js?time=${now}`,
                 `${host}%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=${now}`,
             ]
-            resources.forEach((thing) => {       
+            resources.forEach((thing) => {
                 const script = document.createElement('script');
                 script.src = thing
                 document.head.appendChild(script);
@@ -82,7 +82,7 @@
 
     <div id="floating-box">
         <div id="buttons"></div>
-        <hr/>
+        <hr />
         <button onClick="sendIt()">Send</button>
         <button onClick="doView()">Name this button</button>
         <button onClick="switch_view()">Switch view</button>&nbsp;&nbsp;<span id="switch_view">Verify</span>
@@ -92,10 +92,10 @@
 
 
     <hr />
-                <!-- Legend:<span class="optional">optional</span>&nbsp;<span class="mandatory">mandatory</span> -->
-                <pre id="schema"></pre>
-                <hr />
-                <textarea id="bottom_textArea" spellcheck="false"></textarea>
+    <!-- Legend:<span class="optional">optional</span>&nbsp;<span class="mandatory">mandatory</span> -->
+    <pre id="schema"></pre>
+    <hr />
+    <textarea id="bottom_textArea" spellcheck="false"></textarea>
 
 
     <script>
@@ -124,26 +124,18 @@
                     await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
                     console.log("%c FIRE 2 of 2 ", "background:pink")
                     await setEverything(self.validationModule)
-
-                    // // Roll through and set up the different event objects
-                    // // TODO: Discover the different possible event objects dynamically!
-                    // const events = ["app-response", "error", "general-component-interaction", "general-component-event", "page-products-displayed", "page-view", "product-interaction", "purchase"]
-                    // events.forEach((thing) => {
-                    //     step0_examineSomething(thing)
-                    // })
                     await stepA()
-
                     const namedEvents = getNamedEvents()
-                        let buttons = `<button onClick='doFlatten()'>Flatten</button>`
-                            namedEvents.forEach((thing)=> { 
-                                buttons += `<button onClick='humanChoseAnEvent("${thing}")'>${thing}</button>`
-                            })
-                            buttons += `<div id="selectedEvent" />`
-                            document.getElementById("buttons").innerHTML = buttons 
+                    let buttons = `<button onClick='doFlatten()'>Flatten</button>`
+                    namedEvents.forEach((thing) => {
+                        buttons += `<button onClick='humanChoseAnEvent("${thing}")'>${thing}</button>`
+                    })
+                    buttons += `<hr/><div id="selectedEvent" /><hr/>`
+                    document.getElementById("buttons").innerHTML = buttons
                     console.log("init! MwaAnalytics.initializeAnalytics")
                 } catch (boom) {
                     alert(boom)
-                    console.log(boom )
+                    console.log(boom)
                 }
             }
             await getDynamicaSrc()
@@ -158,30 +150,14 @@
 
 
             const inputObject = getChosenEvent(eventName)
-            const sendThis = createObjectToSend(inputObject)
-
-    //        const keys = createObjectToSend(inputObject)
-  //const lookup = getLookup() 
-
-            // const inputObject = categoricalHoH[eventName]["core"]
-
-
-
-
+            const sendThis_flat = createObjectToSend(inputObject)
+            const sendThis = beautifulJson(sendThis_flat)
             let intermediate = inflateFlatMap(inputObject)
             intermediate = intermediate["default"]["payload"]
+            document.getElementById("schema").innerHTML = JSON.stringify(intermediate, null, 2)
 
-            // const after = getColorizableHOH(intermediate)
-            // const human = after["for_human"]
-            // const css = after["for_css"]
-            // const jsonToSend = inflateFlatMap(human)
-            // const colorered = colorize(human, css)
-            document.getElementById("schema").innerHTML =JSON.stringify( inputObject, null, 2 ) 
-            if (VIEWMODE === VERIFY) {
-                document.getElementById("bottom_textArea").value = JSON.stringify(sendThis, null, 2)
-            } else {
-                document.getElementById("bottom_textArea").value = getSnippet(sendThis)
-            }
+            document.getElementById("bottom_textArea").value = JSON.stringify(sendThis, null, 2)
+
         }
 
 
@@ -226,6 +202,7 @@
             document.getElementById("selectedEvent").innerHTML = flat
             document.getElementById("bottom_textArea").value = JSON.stringify(flat, null, 2)
         }
+
 
 
 
@@ -550,7 +527,14 @@ function getAllNeededNamedEvents() {
 }
 
 
-
+function beautifulJson( HoH ) {
+    let result = {} 
+    for (let k in HoH ) { 
+        result[k] = inflateFlatMap( HoH[k])
+    }
+    inflateFlatMap
+    return result
+}
 
 try {
     module.exports = {
@@ -570,14 +554,14 @@ try {
         getNamedEvents, // version2 
         getChosenEvent,
         createObjectToSend, // version2 
+        beautifulJson,
         categoricalHoH,
         otherObjects_thatNeedAName
     };
 } catch (thisIsJustForNode) {
 //    console.log( thisIsJustForNode)
 }
-/* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */
-        init()
+/* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */        init()
 
 
     </script>

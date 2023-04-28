@@ -15,6 +15,7 @@ const {
   getChosenEvent, // versoin2
   createObjectToSend, // version2 
   getLookup, //version2 
+  beautifulJson, // version2
   categoricalHoH,
   otherObjects_thatNeedAName,
 } = require("./logic.js")
@@ -493,31 +494,160 @@ function createObjectToSend_test(note) {
     }
   }
   const sendThis = createObjectToSend(x)
-  // console.log( sendThis)
+
   const isOk = Object.keys(sendThis).length === 2 
   verdict(isOk, true, note + " createObjectToSend_test ")
 }
+
+function beautifulJson_test(note) {
+  const x = {
+    screen: {
+      urlRoute: 'string',
+      path: 'string',
+      type: 'string',
+      'country.zodValidType': 'string',
+      collections: 'Array<string>',
+      currency: 'string',
+      'property.zodValidType': 'string',
+      'language.zodValidType': 'string',
+      'header.zodValidType': 'header',
+      'header.localized': 'string',
+      'header.unified': 'string',
+      'category.hierarchy': 'Array<hierarchy>',
+      'category.gender': 'string',
+      attributes: 'Record<any>'
+    },
+    event: {
+      id: 'string',
+      'type.zodValidType': 'string',
+      'eventSubType?': 'string',
+      'attributes.orderId?': 'string',
+      'attributes.errorMessage?': 'string',
+      'attributes.errorType?': 'string',
+      'attributes.errorDetails?': 'string',
+      'attributes.errorGuestFacing?': 'boolean',
+      'component.id': 'string',
+      'component.type': 'string',
+      'component.text': 'string',
+      'component.placement.position': 'number',
+      'component.placement.totalCount': 'number',
+      'component.internalCampaignId.ctaPageName.zodValidType': 'hierarchy',
+      'component.internalCampaignId.ctaPageName.name.zodValidType': 'header',
+      'component.internalCampaignId.ctaPageName.name.localized': 'string',
+      'component.internalCampaignId.ctaPageName.name.unified': 'string',
+      'component.internalCampaignId.pageName.zodValidType': 'hierarchy',
+      'component.internalCampaignId.pageName.name.zodValidType': 'header',
+      'component.internalCampaignId.pageName.name.localized': 'string',
+      'component.internalCampaignId.pageName.name.unified': 'string',
+      'component.internalCampaignId.businessInitiative': 'string',
+      'component.internalCampaignId.row': 'number',
+      'component.internalCampaignId.testName': 'string',
+      'component.internalCampaignId.testVariation': 'string',
+      'component.internalCampaignId.type': 'string',
+      'component.internalCampaignId.workstreamBase': 'string',
+      'component.internalCampaignId.workstreamSpecified': 'string'
+    }
+  }
+  const actual = beautifulJson(x)
+  const expected = {
+    "screen": {
+      "urlRoute": "string",
+      "path": "string",
+      "type": "string",
+      "country": {
+        "zodValidType": "string"
+      },
+      "collections": "Array<string>",
+      "currency": "string",
+      "property": {
+        "zodValidType": "string"
+      },
+      "language": {
+        "zodValidType": "string"
+      },
+      "header": {
+        "zodValidType": "header",
+        "localized": "string",
+        "unified": "string"
+      },
+      "category": {
+        "hierarchy": "Array<hierarchy>",
+        "gender": "string"
+      },
+      "attributes": "Record<any>"
+    },
+    "event": {
+      "id": "string",
+      "type": {
+        "zodValidType": "string"
+      },
+      "eventSubType?": "string",
+      "attributes": {
+        "orderId?": "string",
+        "errorMessage?": "string",
+        "errorType?": "string",
+        "errorDetails?": "string",
+        "errorGuestFacing?": "boolean"
+      },
+      "component": {
+        "id": "string",
+        "type": "string",
+        "text": "string",
+        "placement": {
+          "position": "number",
+          "totalCount": "number"
+        },
+        "internalCampaignId": {
+          "ctaPageName": {
+            "zodValidType": "hierarchy",
+            "name": {
+              "zodValidType": "header",
+              "localized": "string",
+              "unified": "string"
+            }
+          },
+          "pageName": {
+            "zodValidType": "hierarchy",
+            "name": {
+              "zodValidType": "header",
+              "localized": "string",
+              "unified": "string"
+            }
+          },
+          "businessInitiative": "string",
+          "row": "number",
+          "testName": "string",
+          "testVariation": "string",
+          "type": "string",
+          "workstreamBase": "string",
+          "workstreamSpecified": "string"
+        }
+      }
+    }
+  }
+  verdict(actual, expected, note + " beautiful_test ")
+}
+
+
 const data = require("./everything.json")
 const thisIsTDD=true
 setEverything(data, thisIsTDD)
 
 /* */
-// simple_happypath("1 of 8")
-// happypath_deeperLook("2 of 8")
-// complex_happypath("3 of 8")
-// flatten_test("4 of 8")
-// inflateFlatMap_complex_test("5 of 8")
-// inflateFlatMap_simple_test("6 of 8")
-// getColorizableHOH_test("7 of 8")
-// colorize_test("8 of 8")
-// version2_test("v2 1")
-// getTypesForNamedEvent_test("v2 2") 
-// screen_test("v2 2")
-///// 
-//  inflateObject_screen_test("v2")
-//  getAllNeededNamedEvents_test("v2")
-//  inflateObject_everything_test("v2")
-//   inflateObject_event_test("v2")
+simple_happypath("1 of 8")
+happypath_deeperLook("2 of 8")
+complex_happypath("3 of 8")
+flatten_test("4 of 8")
+inflateFlatMap_complex_test("5 of 8")
+inflateFlatMap_simple_test("6 of 8")
+getColorizableHOH_test("7 of 8")
+colorize_test("8 of 8")
+version2_test("v2 1")
+inflateObject_screen_test("v2")
+getAllNeededNamedEvents_test("v2")
+inflateObject_everything_test("v2")
+inflateObject_event_test("v2")
 stepA_test("Set up")
 getChosenEvent_test("v2") 
 createObjectToSend_test("v2")
+beautifulJson_test("v2")
