@@ -14,6 +14,7 @@ const {
   createObjectToSend, // version2 
   getLookup, //version2 
   beautifulJson, // version2
+  makeJsonToSendMatchMinimumSchema, // version2
   categoricalHoH,
   otherObjects_thatNeedAName,
 } = require("./logic.js")
@@ -294,7 +295,7 @@ function getTypesForNamedEvent_test(note) {
 
 
 }
-*/ 
+*/
 
 function inflateObject_screen_test(note) {
   let x = getEverything()
@@ -338,7 +339,7 @@ function inflateObject_event_test(note) {
 }
 
 function stepA_test(note) {
-  const isForTddPurposes=true 
+  const isForTddPurposes = true
   stepA(isForTddPurposes)   /// THIS!!!! 
   // lookup is a {collection} of objects that look something like this: 
   /* 
@@ -397,8 +398,8 @@ function getChosenEvent_test(note) {
   verdict(actual, expected, note + " getChosenEvent_test")
 }
 
-function createObjectToSend_test(note) { 
-  const x ={
+function createObjectToSend_test(note) {
+  const x = {
     "default": {
       "payload": {
         "screen": {
@@ -418,7 +419,7 @@ function createObjectToSend_test(note) {
   }
   const sendThis = createObjectToSend(x)
 
-  const isOk = Object.keys(sendThis).length === 2 
+  const isOk = Object.keys(sendThis).length === 2
   verdict(isOk, true, note + " createObjectToSend_test ")
 }
 
@@ -552,8 +553,83 @@ function beautifulJson_test(note) {
 }
 
 
+function makeJsonToSendMatchMinimumSchema_test(note) {
+  const schema = {
+    "screen.header": true,
+    "event.attributes.errorMessage": false,
+    "event.attributes.errorDetails": false,
+    "event.attributes.errorType": false
+  }
+  const comlete = {
+    "screen.urlRoute": "string",
+    "screen.path": "string",
+    "screen.type": "string",
+    "screen.country.zodValidType": "string",
+    "screen.collections": "Array<string>",
+    "screen.currency": "string",
+    "screen.property.zodValidType": "string",
+    "screen.language.zodValidType": "string",
+    "screen.header.zodValidType": "header",
+    "screen.header.localized": "string",
+    "screen.header.unified": "string",
+    "screen.category.hierarchy": "Array<hierarchy>",
+    "screen.category.gender": "string",
+    "screen.attributes": "Record<any>",
+    "event.id": "string",
+    "event.type.zodValidType": "string",
+    "event.eventSubType?": "string",
+    "event.attributes.orderId?": "string",
+    "event.attributes.errorMessage?": "string",
+    "event.attributes.errorType?": "string",
+    "event.attributes.errorDetails?": "string",
+    "event.attributes.errorGuestFacing?": "boolean",
+    "event.component.id": "string",
+    "event.component.type": "string",
+    "event.component.text": "string",
+    "event.component.placement.position": "number",
+    "event.component.placement.totalCount": "number",
+    "event.component.internalCampaignId.ctaPageName.zodValidType": "hierarchy",
+    "event.component.internalCampaignId.ctaPageName.name.zodValidType": "header",
+    "event.component.internalCampaignId.ctaPageName.name.localized": "string",
+    "event.component.internalCampaignId.ctaPageName.name.unified": "string",
+    "event.component.internalCampaignId.pageName.zodValidType": "hierarchy",
+    "event.component.internalCampaignId.pageName.name.zodValidType": "header",
+    "event.component.internalCampaignId.pageName.name.localized": "string",
+    "event.component.internalCampaignId.pageName.name.unified": "string",
+    "event.component.internalCampaignId.businessInitiative": "string",
+    "event.component.internalCampaignId.row": "number",
+    "event.component.internalCampaignId.testName": "string",
+    "event.component.internalCampaignId.testVariation": "string",
+    "event.component.internalCampaignId.type": "string",
+    "event.component.internalCampaignId.workstreamBase": "string",
+    "event.component.internalCampaignId.workstreamSpecified": "string"
+  }
+  const union_flat = makeJsonToSendMatchMinimumSchema(schema, comlete)
+  const union = inflateFlatMap(union_flat)
+  const expected = {
+    "screen": {
+      "header": {
+        "localized": "string",
+        "unified": "string"
+      }
+    },
+    "event": {
+      "attributes": {
+        "errorMessage": "string",
+        "errorDetails": "string",
+        "errorType": "string"
+      }
+    }
+  }
+
+  verdict(union, expected, note + " makeJsonToSendMatchMinimumSchema_test")
+
+
+}
+
+
 const data = require("./everything.json")
-const thisIsTDD=true
+const thisIsTDD = true
 setEverything(data, thisIsTDD)
 
 /* */
@@ -568,6 +644,7 @@ getAllNeededNamedEvents_test("v2")
 inflateObject_everything_test("v2")
 inflateObject_event_test("v2")
 stepA_test("Set up")
-getChosenEvent_test("v2") 
+getChosenEvent_test("v2")
 createObjectToSend_test("v2")
 beautifulJson_test("v2")
+makeJsonToSendMatchMinimumSchema_test("v2")

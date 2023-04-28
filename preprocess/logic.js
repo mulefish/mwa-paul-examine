@@ -232,6 +232,30 @@ function beautifulJson( HoH ) {
     inflateFlatMap
     return result
 }
+
+
+function makeJsonToSendMatchMinimumSchema(schemaMap_flat, toSendMap_flat) { 
+    let union_keys = []
+    for ( let k in schemaMap_flat ) {
+      for ( let k2 in toSendMap_flat ) {
+        if ( k2.startsWith(k)) {
+          if ( k2.endsWith("zodValidType")) {
+            // ignore it
+          } else {
+            union_keys.push(k2)
+          }
+        }
+      }
+    }
+    let union = {} 
+    union_keys.forEach((key)=> { 
+      let clean_key = key.replace("?","") // Strip ? from keys
+      union[clean_key] = toSendMap_flat[key]
+    })
+    return union
+}
+
+
 /* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */
 
 
@@ -253,6 +277,7 @@ try {
         getChosenEvent,
         createObjectToSend, // version2 
         beautifulJson,
+        makeJsonToSendMatchMinimumSchema, 
         categoricalHoH,
         otherObjects_thatNeedAName
     };

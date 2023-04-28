@@ -114,15 +114,9 @@
     <div id="floating-box">
         <div id="buttons"></div>
         <hr />
-        <!-- <button onClick="sendIt()">Send</button><br/>
-        <button onClick="doView()">Name this button</button><br/>
-        <button onClick="switch_view()">Switch view</button><br/> -->
-
-        <!-- <button id="button1" class="active" onclick="handleButtonClick(1)">Craft</button> -->
         
         <button id="button2" onclick="sendIt()">Send</button>
         <button id="button3" onclick="beautifyJson()">beautifyJson</button>
-        <!-- <button id="button4" onclick="handleButtonClick(3)">Code</button> -->
 
         <span id="switch_view">Verify</span><br />
     </div>
@@ -192,7 +186,10 @@
             let intermediate = inflateFlatMap(inputObject)
             intermediate = intermediate["default"]["payload"]
             document.getElementById("schema").innerHTML = JSON.stringify(intermediate, null, 2)
-
+            const flat_intermediate = flatten(intermediate)
+            const flat_sendThis = flatten(sendThis)
+            console.log( JSON.stringify( flat_intermediate, null, 2 ))
+            console.log( JSON.stringify( flat_sendThis, null, 2 ))
             document.getElementById("bottom_textArea").value = JSON.stringify(sendThis, null, 2)
 
         }
