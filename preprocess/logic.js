@@ -188,7 +188,6 @@ function getColorizableHOH(obj) {
 }
 
 ///////////// version 2 ///////////////
-
 function getTypesForNamedEvent(namedEvent_lowerCase) {
     const namedEvent = namedEvent_lowerCase.toUpperCase()
     const obj = everything[namedEvent]
@@ -255,6 +254,6 @@ try {
         otherObjects_thatNeedAName
     };
 } catch (thisIsJustForNode) {
-//    console.log( thisIsJustForNode)
+
 }
 /* MAIN_LOGIC_END :  TEMPLATING - DO NOT REMOVE */
