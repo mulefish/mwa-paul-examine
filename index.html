@@ -88,24 +88,23 @@
         }
 
 
-        let lastClickedButton = "button1";
+        // let lastClickedButton = "button1";
+        // // Define a function to handle button clicks
+        // function handleButtonClick(buttonNumber) {
+        //     // If a button was previously clicked, remove the "active" class from it
+        //     if (lastClickedButton) {
+        //         lastClickedButton.classList.remove("active");
+        //     }
 
-        // Define a function to handle button clicks
-        function handleButtonClick(buttonNumber) {
-            // If a button was previously clicked, remove the "active" class from it
-            if (lastClickedButton) {
-                lastClickedButton.classList.remove("active");
-            }
+        //     // Get a reference to the button that was clicked
+        //     const button = document.getElementById(`button${buttonNumber}`);
 
-            // Get a reference to the button that was clicked
-            const button = document.getElementById(`button${buttonNumber}`);
+        //     // Add the "active" class to the clicked button
+        //     button.classList.add("active");
 
-            // Add the "active" class to the clicked button
-            button.classList.add("active");
-
-            // Update the lastClickedButton variable to point to the clicked button
-            lastClickedButton = button;
-        }
+        //     // Update the lastClickedButton variable to point to the clicked button
+        //     lastClickedButton = button;
+        // }
     </script>
 
 </head>
@@ -115,7 +114,7 @@
     <div id="floating-box">
         <div id="buttons"></div>
         <hr />
-        
+
         <button id="button2" onclick="sendIt()">Send</button>
         <button id="button3" onclick="beautifyJson()">beautifyJson</button>
 
@@ -158,7 +157,7 @@
                     await stepA()
                     const namedEvents = getNamedEvents()
                     let buttons = `<button onClick='doFlatten()'>flatten</button><br/>`
-                    
+
                     namedEvents.forEach((thing) => {
                         buttons += `<button onClick='humanChoseAnEvent("${thing}")'>MIN ${thing}</button><br/>`
                         buttons += `<button onClick='humanChoseAnEventMax("${thing}")'>MAX ${thing}</button><br/>`
@@ -177,7 +176,7 @@
                 loadMwaAnalytics()
             }, 1000);
         }
-        function humanChoseAnEventMax(eventName ) { 
+        function humanChoseAnEventMax(eventName) {
             currentEventName = eventName
             document.getElementById("selectedEvent").innerHTML = eventName
             const inputObject = getChosenEvent(eventName)
@@ -209,7 +208,7 @@
                 const str = document.getElementById("bottom_textArea").value
                 const j = JSON.parse(str)
                 const pretty = JSON.stringify(j, null, 2)
-                document.getElementById("bottom_textArea").value = pretty
+                document.getElementById("bottom_textArea").value = `trackEvent("${currentEventName}",${pretty})`
                 return true
             } catch (boom) {
                 alert("Text is not well formed:\n" + boom)
@@ -254,6 +253,7 @@
             document.getElementById("selectedEvent").innerHTML = flat
             document.getElementById("bottom_textArea").value = JSON.stringify(flat, null, 2)
         }
+
 
 
 /* MAIN_LOGIC_BEGIN :  TEMPLATING - DO NOT REMOVE */
