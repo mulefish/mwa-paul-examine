@@ -217,8 +217,8 @@
         }
 
         async function sendIt() {
-            const isOk = await beautifyJson()
-            if (isOk === true) {
+            // const isOk = await beautifyJson()
+            // if (isOk === true) {
                 const eventName = document.getElementById("selectedEvent").innerHTML
                 try {
                     const x = JSON.parse(document.getElementById("bottom_textArea").value)
@@ -235,7 +235,7 @@
                     document.getElementById("bottom_textArea").value = boom
                 }
             }
-        }
+        // }
 
         function getSnippet(json) {
             const j = JSON.stringify(json, null, 2)
