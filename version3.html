@@ -6,7 +6,7 @@
     <style>
         #top_textArea {
             min-width: 100%;
-            min-height: 20vh;
+            min-height: 50vh;
         }
 
         #buttons {
@@ -16,17 +16,16 @@
 
         #bottom_textArea {
             min-width: 100%;
-            min-height: 50vh;
+            min-height: 200vh;
+        }
+        .meta {
+            background-color: lightyellow;
         }
     </style>
-
-
-
 
     <script>
         async function getDynamicaSrc() {
 
-            console.log("%cgetDynamicalSrc()", "background:tan")
             const version = "latest"
             const now = Date.now()
             const host = 'https://dxa4wb90x7ize.cloudfront.net/stage/';
@@ -45,23 +44,22 @@
                 document.head.appendChild(script);
             })
         }
-
-
     </script>
 
 </head>
 
 <body>
 
-    <textarea id='top_textArea'></textarea>
+    <textarea id='top_textArea' spellcheck="false"></textarea>
     <div id='buttons'>
     </div>
-    <textarea id='bottom_textArea'></textarea>
+    <textarea id='bottom_textArea' spellcheck="false"></textarea>
 
     <script>
         const categoricalHoH = {}
         const otherObjects_thatNeedAName = {}
         let lookup = {}
+        let currentEventName = ""
         let everything = {}
 
         async function setEverything(gaintBallOfJson) {
@@ -69,77 +67,73 @@
         }
 
         function getAllNeededNamedEvents() {
-    let seen = {}
-    const coo = Object.keys(everything['categoricalOptionalityObjects'])
-    coo.forEach((thing, i) => {
-        const payloads = Object.keys(everything['categoricalOptionalityObjects'][thing]["default"]["payload"])
-        payloads.forEach((payload) => {
-            if (seen.hasOwnProperty(payload)) {
-                seen[payload]++
-            } else {
-                seen[payload] = 1
-            }
-        })
-    })
-    return seen
-}
+            let seen = {}
+            const coo = Object.keys(everything['categoricalOptionalityObjects'])
+            coo.forEach((thing, i) => {
+                const payloads = Object.keys(everything['categoricalOptionalityObjects'][thing]["default"]["payload"])
+                payloads.forEach((payload) => {
+                    if (seen.hasOwnProperty(payload)) {
+                        seen[payload]++
+                    } else {
+                        seen[payload] = 1
+                    }
+                })
+            })
+            return seen
+        }
 
-function flatten(objectToFlatten) {
-    // This will not be used in the logic of the page - but it will be helpful to put this page together
-    function flattenObject(obj) {
-        const accumulator = {};
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                if ((typeof obj[key]) == 'object' && obj[key] != null) {
-                    const flatObject = flattenObject(obj[key]);
-                    for (let x in flatObject) {
-                        if (flatObject.hasOwnProperty(x)) {
-                            accumulator[key + '.' + x] = flatObject[x];
+        function flatten(objectToFlatten) {
+            // This will not be used in the logic of the page - but it will be helpful to put this page together
+            function flattenObject(obj) {
+                const accumulator = {};
+                for (let key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        if ((typeof obj[key]) == 'object' && obj[key] != null) {
+                            const flatObject = flattenObject(obj[key]);
+                            for (let x in flatObject) {
+                                if (flatObject.hasOwnProperty(x)) {
+                                    accumulator[key + '.' + x] = flatObject[x];
+                                }
+                            }
+                        } else {
+                            accumulator[key] = obj[key];
                         }
                     }
+                }
+                return accumulator;
+            }
+            return flattenObject(objectToFlatten)
+        }
+
+        function inflateObject(eventType) {
+            const EVENT_TYPE = eventType.toUpperCase()
+            const tmp = flatten(everything[EVENT_TYPE])
+            const seen = {}
+            for (let k in tmp) {
+                if (k.includes("zodValidationFn")) {
+                    // ignore it 
                 } else {
-                    accumulator[key] = obj[key];
+                    seen[k] = tmp[k]
                 }
             }
+            return seen
         }
-        return accumulator;
-    }
-    return flattenObject(objectToFlatten)
-}
-
-
-
-
-
-function inflateObject(eventType) {
-    const EVENT_TYPE = eventType.toUpperCase()
-    const tmp = flatten( everything[EVENT_TYPE ]) 
-    const seen = {} 
-    for ( let k in tmp ) {
-        if ( k.includes("zodValidationFn")) {
-            // ignore it 
-        } else {
-            seen[k] = tmp[k]
-        }
-    }
-    return seen
-}
-
-
 
         async function init() {
             async function loadMwaAnalytics() {
                 try {
                     await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
 
-                    console.log("%c FIRE 2 of 2 ", "background:pink")
                     await setEverything(self.validationModule)
+
+
+                    // set the cookie here 
 
                     // Create the lookups map
                     // and 
                     // get which buttons to make 
                     // 
-                    // GUI logic is never pretty
+                    // NOTE: GUI logic is never pretty
                     let namedEvents = Object.keys(everything["categoricalOptionalityObjects"])
                     const ignore = ["general-component-interaction"]
                     namedEvents = namedEvents.filter((x) => !ignore.includes(x));
@@ -150,21 +144,22 @@ function inflateObject(eventType) {
                         lookup[namedEvent] = x
                     }
 
-                    let buttons = `<button onClick='doFlatten()'>flatten</button>`
-                    namedEvents.forEach((thing) => {
-                        buttons += `<button onClick='pickMe("${thing}")'>${thing}</button>`
+                    let buttons = `<button onClick='sendIt()' class='meta'>Send</button>`
+                    buttons += `<button onClick='beautify()' class='meta'>Beautify</button>`
+                    buttons += `<button onClick='flattenCategoricalOptionalityObjects()' class='meta'>Flat Cat</button>`
+                    buttons += `<button onClick='setStore()' class='meta'>setStore</button>`
+                    buttons += `<button onClick='getStore()' class='meta'>getStore</button>`
+                    buttons += `<button onClick='flattenTransformationModule_defaultCategorizedEvents()' class='meta'>Flat Trans</button>`
+                    namedEvents.forEach((event) => {
+                        buttons += `<button onClick='loadThisEvent("${event}")'>${event}</button>`
+                        if ( event === "error") {
+                            buttons += `<button onClick='loadBigEvent("${event}")'>${event} big</button>`
+                        }
                     })
+                    buttons += `&nbsp;&nbsp;<span id="selectedEvent" />`
                     document.getElementById("buttons").innerHTML = buttons
-                    console.log("init! MwaAnalytics.initializeAnalytics")
-                    // console.log("%c transformationModule.defaultCategorizedEvents\n" + JSON.stringify( transformationModule.defaultCategorizedEvents, null, 2 ) , "background:lightblue") 
 
-                    // console.log("%c transformationModule.defaultCategorizedEvents\n" + JSON.stringify( transformationModule.defaultCategorizedEvents, null, 2 ) , "background:lightblue") 
-
-
-                    // console.log("%c FIRE 2 of 2 ", "background:pink")
-                    // console.log("%c " + JSON.stringify( self.validationModule, null, 2 ), "background:pink")
-                    // await setEverything(self.validationModule)
-
+                    console.log("%c FIRE 2 of 2: Loaded MwaAnalytics", "background:pink")
 
                 } catch (boom) {
                     alert(boom)
@@ -172,7 +167,7 @@ function inflateObject(eventType) {
                 }
             }
             await getDynamicaSrc()
-            console.log("%c PAUSE 1 of 2", "background:pink")
+            console.log("%c PAUSE 1 of 2: In the init", "background:pink")
             setTimeout(function () {
                 loadMwaAnalytics()
             }, 1000);
