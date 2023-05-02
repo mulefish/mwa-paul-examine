@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <style>
+        #top_textArea {
+            min-width: 100%;
+            min-height: 20vh;
+        }
+
+        #buttons {
+            min-width: 110%;
+            background-color: #e0e0e0;
+        }
+
+        #bottom_textArea {
+            min-width: 100%;
+            min-height: 50vh;
+        }
+    </style>
+
+
+
+
+    <script>
+        async function getDynamicaSrc() {
+
+            console.log("%cgetDynamicalSrc()", "background:tan")
+            const version = "latest"
+            const now = Date.now()
+            const host = 'https://dxa4wb90x7ize.cloudfront.net/stage/';
+            const resources = [
+                `https://assets.adobedtm.com/7a84fdea953b/09aece6f582f/launch-e6cc9ebc113b-development.min.js`,
+                `${host}transformation-configs/${version}/transformation-configs-remoteEntry.js?time=${now}`,
+                `${host}validation-configs/${version}/validation-configs-remoteEntry.js?time=${now}`,
+                `${host}lam-model/${version}/lam-model-remoteEntry.js?time=${now}`,
+                `${host}experiment-module/${version}/experiment-module-remoteEntry.js?time=${now}`,
+                `${host}%40lululemon/mwa-analytics/latest/browser/mwa-analytics.js?time=${now}`,
+                `version3.js`
+            ]
+            resources.forEach((thing) => {
+                const script = document.createElement('script');
+                script.src = thing
+                document.head.appendChild(script);
+            })
+        }
+
+
+    </script>
+
+</head>
+
+<body>
+
+    <textarea id='top_textArea'></textarea>
+    <div id='buttons'>
+    </div>
+    <textarea id='bottom_textArea'></textarea>
+
+    <script>
+        const categoricalHoH = {}
+        const otherObjects_thatNeedAName = {}
+        let lookup = {}
+        let everything = {}
+
+        async function setEverything(gaintBallOfJson) {
+            everything = gaintBallOfJson
+        }
+
+        function getAllNeededNamedEvents() {
+    let seen = {}
+    const coo = Object.keys(everything['categoricalOptionalityObjects'])
+    coo.forEach((thing, i) => {
+        const payloads = Object.keys(everything['categoricalOptionalityObjects'][thing]["default"]["payload"])
+        payloads.forEach((payload) => {
+            if (seen.hasOwnProperty(payload)) {
+                seen[payload]++
+            } else {
+                seen[payload] = 1
+            }
+        })
+    })
+    return seen
+}
+
+function flatten(objectToFlatten) {
+    // This will not be used in the logic of the page - but it will be helpful to put this page together
+    function flattenObject(obj) {
+        const accumulator = {};
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                if ((typeof obj[key]) == 'object' && obj[key] != null) {
+                    const flatObject = flattenObject(obj[key]);
+                    for (let x in flatObject) {
+                        if (flatObject.hasOwnProperty(x)) {
+                            accumulator[key + '.' + x] = flatObject[x];
+                        }
+                    }
+                } else {
+                    accumulator[key] = obj[key];
+                }
+            }
+        }
+        return accumulator;
+    }
+    return flattenObject(objectToFlatten)
+}
+
+
+
+
+
+function inflateObject(eventType) {
+    const EVENT_TYPE = eventType.toUpperCase()
+    const tmp = flatten( everything[EVENT_TYPE ]) 
+    const seen = {} 
+    for ( let k in tmp ) {
+        if ( k.includes("zodValidationFn")) {
+            // ignore it 
+        } else {
+            seen[k] = tmp[k]
+        }
+    }
+    return seen
+}
+
+
+
+        async function init() {
+            async function loadMwaAnalytics() {
+                try {
+                    await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
+
+                    console.log("%c FIRE 2 of 2 ", "background:pink")
+                    await setEverything(self.validationModule)
+
+                    // Create the lookups map
+                    // and 
+                    // get which buttons to make 
+                    // 
+                    // GUI logic is never pretty
+                    let namedEvents = Object.keys(everything["categoricalOptionalityObjects"])
+                    const ignore = ["general-component-interaction"]
+                    namedEvents = namedEvents.filter((x) => !ignore.includes(x));
+                    const namedEventKeys = getAllNeededNamedEvents()
+                    for (let namedEvent in namedEventKeys) {
+                        const x = inflateObject(namedEvent)
+                        // const n = Object.keys(x).length 
+                        lookup[namedEvent] = x
+                    }
+
+                    let buttons = `<button onClick='doFlatten()'>flatten</button>`
+                    namedEvents.forEach((thing) => {
+                        buttons += `<button onClick='pickMe("${thing}")'>${thing}</button>`
+                    })
+                    document.getElementById("buttons").innerHTML = buttons
+                    console.log("init! MwaAnalytics.initializeAnalytics")
+                    // console.log("%c transformationModule.defaultCategorizedEvents\n" + JSON.stringify( transformationModule.defaultCategorizedEvents, null, 2 ) , "background:lightblue") 
+
+                    // console.log("%c transformationModule.defaultCategorizedEvents\n" + JSON.stringify( transformationModule.defaultCategorizedEvents, null, 2 ) , "background:lightblue") 
+
+
+                    // console.log("%c FIRE 2 of 2 ", "background:pink")
+                    // console.log("%c " + JSON.stringify( self.validationModule, null, 2 ), "background:pink")
+                    // await setEverything(self.validationModule)
+
+
+                } catch (boom) {
+                    alert(boom)
+                    console.log(boom)
+                }
+            }
+            await getDynamicaSrc()
+            console.log("%c PAUSE 1 of 2", "background:pink")
+            setTimeout(function () {
+                loadMwaAnalytics()
+            }, 1000);
+        }
+
+        init()
+
+    </script>
+
+</body>
+
+</html>

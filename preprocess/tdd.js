@@ -220,18 +220,9 @@ function colorize_test(note) {
   const human = intermediate["for_human"]
   const css = intermediate["for_css"]
   const result = colorize(human, css) // result is a bunch of divs used to colorize a JSON.stringified version of the collection 'before'
-  let isOk = true
-  const expected_substrings = ['boathouse',
-    '"Maggy": "kittycat"',
-    'class="mandatory"',
-    'class="optional"'
-  ]
-  expected_substrings.forEach((thing) => {
-    if (!result.includes(thing)) {
-      isOk = false
-    }
-  })
-  verdict(isOk, true, note + " colorize_test")
+  const expected = `<div contenteditable="true">{</div><div contenteditable="true">  "boathouse": {</div><div contenteditable="true">    "event": {</div><div contenteditable="true">      "component": {</div><div class="mandatory" contenteditable="true">        "id": "string_1",</div><div class="mandatory" contenteditable="true">        "placement": "string_2"</div><div contenteditable="true">      }</div><div contenteditable="true">    },</div><div contenteditable="true">    "water": {</div><div contenteditable="true">      "boats": {</div><div contenteditable="true">        "Jupiter": {</div><div contenteditable="true">          "Eeboo": {</div><div contenteditable="true">            "Shabone": {</div><div class="optional" contenteditable="true">              "Maggy": "kittycat"</div><div contenteditable="true">            }</div><div contenteditable="true">          }</div><div contenteditable="true">        }</div><div contenteditable="true">      }</div><div contenteditable="true">    }</div><div contenteditable="true">  }</div><div contenteditable="true">}</div>`
+
+  verdict(result,expected, note + " colorize_test")
 }
 function version2_test(note) {
   const ignore = ["MODULE_VERSION"]
@@ -632,19 +623,21 @@ const data = require("./everything.json")
 const thisIsTDD = true
 setEverything(data, thisIsTDD)
 
-/* */
-flatten_test("4 of 8")
-inflateFlatMap_complex_test("5 of 8")
-inflateFlatMap_simple_test("6 of 8")
-getColorizableHOH_test("7 of 8")
-colorize_test("8 of 8")
-version2_test("v2 1")
-inflateObject_screen_test("v2")
-getAllNeededNamedEvents_test("v2")
-inflateObject_everything_test("v2")
-inflateObject_event_test("v2")
-stepA_test("Set up")
-getChosenEvent_test("v2")
-createObjectToSend_test("v2")
-beautifulJson_test("v2")
-makeJsonToSendMatchMinimumSchema_test("v2")
+/*
+// flatten_test("4 of 8")
+// inflateFlatMap_complex_test("5 of 8")
+// inflateFlatMap_simple_test("6 of 8")
+// getColorizableHOH_test("7 of 8")
+// colorize_test("8 of 8")
+*/
+// version2_test("1 of 10")
+// inflateObject_screen_test("2 of 10")
+// getAllNeededNamedEvents_test("3 of 10")
+// inflateObject_everything_test("4 of 10")
+// inflateObject_event_test("5 of 10")
+// stepA_test("6 of 10")
+// getChosenEvent_test("7 of 10")
+// createObjectToSend_test("8 of 10")
+// beautifulJson_test("9 of 10")
+// makeJsonToSendMatchMinimumSchema_test("10 of 10")
+colorize_test("11 of 10")

@@ -1,0 +1,22 @@
+{
+  "name": "mwa-paul-examine",
+  "version": "1.0.0",
+  "description": "[Edit on StackBlitz ⚡️](https://stackblitz.com/edit/mwa-paul-examine4?file=README.md)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mulefish/mwa-paul-examine.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mulefish/mwa-paul-examine/issues"
+  },
+  "homepage": "https://github.com/mulefish/mwa-paul-examine#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

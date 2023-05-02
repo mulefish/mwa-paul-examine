@@ -137,6 +137,7 @@ function getColorizableHOH(obj) {
 
     const traverseObject = (obj, path) => {
         for (const [key, value] of Object.entries(obj)) {
+            console.log( key + "  " + value)
             const currentPath = path.concat([key]);
             if (typeof value === "object") {
                 traverseObject(value, currentPath);

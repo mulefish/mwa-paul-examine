@@ -88,6 +88,24 @@
         }
 
 
+        let lastClickedButton = "button1";
+
+        // Define a function to handle button clicks
+        function handleButtonClick(buttonNumber) {
+            // If a button was previously clicked, remove the "active" class from it
+            if (lastClickedButton) {
+                lastClickedButton.classList.remove("active");
+            }
+
+            // Get a reference to the button that was clicked
+            const button = document.getElementById(`button${buttonNumber}`);
+
+            // Add the "active" class to the clicked button
+            button.classList.add("active");
+
+            // Update the lastClickedButton variable to point to the clicked button
+            lastClickedButton = button;
+        }
     </script>
 
 </head>
@@ -97,11 +115,14 @@
     <div id="floating-box">
         <div id="buttons"></div>
         <hr />
-
+        
         <button id="button2" onclick="sendIt()">Send</button>
-        <button id="button3" onclick="beautifyJson()">beautifyJson</button>
+        <br/>
+        <button id="button3" onclick="beautifyJson()">Data layer</button>
+        <br/>
+        <a target="_blank" href="https://lululemon.atlassian.net/wiki/spaces/DCP/pages/2967410421/TDR+Web+NA+-+Reviews+Funnel+Tracking">Data Layer Example</a>
+        <!-- <span id="switch_view">Verify</span><br /> -->
 
-        <span id="switch_view">Verify</span><br />
     </div>
 
 
@@ -135,13 +156,12 @@
             async function loadMwaAnalytics() {
                 try {
                     await MwaAnalytics.initializeAnalytics('TEST', {}, [], true)
-
                     console.log("%c FIRE 2 of 2 ", "background:pink")
                     await setEverything(self.validationModule)
                     await stepA()
                     const namedEvents = getNamedEvents()
                     let buttons = `<button onClick='doFlatten()'>flatten</button><br/>`
-console.log("%c HELLO\n" + JSON.stringify( transformationModule.defaultCategorizedEvents, null, 2 ) , "background:lightblue") 
+                    
                     namedEvents.forEach((thing) => {
                         buttons += `<button onClick='humanChoseAnEvent("${thing}")'>MIN ${thing}</button><br/>`
                         buttons += `<button onClick='humanChoseAnEventMax("${thing}")'>MAX ${thing}</button><br/>`
@@ -160,7 +180,7 @@ console.log("%c HELLO\n" + JSON.stringify( transformationModule.defaultCategoriz
                 loadMwaAnalytics()
             }, 1000);
         }
-        function humanChoseAnEventMax(eventName) {
+        function humanChoseAnEventMax(eventName ) { 
             currentEventName = eventName
             document.getElementById("selectedEvent").innerHTML = eventName
             const inputObject = getChosenEvent(eventName)
@@ -168,21 +188,7 @@ console.log("%c HELLO\n" + JSON.stringify( transformationModule.defaultCategoriz
             const sendThis = beautifulJson(sendThis_flat)
             let schema = inflateFlatMap(inputObject)
             schema = schema["default"]["payload"]
-            
-            // const theThing = getColorizableHOH(schema)
-            document.getElementById("schema").innerHTML = JSON.stringify( schema, null, 2 ) 
-            // getColorizableHOH(theThing)  // JSON.stringify(schema, null, 2)
-            //console.log("HELLO ")
-            // const intermediate = getColorizableHOH(schema)
-            // const human = intermediate["for_human"]
-            // const css = intermediate["for_css"]
-            // console.log("%c human", "background:lightblue")
-            // console.log("%c " + JSON.stringify( human, null, 2 ), "background:lightblue")
-            // console.log("%c css", "background:lightgreen")
-            // console.log("%c " + JSON.stringify( css, null, 2 ), "background:lightgreen")
-            // const html = colorize(human, css)
-         //    document.getElementById("schema").innerHTML = html
-           //  console.log("%c " + JSON.stringify(theThing, null, 2 ) , "background:lightgreen" )
+            document.getElementById("schema").innerHTML = JSON.stringify(schema, null, 2)
             document.getElementById("bottom_textArea").value = JSON.stringify(sendThis, null, 2)
         }
         function humanChoseAnEvent(eventName) {
@@ -206,7 +212,10 @@ console.log("%c HELLO\n" + JSON.stringify( transformationModule.defaultCategoriz
                 const str = document.getElementById("bottom_textArea").value
                 const j = JSON.parse(str)
                 const pretty = JSON.stringify(j, null, 2)
-                document.getElementById("bottom_textArea").value = `trackEvent("${currentEventName}",${pretty})`
+                document.getElementById("bottom_textArea").value = pretty
+                // let x = `trackEvent(EVENT_CATEGORY.COMPONENT_EVENT,${pretty}}`
+                let x = `trackEvent("${currentEventName}", ${pretty})`
+                document.getElementById("bottom_textArea").value = x
                 return true
             } catch (boom) {
                 alert("Text is not well formed:\n" + boom)
@@ -215,8 +224,8 @@ console.log("%c HELLO\n" + JSON.stringify( transformationModule.defaultCategoriz
         }
 
         async function sendIt() {
-            // const isOk = await beautifyJson()
-            // if (isOk === true) {
+            const isOk = await beautifyJson()
+            if (isOk === true) {
                 const eventName = document.getElementById("selectedEvent").innerHTML
                 try {
                     const x = JSON.parse(document.getElementById("bottom_textArea").value)
@@ -233,7 +242,7 @@ console.log("%c HELLO\n" + JSON.stringify( transformationModule.defaultCategoriz
                     document.getElementById("bottom_textArea").value = boom
                 }
             }
-        // }
+        }
 
         function getSnippet(json) {
             const j = JSON.stringify(json, null, 2)
@@ -251,7 +260,6 @@ console.log("%c HELLO\n" + JSON.stringify( transformationModule.defaultCategoriz
             document.getElementById("selectedEvent").innerHTML = flat
             document.getElementById("bottom_textArea").value = JSON.stringify(flat, null, 2)
         }
-
 
 
 /* MAIN_LOGIC_BEGIN :  TEMPLATING - DO NOT REMOVE */
