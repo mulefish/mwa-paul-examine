@@ -48,7 +48,7 @@ function createObjectToSend(event) {
 }
 
 function setStore() {
-    const x = document.getElementById("bottom_textArea").value
+    const x = document.getElementById("bottom_left_textArea").value
     localStorage.setItem("register1", x);
 }
 
@@ -56,9 +56,9 @@ function getStore() {
     const x = localStorage.getItem("register1")
     try {
         const obj = JSON.parse(x)
-        document.getElementById("bottom_textArea").value = JSON.stringify(obj, null, 2)
+        document.getElementById("bottom_left_textArea").value = JSON.stringify(obj, null, 2)
     } catch (ohno_bad_json) {
-        document.getElementById("bottom_textArea").value = x
+        document.getElementById("bottom_left_textArea").value = x
     }
 }
 
@@ -91,75 +91,105 @@ function makeJsonToSendMatchMinimumSchema(schemaMap_flat, toSendMap_flat) {
     })
     return union
 }
-/* 
-function getEvent() { 
 
-    "urlRoute":"string",
-    "path":"string",
-    "screenType"                            default.$.payload.screen.type",
-    "currency                            default.$.payload.screen.currency",
-    "country                            default.$.payload.screen.country",
-    "language                            default.$.payload.screen.language",
-    "property                            default.$.payload.screen.property",
-    "headerUnified                            default.$.payload.screen.header.unified",
-    "headerLocalized                            default.$.payload.screen.header.localized",
-    "gender                            default.$.payload.screen.category.gender",
-    "$.screen.attributes                            default.$.payload.screen.attributes",
-    "$.error.errorType                            default.$.payload.event.id",
-    "$.error.errorType                            default.$.payload.event.attributes.errorType",
-    "$.error.errorDetails                            default.$.payload.event.attributes.errorDetails",
-    "$.error.errorGuestFacing                            default.$.payload.event.attributes.errorGuestFacing",
-    "$.error.errorMessage                            default.$.payload.event.attributes.errorMessage",
-    "errorType                            default.$.payload.event.type.inputPath",
-    "error                            default.$.payload.event.type.default",
-    "anonymousId                            default.$.payload.user.anonymousId",
-    "browserAgent                            default.$.payload.user.browserUserAgent",
-    "ip                            default.$.payload.user.geoIp.ip",
-    "country                            default.$.payload.user.geoIp.country",
-    "state                            default.$.payload.user.geoIp.state",
-    "city                            default.$.payload.user.geoIp.city",
-    "zip                            default.$.payload.user.geoIp.zip",
-    "undefined                            default.$.payload.user.profile.isLoggedIn",
-    "hashedEmail                            default.$.payload.user.profile.hashedEmail",
-    "$.membershipType                            default.$.payload.user.profile.membershipType.inputPath",
-    "unknown                            default.$.payload.user.profile.membershipType.default",
-    "undefined                            default.$.payload.user.attributes.campaignId",
-    "undefined                            default.$.payload.user.attributes.vendors.facebook.fb",
-    "undefined                            default.$.payload.user.attributes.vendors.facebook.fbClickId",
-    "undefined                            default.$.payload.user.attributes.vendors.facebook.fbc",
-    "undefined                            default.$.payload.user.attributes.vendors.facebook.fbp",
-    "undefined                            default.$.payload.user.attributes.vendors.facebook.testEventCode",
-    "undefined                            default.$.payload.user.attributes.vendors.facebook.eventId",
-    "undefined                            default.$.payload.user.attributes.vendors.google.googleClickId",
-    "atgAppId                            default.$.payload.user.attributes.appId.atg.id",
-    "sfccAppId                            default.$.payload.user.attributes.appId.sfcc.id",
-    "undefined                            default.$.version.lam",
-    "undefined                            default.$.version.team",
-    "undefined 
-
-
+function showEverything() { 
+    alert("TODO: This ought to be created. NOTE: Something something event type also")
 }
+
+
+
+// "CATEGORY.hierarchy": "Array<hierarchy>",
+// "CATEGORY.gender": "string",
+// "property"
+
+
+/*
+"app-response.default.$.payload.event.component.id": "$.component.id",
+"app-response.default.$.payload.event.component.type": "$.component.type",
+"app-response.default.$.payload.event.component.text": "$.component.text",
+"app-response.default.$.payload.event.component.placement.position": "$.component.position",
+"app-response.default.$.payload.event.component.placement.totalCount": "$.component.totalCount",
+"app-response.default.$.payload.event.component.attributes": "$.component.attributes",
+"app-response.default.$.payload.event.component.internalCampaignId.ctaPageName.name.localized": "$.campaignID.ctaPageName.localized",
+"app-response.default.$.payload.event.component.internalCampaignId.ctaPageName.name.unified": "$.campaignID.ctaPageName.unified",
+"app-response.default.$.payload.event.component.internalCampaignId.pageName.name.localized": "$.campaignID.pageName.localized",
+"app-response.default.$.payload.event.component.internalCampaignId.pageName.name.unified": "$.campaignID.pageName.unified",
+"app-response.default.$.payload.event.type.inputPath": "eventType",
+"app-response.default.$.payload.event.type.default": "app-response",
+"app-response.default.$.payload.user.anonymousId": "anonymousId",
+"app-response.default.$.payload.user.browserUserAgent": "browserAgent",
+"app-response.default.$.payload.user.geoIp.ip": "ip",
+"app-response.default.$.payload.user.geoIp.country": "country",
+"app-response.default.$.payload.user.geoIp.state": "state",
+"app-response.default.$.payload.user.geoIp.city": "city",
+"app-response.default.$.payload.user.geoIp.zip": "zip",
+"app-response.default.$.payload.user.profile.hashedEmail": "hashedEmail",
+"app-response.default.$.payload.user.profile.membershipType.inputPath": "$.membershipType",
+"app-response.default.$.payload.user.profile.membershipType.default": "unknown",
+"app-response.default.$.payload.user.attributes.appId.atg.id": "atgAppId",
+"app-response.default.$.payload.user.attributes.appId.sfcc.id": "sfccAppId",
 */
 
 const types = {
+    "app-response_big": {
+        "path": "string",
+        "urlRoute": "string",
+        "screenType": "string",
+        "currency": "string",
+        "country": "US",
+        "language": "en_US",
+        //"property":"string",
+        "headerUnified": "string",
+        "headerLocalized": "string",
+        "gender": "string",
+        "screen": {
+            "attributes": {
+                "anything": "can go here"
+            }
+        },
+        "id": "String",
+        "event": {
+            "attributes": {
+                "anything": "can go here"
+            }
+        }
+    },
+
     "app-response": {
         "path": "string",
-        "component.type":"string",
-        "component.id":"string",
-        "component.text":"string",
-        "component.position":123,
-        "component.totalCount":123,
-        "component.attributes":{
-            "anything": "can go here"
-        }
-
+        "type": "string",
+        "category": "string",
+        "country": "US",
+        "collections": {},
+        "currency": "string",
+        "headerUnified": "string",
+        "headerLocalized": "string",
+        "language": "en_US",
+        "property": "string",
+        "urlRoute": "string"
     },
+    "general-component-event": {
+        "path": "string",
+        "type": "string",
+        "category": "string",
+        "country": "US",
+        "collections": {},
+        "currency": "string",
+        "headerUnified": "string",
+        "headerLocalized": "string",
+        "language": "en_US",
+        // "property": "string",
+        "urlRoute": "string",
+        "component.id":"string",
+        "component.type":"string",
+        "component.text":"string",
+        "component.type":"string",
+        "component.placement.position":123,
+        "component.placement.totalCount":123,
+    },
+
     "error": {
-        // "screen": {
-        //     "attributes": {
-        //         "anything": "can go here"
-        //     }
-        // },
+
         "headerUnified": "string",
         "headerLocalized": "string",
         "error.errorType": "string",
@@ -229,21 +259,22 @@ function loadThisEvent(eventName) {
     // document.getElementById("top_left_textArea").innerHTML = JSON.stringify(schema, null, 2)
 
     const x = flatten(transformationModule.defaultCategorizedEvents[eventName])
-    const possible = []
-    const seen = 0
-    for (let k in x) {
-        v = x[k]
-        if (seen.hasOwnProperty(v)) {
-            // skip it 
-        } else {
-            seen[v] = 1
-            possible.push(v + " ====> " + k)
-        }
-    }
-    document.getElementById("top_left_textArea").innerHTML = JSON.stringify(possible, null, 2)
+    // const possible = []
+    // const seen = 0
+    // for (let k in x) {
+    //     v = x[k]
+    //     if (seen.hasOwnProperty(v)) {
+    //         // skip it 
+    //     } else {
+    //         seen[v] = 1
+    //         possible.push(v + " ====> " + k)
+    //     }
+    // }
+    // document.getElementById("top_left_textArea").innerHTML = JSON.stringify(possible, null, 2)
+    document.getElementById("top_left_textArea").innerHTML = JSON.stringify(x, null, 2)
     // const flat_schema = flatten(schema)
     // const schema = inflateFlatMap(flat_schema)
-    
+
     document.getElementById("top_right_textArea").value = JSON.stringify(schema, null, 2)
 
     const flat_sendThis = flatten(sendThis)

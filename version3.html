@@ -6,12 +6,12 @@
     <style>
         #top_left_textArea {
             display: inline-block;
-            min-width: 49%;
+            min-width: 69%;
             min-height: 50vh;
         }
         #top_right_textArea {
             display: inline-block;
-            min-width: 49%;
+            min-width: 29%;
             min-height: 50vh;
         }
 
@@ -22,12 +22,12 @@
 
         #bottom_left_textArea {
             display: inline-block;
-            min-width: 49%;
+            min-width: 29%;
             min-height: 50vh;
         }
         #bottom_right_textArea {
             display: inline-block;
-            min-width: 49%;
+            min-width: 69%;
             min-height: 50vh;
         }
 
@@ -162,14 +162,13 @@
                     let buttons = `<button onClick='sendIt()' class='meta'>Send</button>`
                     buttons += `<button onClick='beautify()' class='meta'>Beautify</button>`
                     buttons += `<button onClick='flattenCategoricalOptionalityObjects()' class='meta'>Flat Cat</button>`
+                    buttons += `<button onClick='flattenTransformationModule_defaultCategorizedEvents()' class='meta'>Flat Trans</button>`
                     buttons += `<button onClick='setStore()' class='meta'>setStore</button>`
                     buttons += `<button onClick='getStore()' class='meta'>getStore</button>`
-                    buttons += `<button onClick='flattenTransformationModule_defaultCategorizedEvents()' class='meta'>Flat Trans</button>`
+                    buttons += `<button onClick='showEverything()' class='meta'>everything</button>`
+
                     namedEvents.forEach((event) => {
                         buttons += `<button onClick='loadThisEvent("${event}")'>${event}</button>`
-                        if ( event === "error") {
-                            buttons += `<button onClick='loadBigEvent("${event}")'>${event} big</button>`
-                        }
                     })
                     buttons += `&nbsp;&nbsp;<span id="selectedEvent" />`
                     document.getElementById("buttons").innerHTML = buttons
