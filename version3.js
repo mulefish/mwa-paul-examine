@@ -234,8 +234,8 @@ const types = {
         "component.type":"string",
         "component.text":"string",
         "component.type":"string",
-        "component.placement.position":123,
-        "component.placement.totalCount":123,
+        "component.position":123,
+        "component.totalCount":123,
     },
 
     "error": {
