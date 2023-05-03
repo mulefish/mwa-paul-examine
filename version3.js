@@ -11,7 +11,7 @@ function flattenTransformationModule_defaultCategorizedEvents() {
 }
 function beautify() {
     try {
-        const x = document.getElementById("bottom_textArea").value
+        const x = document.getElementById("bottom_left_textArea").value
         const obj = JSON.parse(x)
         document.getElementById("bottom_left_textArea").value = JSON.stringify(obj, null, 2)
     } catch (boom) {
@@ -143,29 +143,25 @@ function getEvent() {
 
 const types = {
     "app-response": {
-        "urlRoute": "string",
         "path": "string",
-        "screenType": "string",
-        "currency": "string",
-        "country": "US",
-        "language": "en_CA",
-        "headerUnified": "string",
-        "headerLocalized": "string",
-        "gender": "string",
-        "screen": {
-            "attributes": {
-                "anything": "can go here"
-            }
-        },
-        "id": "string"
+        "component.type":"string",
+        "component.id":"string",
+        "component.text":"string",
+        "component.position":123,
+        "component.totalCount":123,
+        "component.attributes":{
+            "anything": "can go here"
+        }
 
     },
     "error": {
-        "screen": {
-            "attributes": {
-                "anything": "can go here"
-            }
-        },
+        // "screen": {
+        //     "attributes": {
+        //         "anything": "can go here"
+        //     }
+        // },
+        "headerUnified": "string",
+        "headerLocalized": "string",
         "error.errorType": "string",
         "error.errorDetails": "string",
         "error.errorGuestFacing": true,
