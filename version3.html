@@ -4,8 +4,14 @@
 <head>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <style>
-        #top_textArea {
-            min-width: 100%;
+        #top_left_textArea {
+            display: inline-block;
+            min-width: 49%;
+            min-height: 50vh;
+        }
+        #top_right_textArea {
+            display: inline-block;
+            min-width: 49%;
             min-height: 50vh;
         }
 
@@ -14,10 +20,17 @@
             background-color: #e0e0e0;
         }
 
-        #bottom_textArea {
-            min-width: 100%;
+        #bottom_left_textArea {
+            display: inline-block;
+            min-width: 49%;
             min-height: 200vh;
         }
+        #bottom_right_textArea {
+            display: inline-block;
+            min-width: 49%;
+            min-height: 200vh;
+        }
+
         .meta {
             background-color: lightyellow;
         }
@@ -50,10 +63,12 @@
 
 <body>
 
-    <textarea id='top_textArea' spellcheck="false"></textarea>
+    <textarea id='top_left_textArea' spellcheck="false"></textarea>
+    <textarea id='top_right_textArea' spellcheck="false"></textarea>
     <div id='buttons'>
     </div>
-    <textarea id='bottom_textArea' spellcheck="false"></textarea>
+    <textarea id='bottom_left_textArea' spellcheck="false"></textarea>
+    <textarea id='bottom_right_textArea' spellcheck="false"></textarea>
 
     <script>
         const categoricalHoH = {}

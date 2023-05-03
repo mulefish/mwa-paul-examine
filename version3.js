@@ -1,19 +1,19 @@
 function flattenCategoricalOptionalityObjects() {
     const flat = flatten(everything)
     document.getElementById("selectedEvent").innerHTML = "Flat CategoricalOptionalityObjects"
-    document.getElementById("bottom_textArea").value = JSON.stringify(flat, null, 2)
+    document.getElementById("bottom_left_textArea").value = JSON.stringify(flat, null, 2)
 }
 
 function flattenTransformationModule_defaultCategorizedEvents() {
     const flat = flatten(transformationModule.defaultCategorizedEvents)
     document.getElementById("selectedEvent").innerHTML = "Flat TransformationModule"
-    document.getElementById("bottom_textArea").value = JSON.stringify(flat, null, 2)
+    document.getElementById("bottom_left_textArea").value = JSON.stringify(flat, null, 2)
 }
 function beautify() {
     try {
         const x = document.getElementById("bottom_textArea").value
         const obj = JSON.parse(x)
-        document.getElementById("bottom_textArea").value = JSON.stringify(obj, null, 2)
+        document.getElementById("bottom_left_textArea").value = JSON.stringify(obj, null, 2)
     } catch (boom) {
         alert(boom)
     }
@@ -157,7 +157,7 @@ const types = {
                 "anything": "can go here"
             }
         },
-        "id":"string"
+        "id": "string"
 
     },
     "error": {
@@ -172,91 +172,52 @@ const types = {
         "error.errorMessage": "string"
     },
     "error_big": {
-        "error": {
-            "urlRoute": "string",
-            "path": "string",
-            "screenType": "string",
-            "currency": "string",
-            "country": "US",
-            "language": "en_CA",
-            "headerUnified": "string",
-            "headerLocalized": "string",
-            "gender": "string",
-            "screen": {
-                "attributes": {
-                    "anything": "can go here"
-                }
-            },
-            "error.errorType": "string",
-            "error.errorDetails": "string",
-            "error.errorGuestFacing": true,
-            "error.errorMessage": "string",
-            "error": "string",
-            "errorType": "error",
-            "anonymousId": "string",
-            "browserAgent": "string",
-            "ip": "string",
-            "country": "US",
-            "state": "OR",
-            "city": "Portland",
-            "zip": "97211",
-            "language": "en_US",
-            "hashedEmail": "string",
-            "atgAppId": "string",
-            "membershipType": "anything",
-            "payload.user.attributes.campaignId": "anything",
-            "payload.user.attributes.vendors.facebook.fb": "anything",
-            "payload.user.attributes.vendors.facebook.fbClickId": "anything",
-            "payload.user.attributes.vendors.facebook.fbc": "anything",
-            "payload.user.attributes.vendors.facebook.fbp": "anything",
-            "payload.user.attributes.vendors.facebook.testEventCode": "anything",
-            "payload.user.attributes.vendors.facebook.eventId": "anything",
-            "payload.user.attributes.vendors.google.googleClickId": "anything",
-            "payload.user.attributes.appId.atg.id": "anything",
-            "payload.user.attributes.appId.sfcc.id": "anything",
-            "version.lam": "default",
-            "version.team": "default",
-            "timestamp": "default"
+        "urlRoute": "string",
+        "path": "string",
+        "screenType": "string",
+        "currency": "string",
+        "country": "US",
+        "language": "en_CA",
+        "headerUnified": "string",
+        "headerLocalized": "string",
+        "gender": "string",
+        "screen": {
+            "attributes": {
+                "anything": "can go here"
+            }
         },
-    }
+        "error.errorType": "string",
+        "error.errorDetails": "string",
+        "error.errorGuestFacing": true,
+        "error.errorMessage": "string",
+        "error": "string",
+        "errorType": "error",
+        "anonymousId": "string",
+        "browserAgent": "string",
+        "ip": "string",
+        "country": "US",
+        "state": "OR",
+        "city": "Portland",
+        "zip": "97211",
+        "language": "en_US",
+        "hashedEmail": "string",
+        "atgAppId": "string",
+        "membershipType": "anything",
+        "payload.user.attributes.campaignId": "anything",
+        "payload.user.attributes.vendors.facebook.fb": "anything",
+        "payload.user.attributes.vendors.facebook.fbClickId": "anything",
+        "payload.user.attributes.vendors.facebook.fbc": "anything",
+        "payload.user.attributes.vendors.facebook.fbp": "anything",
+        "payload.user.attributes.vendors.facebook.testEventCode": "anything",
+        "payload.user.attributes.vendors.facebook.eventId": "anything",
+        "payload.user.attributes.vendors.google.googleClickId": "anything",
+        "payload.user.attributes.appId.atg.id": "anything",
+        "payload.user.attributes.appId.sfcc.id": "anything",
+        "version.lam": "default",
+        "version.team": "default",
+        "timestamp": "default"
+    },
 }
-
-function loadBigEvent(eventName) {
-    currentEventName = eventName
-    document.getElementById("selectedEvent").innerHTML = eventName
-    const inputObject = everything["categoricalOptionalityObjects"][eventName]
-    console.log(inputObject)
-    const sendThis_flat = createObjectToSend(inputObject)
-    const sendThis = beautifulJson(sendThis_flat)
-    let schema = inflateFlatMap(inputObject)
-    schema = schema["default"]["payload"]
-    // document.getElementById("top_textArea").innerHTML = JSON.stringify(schema, null, 2)
-
-    const x = flatten(transformationModule.defaultCategorizedEvents[eventName])
-    const possible = []
-    const seen = 0
-    for (let k in x) {
-        v = x[k]
-        if (seen.hasOwnProperty(v)) {
-            // skip it 
-        } else {
-            seen[v] = 1
-            possible.push(v + "                            " + k)
-        }
-    }
-    document.getElementById("top_textArea").innerHTML = JSON.stringify(possible, null, 2)
-    const flat_schema = flatten(schema)
-    const flat_sendThis = flatten(sendThis)
-    //    const union_flat = makeJsonToSendMatchMinimumSchema(flat_schema, flat_sendThis)
-    //   const union = inflateFlatMap(union_flat)
-    //    document.getElementById("bottom_textArea").value = JSON.stringify(union, null, 2)
-    //  property
-    //    "membershipType":"string",
-    //    "unknown":"string"
-    const union = inflateFlatMap(types[eventName + "_big"])
-    document.getElementById("bottom_textArea").value = JSON.stringify(union, null, 2)
-}
-
 
 
 
@@ -269,7 +230,7 @@ function loadThisEvent(eventName) {
     const sendThis = beautifulJson(sendThis_flat)
     let schema = inflateFlatMap(inputObject)
     schema = schema["default"]["payload"]
-    // document.getElementById("top_textArea").innerHTML = JSON.stringify(schema, null, 2)
+    // document.getElementById("top_left_textArea").innerHTML = JSON.stringify(schema, null, 2)
 
     const x = flatten(transformationModule.defaultCategorizedEvents[eventName])
     const possible = []
@@ -280,20 +241,24 @@ function loadThisEvent(eventName) {
             // skip it 
         } else {
             seen[v] = 1
-            possible.push(v + "                            " + k)
+            possible.push(v + " ====> " + k)
         }
     }
-    document.getElementById("top_textArea").innerHTML = JSON.stringify(possible, null, 2)
-    const flat_schema = flatten(schema)
+    document.getElementById("top_left_textArea").innerHTML = JSON.stringify(possible, null, 2)
+    // const flat_schema = flatten(schema)
+    // const schema = inflateFlatMap(flat_schema)
+    
+    document.getElementById("top_right_textArea").value = JSON.stringify(schema, null, 2)
+
     const flat_sendThis = flatten(sendThis)
     //    const union_flat = makeJsonToSendMatchMinimumSchema(flat_schema, flat_sendThis)
     //   const union = inflateFlatMap(union_flat)
-    //    document.getElementById("bottom_textArea").value = JSON.stringify(union, null, 2)
+    //    document.getElementById("bottom_left_textArea").value = JSON.stringify(union, null, 2)
     //  property
     //    "membershipType":"string",
     //    "unknown":"string"
     const union = inflateFlatMap(types[eventName])
-    document.getElementById("bottom_textArea").value = JSON.stringify(union, null, 2)
+    document.getElementById("bottom_left_textArea").value = JSON.stringify(union, null, 2)
 }
 
 
@@ -301,17 +266,17 @@ async function sendIt() {
 
     const eventName = document.getElementById("selectedEvent").innerHTML
     try {
-        const x = JSON.parse(document.getElementById("bottom_textArea").value)
+        const x = JSON.parse(document.getElementById("bottom_left_textArea").value)
         const theResult = await MwaAnalytics.trackEvent(eventName, x)
         const base = theResult['payload']['properties'] //["validationResult"] //["data"]["payload"] //['payload']["validationResult"]["data"]["payload"]
         const product = base["product"]
         const payloadInner = base['validationResult']['data']['payload']
-        let out = JSON.stringify(product, null, 2)
-        out += "\n-----------------\n"
-        out += JSON.stringify(payloadInner, null, 2)
+        // let out = JSON.stringify(product, null, 2)
+        // out += "\n-----------------\n"
+        // out += JSON.stringify(payloadInner, null, 2)
         // document.getElementById("receiveInfo").value = out
-        document.getElementById("bottom_textArea").value = JSON.stringify(theResult, null, 2)
+        document.getElementById("bottom_right_textArea").value = JSON.stringify(theResult, null, 2)
     } catch (boom) {
-        document.getElementById("bottom_textArea").value = boom
+        document.getElementById("bottom_right_textArea").value = boom
     }
 }
