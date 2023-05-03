@@ -97,40 +97,90 @@ function showEverything() {
 }
 
 
-
+// MYSTERYIES
 // "CATEGORY.hierarchy": "Array<hierarchy>",
 // "CATEGORY.gender": "string",
 // "property"
 
 
-/*
-"app-response.default.$.payload.event.component.id": "$.component.id",
-"app-response.default.$.payload.event.component.type": "$.component.type",
-"app-response.default.$.payload.event.component.text": "$.component.text",
-"app-response.default.$.payload.event.component.placement.position": "$.component.position",
-"app-response.default.$.payload.event.component.placement.totalCount": "$.component.totalCount",
-"app-response.default.$.payload.event.component.attributes": "$.component.attributes",
-"app-response.default.$.payload.event.component.internalCampaignId.ctaPageName.name.localized": "$.campaignID.ctaPageName.localized",
-"app-response.default.$.payload.event.component.internalCampaignId.ctaPageName.name.unified": "$.campaignID.ctaPageName.unified",
-"app-response.default.$.payload.event.component.internalCampaignId.pageName.name.localized": "$.campaignID.pageName.localized",
-"app-response.default.$.payload.event.component.internalCampaignId.pageName.name.unified": "$.campaignID.pageName.unified",
-"app-response.default.$.payload.event.type.inputPath": "eventType",
-"app-response.default.$.payload.event.type.default": "app-response",
-"app-response.default.$.payload.user.anonymousId": "anonymousId",
-"app-response.default.$.payload.user.browserUserAgent": "browserAgent",
-"app-response.default.$.payload.user.geoIp.ip": "ip",
-"app-response.default.$.payload.user.geoIp.country": "country",
-"app-response.default.$.payload.user.geoIp.state": "state",
-"app-response.default.$.payload.user.geoIp.city": "city",
-"app-response.default.$.payload.user.geoIp.zip": "zip",
-"app-response.default.$.payload.user.profile.hashedEmail": "hashedEmail",
-"app-response.default.$.payload.user.profile.membershipType.inputPath": "$.membershipType",
-"app-response.default.$.payload.user.profile.membershipType.default": "unknown",
-"app-response.default.$.payload.user.attributes.appId.atg.id": "atgAppId",
-"app-response.default.$.payload.user.attributes.appId.sfcc.id": "sfccAppId",
-*/
-
 const types = {
+
+    "product-interaction": { 
+        "path": "string",
+        "type": "string",
+        "category": "string",
+        "country": "US",
+        "collections": {},
+        "currency": "string",
+        "headerUnified": "string",
+        "headerLocalized": "string",
+        "language": "en_US",
+        "TODOproperty": "cookie",
+        "urlRoute": "string",
+        "component.id":"string",
+        "component.type":"string",
+        "component.text":"string",
+        "component.type":"string",
+        "component.placement.position":123,
+        "component.placement.totalCount":123,
+
+        "collectionList":["TODO - this will be tricky"]
+
+    }, 
+    "page-products-displayed":{ 
+        "path": "string",
+        "type": "string",
+        "category": "string",
+        "country": "US",
+        "collections": {},
+        "currency": "string",
+        "headerUnified": "string",
+        "headerLocalized": "string",
+        "language": "en_US",
+        "TODOproperty": "cookie",
+        "urlRoute": "string",
+        "collectionList":["TODO - this will be tricky"]
+
+    }, 
+
+
+    "purchase": { 
+        "path": "string",
+        "type": "string",
+        "category": "string",
+        "country": "US",
+        "collections": {},
+        "currency": "string",
+        "headerUnified": "string",
+        "headerLocalized": "string",
+        "language": "en_US",
+        "TODOproperty": "cookie",
+        "collectionList":["TODO - this will be tricky"], 
+        "urlRoute": "string",
+        "event.orderId": "string"
+
+        // "error.errorType": "string",
+        // "error.errorDetails": "string",
+        // "error.errorGuestFacing": true,
+        // "error.errorMessage": "string"
+
+
+    }, 
+    "page-view":{ 
+        "path": "string",
+        "type": "string",
+        "category": "string",
+        "country": "US",
+        "collections": {},
+        "currency": "string",
+        "headerUnified": "string",
+        "headerLocalized": "string",
+        "language": "en_US",
+        // "property": "string",
+        "urlRoute": "string"
+
+    }, 
+
     "app-response_big": {
         "path": "string",
         "urlRoute": "string",
@@ -165,7 +215,7 @@ const types = {
         "headerUnified": "string",
         "headerLocalized": "string",
         "language": "en_US",
-        "property": "string",
+        "TODOproperty": "cookie",
         "urlRoute": "string"
     },
     "general-component-event": {
@@ -178,7 +228,7 @@ const types = {
         "headerUnified": "string",
         "headerLocalized": "string",
         "language": "en_US",
-        // "property": "string",
+        "TODOproperty": "cookie",
         "urlRoute": "string",
         "component.id":"string",
         "component.type":"string",
